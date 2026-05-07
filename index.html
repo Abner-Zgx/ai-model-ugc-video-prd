@@ -76,8 +76,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 
 /* ── 表格 ── */
 .table-wrap{background:#fff;border:1px solid #e4e4e4;border-radius:6px;overflow:hidden;}
-.t-head{display:grid;grid-template-columns:40px 60px 70px minmax(200px,1.2fr) minmax(180px,1fr) 76px 90px 200px;column-gap:10px;padding:0 12px;height:40px;align-items:center;background:#f8f8f9;border-bottom:1px solid #e8e8e8;font-size:13px;font-weight:500;color:#606266;}
-.t-row{display:grid;grid-template-columns:40px 60px 70px minmax(200px,1.2fr) minmax(180px,1fr) 76px 90px 200px;column-gap:10px;padding:10px 12px;align-items:center;border-bottom:1px solid #f0f0f0;font-size:13px;transition:background .1s;}
+/* 增加了一列用于单独展示 "+新指令"，调整列宽分配 */
+.t-head{display:grid;grid-template-columns:40px 60px 70px minmax(200px,1.2fr) minmax(180px,1fr) 76px 90px 140px 90px;column-gap:10px;padding:0 12px;height:40px;align-items:center;background:#f8f8f9;border-bottom:1px solid #e8e8e8;font-size:13px;font-weight:500;color:#606266;}
+.t-row{display:grid;grid-template-columns:40px 60px 70px minmax(200px,1.2fr) minmax(180px,1fr) 76px 90px 140px 90px;column-gap:10px;padding:10px 12px;align-items:center;border-bottom:1px solid #f0f0f0;font-size:13px;transition:background .1s;}
 .t-row:last-child{border-bottom:none;}
 .t-row:hover{background:#f5f7fa;}
 .t-row.row-pass{background:#f9fff6;} .t-row.row-pass:hover{background:#f0ffe0;}
@@ -86,7 +87,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 .t-row>*{min-width:0;overflow:hidden;}
 .t-col-cb{display:flex;align-items:center;justify-content:center;} 
 
-/* 缩略图：去掉了 empty 状态的半透明，现在全部实心展示 */
+/* 缩略图：全状态实心展示 */
 .thumb-box{width:44px;height:60px;border-radius:4px;overflow:hidden;border:1px solid #e8e8e8;background:#f5f5f5;position:relative;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .thumb-box img{width:100%;height:100%;object-fit:cover;display:block;}
 .thumb-box.clickable{cursor:pointer;}
@@ -125,7 +126,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 .op-reject{color:#f56c6c;border-color:#fbc4c4;} .op-reject:hover{background:#fef0f0;}
 .op-new{color:#409eff;border-color:#b3d8ff;} .op-new:hover{background:#ecf5ff;}
 .op-retry{color:#e6a23c;border-color:#f5dab1;} .op-retry:hover{background:#fdf6ec;}
-.op-off{color:#c0c4cc;border-color:#e4e7ed;cursor:not-allowed;} .op-off:hover{background:#fff;}
 
 /* ── 分页 ── */
 .pager-wrap{display:flex;align-items:center;justify-content:flex-end;padding:16px 0;gap:8px;font-size:13px;color:#606266;}
@@ -189,7 +189,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 <div class="table-wrap">
   <div class="t-head">
     <div class="t-col-cb"><label class="custom-cb-wrap"><input type="checkbox" id="ckAllTop" class="custom-cb" onclick="toggleAllTop()"></label></div>
-    <div>缩略图</div><div>SPU</div><div>视频名称</div><div>指令内容</div><div>生成状态</div><div>审核状态</div><div style="text-align:center">操作</div>
+    <div>缩略图</div><div>SPU</div><div>视频名称</div><div>指令内容</div><div>生成状态</div><div>审核状态</div><div style="text-align:center">操作</div><div style="text-align:center">新建</div>
   </div>
   <div id="tbody"></div>
 </div>
@@ -205,7 +205,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 
 <div class="overlay" id="ovPlayer"><div class="modal modal-player"><div class="m-hd"><h3 id="pTitle">视频预览</h3><button class="m-close" onclick="closePlayer()">×</button></div><div class="m-bd"><video id="vPlayer" controls><source src="https://media.flamingo.shop/v/06a562172ddc4d4db2131e22f83c3827.mp4" type="video/mp4"></video></div></div></div>
 
-<div class="overlay" id="ovInst"><div class="modal modal-inst"><div class="m-hd"><h3>+ 新指令</h3><button class="m-close" onclick="closeInst()">×</button></div><div class="m-bd" id="instBody"></div><div class="m-ft"><button class="btn btn-outline" onclick="closeInst()">取消</button><button class="btn btn-primary" onclick="submitInst()">提交生成</button></div></div></div>
+<div class="overlay" id="ovInst"><div class="modal modal-inst"><div class="m-hd"><h3>+ 新指令</h3><button class="m-close" onclick="closeInst()">×</button></div><div class="m-bd" id="instBody"></div><div class="m-ft"><button class="btn btn-outline" onclick="closeInst()">取消</button><button class="btn btn-primary" id="btnSubmitInst" onclick="submitInst()">提交生成</button></div></div></div>
 
 <div id="toast"></div>
 
@@ -315,23 +315,23 @@ function renderPage(){
       apHtml='<span class="muted">—</span>';
     }
 
-    // 操作
+    // 主操作状态剥离出来
     let ops='';
     if(d.gen==='done'&&d.approve==='pending'){
-      ops=`<button class="op op-pass" onclick="actApprove(${gi})">通过</button><button class="op op-reject" onclick="actReject(${gi})">不通过</button><button class="op op-new" onclick="openInst(${gi})">+ 新指令</button>`;
+      ops=`<button class="op op-pass" onclick="actApprove(${gi})">通过</button><button class="op op-reject" onclick="actReject(${gi})">不通过</button>`;
     }else if(d.gen==='done'&&d.approve==='pass'){
       // 仅在上传失败时显示重试上传按钮
       if(d.upload === 'upload_fail') {
-        ops += `<button class="op op-retry" onclick="actRetryUpload(${gi})">重试上传素材库</button>`;
+        ops = `<button class="op op-retry" onclick="actRetryUpload(${gi})">重试上传素材库</button>`;
       }
-      ops += `<button class="op op-new" onclick="openInst(${gi})">+ 新指令</button>`;
-    }else if(d.gen==='done'&&d.approve==='fail'){
-      ops=`<button class="op op-new" onclick="openInst(${gi})">+ 新指令</button>`;
     }else if(d.gen==='fail'){
-      ops=`<button class="op op-retry" onclick="actRetry(${gi})">重试生成</button><button class="op op-new" onclick="openInst(${gi})">+ 新指令</button>`;
-    }else if(d.gen==='generating' || d.gen==='pending'){
-      ops=`<span class="muted">—</span>`;
-    }else{ops='<span class="muted">—</span>';}
+      ops=`<button class="op op-retry" onclick="actRetry(${gi})">重试生成</button>`;
+    }
+    
+    // 如果没有任何主状态操作按钮，显示占位符
+    if(!ops) {
+      ops = `<span class="muted">—</span>`;
+    }
 
     // 视频名称处理：生成中强行占位横杠
     const vNameStr = d.vname || (d.gen==='generating'?'-':(d.gen==='pending'?'排队中...':'—'));
@@ -345,6 +345,7 @@ function renderPage(){
       <div><span class="tag ${g[1]}">${g[0]}</span></div>
       <div>${apHtml}</div>
       <div class="ops">${ops}</div>
+      <div class="ops"><button class="op op-new" onclick="openInst(${gi})">+ 新指令</button></div>
     </div>`;
   }).join('');
   renderPager(totalPages);
@@ -443,28 +444,51 @@ function openInst(gi){
   const d=filtered[gi];
   const submitted = [];
   const seen = new Set();
-  filtered.forEach(x => {
-    if(x.spu === d.spu && x.grp === d.grp && x.gen === 'done') {
-      if(!seen.has(x.inst)) {
-        seen.add(x.inst);
-        submitted.push(x);
+  let hasGenerating = false;
+
+  // 遍历全局数据，查找当前组是否有正在生成/排队中的记录
+  DATA.forEach(x => {
+    if(x.spu === d.spu && x.grp === d.grp) {
+      if(x.gen === 'generating' || x.gen === 'pending') {
+        hasGenerating = true;
+      }
+      if(x.gen === 'done') {
+        if(!seen.has(x.inst)) {
+          seen.add(x.inst);
+          submitted.push(x);
+        }
       }
     }
   });
   
   const avail=[{c:'左右来回扭动展示正面',sys:true},{c:'镜头推进展示细节',sys:true}];
   let html=`<div class="inst-info-box"><b>当前记录：</b>${d.grp}<br><b>SPU：</b>${d.spu} &nbsp; <b>颜色：</b>${d.color}</div>`;
+  
+  // 核心互斥拦截逻辑
+  if(hasGenerating) {
+    html += `<div style="background:#fef0f0; color:#f56c6c; padding:10px 14px; border-radius:4px; border:1px solid #fbc4c4; margin-bottom:16px; font-size:13px; line-height:1.5;">当前组名下已经有在生成中的视频切片，需待视频切片生成完成后再创建新切片</div>`;
+    document.getElementById('btnSubmitInst').style.display = 'none'; // 隐藏提交按钮
+  } else {
+    document.getElementById('btnSubmitInst').style.display = 'inline-flex'; // 恢复显示提交按钮
+  }
+
   if(submitted.length){
     html+=`<div class="inst-sec">已提交记录</div>`;
     submitted.forEach(s=>{const a=A[s.approve];html+=`<div class="inst-item sub"><div class="il" style="color:#909399">${s.inst}</div><span class="inst-badge" style="background:${s.approve==='pass'?'#f0f9eb':s.approve==='pending'?'#fdf6ec':'#fef0f0'};color:${s.approve==='pass'?'#67c23a':s.approve==='pending'?'#e6a23c':'#f56c6c'}">${a[0]}</span></div>`;});
   }
-  html+=`<div class="inst-sec">选择新指令</div>`;
-  avail.forEach((a,j)=>{html+=`<label class="inst-item"><input type="radio" name="ni" value="${j}"><div class="il">${a.c}</div><span class="inst-badge" style="background:#ecf5ff;color:#409eff">系统指令</span></label>`;});
-  html+=`<div class="inst-sec">或自定义指令</div><textarea class="ci-input" placeholder="输入自定义指令内容..." id="ciVal"></textarea>`;
+  
+  // 如果正在生成，也不展示新建选项面板防止误解
+  if(!hasGenerating) {
+    html+=`<div class="inst-sec">选择新指令</div>`;
+    avail.forEach((a,j)=>{html+=`<label class="inst-item"><input type="radio" name="ni" value="${j}"><div class="il">${a.c}</div><span class="inst-badge" style="background:#ecf5ff;color:#409eff">系统指令</span></label>`;});
+    html+=`<div class="inst-sec">或自定义指令</div><textarea class="ci-input" placeholder="输入自定义指令内容..." id="ciVal"></textarea>`;
+  }
+
   document.getElementById('instBody').innerHTML=html;
   document.getElementById('ovInst').classList.add('show');
 }
 function closeInst(){document.getElementById('ovInst').classList.remove('show'); activeInstGi = -1;}
+
 function submitInst(){
   if (activeInstGi < 0) return;
   const r=document.querySelector('input[name="ni"]:checked');

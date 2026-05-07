@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI视频切片汇总 - PRD 交互稿</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#f0f2f5;color:#333;font-size:13px;}
+
+/* ── 顶部导航 ── */
+.top-nav{background:#fff;height:48px;display:flex;align-items:center;padding:0 20px;border-bottom:1px solid #e8e8e8;justify-content:space-between;}
+.breadcrumb{display:flex;align-items:center;gap:8px;color:#888;font-size:14px;}
+.breadcrumb a{color:#888;text-decoration:none;} .breadcrumb a:hover{color:rgb(65,181,132);}
+.breadcrumb .cur{color:#333;font-weight:500;}
+.user-info{color:#888;font-size:13px;}
+
+/* ── 容器 ── */
+.container{padding:16px 20px;}
+
+/* ── 顶部操作栏（筛选+批量） ── */
+.toolbar{background:#fff;border:1px solid #e8e8e8;border-radius:4px;padding:16px;margin-bottom:12px;display:flex;flex-direction:column;gap:16px;}
+.tb-row{display:flex;align-items:center;flex-wrap:wrap;}
+
+/* Element UI 风格表单项 */
+.tb-group{display:inline-flex;align-items:center;margin-right:24px;}
+.tb-label{font-size:14px;color:#606266;width:80px;text-align:right;padding-right:12px;flex-shrink:0;}
+.tb-input, .tb-select{
+  width:200px;
+  height:32px;
+  line-height:32px;
+  border:1px solid #dcdfe6;
+  border-radius:4px;
+  padding:0 15px;
+  font-size:14px;
+  color:#606266;
+  outline:none;
+  background:#fff;
+  transition:border-color .2s cubic-bezier(.645,.045,.355,1);
+}
+.tb-input::placeholder{color:#c0c4cc;}
+.tb-input:hover, .tb-select:hover{border-color:#c0c4cc;}
+.tb-input:focus, .tb-select:focus{border-color:rgb(65,181,132);}
+
+/* Element UI 下拉框箭头模拟 */
+.tb-select{
+  appearance:none; -webkit-appearance:none;
+  padding-right:30px;
+  cursor:pointer;
+  background: #fff url("data:image/svg+xml;utf8,<svg viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'><path d='M7 9L3.5 5h7L7 9z' fill='%23C0C4CC'/></svg>") no-repeat right 10px center / 12px 12px;
+}
+
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.btn{border:none;border-radius:4px;padding:0 16px;font-size:14px;cursor:pointer;height:32px;display:inline-flex;align-items:center;gap:4px;transition:all .15s;white-space:nowrap;}
+.btn-primary{background:rgb(65,181,132);color:#fff;} .btn-primary:hover{background:rgb(85,201,152);}
+.btn-outline{background:#fff;color:#606266;border:1px solid #dcdfe6;} .btn-outline:hover{border-color:rgb(65,181,132);color:rgb(65,181,132);}
+.btn-success-plain{background:#f0f9eb;color:#67c23a;border:1px solid #c2e7b0;} .btn-success-plain:hover{background:#e1f3d8;}
+.btn-danger-plain{background:#fef0f0;color:#f56c6c;border:1px solid #fbc4c4;} .btn-danger-plain:hover{background:#fde2e2;}
+.btn[disabled]{opacity:.45;cursor:not-allowed;}
+
+/* ── 自定义 Checkbox (参考 Element UI vab-theme-green) ── */
+.custom-cb-wrap { display:inline-flex; align-items:center; justify-content:center; cursor:pointer; vertical-align:middle; margin:0; }
+.custom-cb {
+  appearance:none; -webkit-appearance:none; width:14px; height:14px;
+  border:1px solid #dcdfe6; border-radius:2px; background:#fff;
+  position:relative; cursor:pointer; transition:all .2s; outline:none; margin:0;
+}
+.custom-cb:hover { border-color:rgb(65, 181, 132); }
+.custom-cb:checked { background-color:rgb(65, 181, 132); border-color:rgb(65, 181, 132); }
+.custom-cb:checked::after {
+  content:""; position:absolute; left:3.5px; top:1px; width:3px; height:7px;
+  border:1px solid #fff; border-left:0; border-top:0; transform:rotate(45deg);
+}
+.custom-cb:disabled { background-color:#f2f6fc; border-color:#dcdfe6; cursor:not-allowed; }
+.custom-cb:disabled:checked { background-color:#c0c4cc; border-color:#c0c4cc; }
+
+/* ── 表格 ── */
+.table-wrap{background:#fff;border:1px solid #e4e4e4;border-radius:6px;overflow:hidden;}
+.t-head{display:grid;grid-template-columns:40px 60px 70px minmax(200px,1.2fr) minmax(180px,1fr) 76px 90px 200px;column-gap:10px;padding:0 12px;height:40px;align-items:center;background:#f8f8f9;border-bottom:1px solid #e8e8e8;font-size:13px;font-weight:500;color:#606266;}
+.t-row{display:grid;grid-template-columns:40px 60px 70px minmax(200px,1.2fr) minmax(180px,1fr) 76px 90px 200px;column-gap:10px;padding:10px 12px;align-items:center;border-bottom:1px solid #f0f0f0;font-size:13px;transition:background .1s;}
+.t-row:last-child{border-bottom:none;}
+.t-row:hover{background:#f5f7fa;}
+.t-row.row-pass{background:#f9fff6;} .t-row.row-pass:hover{background:#f0ffe0;}
+.t-row.row-fail{background:#fff8f8;} .t-row.row-fail:hover{background:#fff0f0;}
+.t-row.row-generating{background:#fffbe6;}
+.t-row>*{min-width:0;overflow:hidden;}
+.t-col-cb{display:flex;align-items:center;justify-content:center;} 
+
+/* 缩略图：去掉了 empty 状态的半透明，现在全部实心展示 */
+.thumb-box{width:44px;height:60px;border-radius:4px;overflow:hidden;border:1px solid #e8e8e8;background:#f5f5f5;position:relative;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.thumb-box img{width:100%;height:100%;object-fit:cover;display:block;}
+.thumb-box.clickable{cursor:pointer;}
+.thumb-box .play-mask{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);opacity:0;transition:opacity .15s;color:#fff;font-size:20px;}
+.thumb-box.clickable:hover .play-mask{opacity:1;}
+
+.spu-cell{font-weight:600;font-size:13px;white-space:nowrap;color:#303133;}
+.vname{font-size:12px;color:#909399;font-family:monospace;word-break:break-all;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4;}
+.vname-empty{color:#c0c4cc;}
+.inst-text{font-size:13px;color:#606266;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;line-height:1.5;}
+
+/* el-tag 风格 */
+.tag{display:inline-block;padding:0 8px;border-radius:4px;font-size:12px;border:1px solid;line-height:22px;white-space:nowrap;}
+.tag-done{color:#67c23a;background:#f0f9eb;border-color:#e1f3d8;}
+.tag-generating{color:#409eff;background:#ecf5ff;border-color:#d9ecff;animation:pulse 1.5s ease-in-out infinite;}
+.tag-fail{color:#f56c6c;background:#fef0f0;border-color:#fde2e2;}
+.tag-pending{color:#909399;background:#f4f4f5;border-color:#e9e9eb;}
+.tag-ap-pass{color:#67c23a;background:#f0f9eb;border-color:#e1f3d8;}
+.tag-ap-pending{color:#e6a23c;background:#fdf6ec;border-color:#faecd8;}
+.tag-ap-fail{color:#f56c6c;background:#fef0f0;border-color:#fde2e2;}
+.tag-up-done{color:#409eff;background:#ecf5ff;border-color:#d9ecff;}
+.tag-up-pending{color:#909399;background:#f4f4f5;border-color:#e9e9eb;}
+.tag-up-fail{color:#f56c6c;background:#fef0f0;border-color:#fde2e2;}
+
+/* 审核与上传状态堆叠 */
+.row-ap-stack { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px; }
+.upload-sub-tag { display: inline-flex; align-items: center; font-size: 11px; padding: 0 6px; line-height: 20px; }
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+.muted{color:#c0c4cc;font-size:13px;}
+
+/* 操作按钮 */
+.ops{display:flex;flex-wrap:wrap;gap:5px;align-items:center;justify-content:center;}
+.op{padding:0 10px;border-radius:3px;font-size:12px;cursor:pointer;border:1px solid;background:#fff;height:26px;display:inline-flex;align-items:center;transition:all .12s;white-space:nowrap;}
+.op-pass{color:#67c23a;border-color:#c2e7b0;} .op-pass:hover{background:#f0f9eb;}
+.op-reject{color:#f56c6c;border-color:#fbc4c4;} .op-reject:hover{background:#fef0f0;}
+.op-new{color:#409eff;border-color:#b3d8ff;} .op-new:hover{background:#ecf5ff;}
+.op-retry{color:#e6a23c;border-color:#f5dab1;} .op-retry:hover{background:#fdf6ec;}
+.op-off{color:#c0c4cc;border-color:#e4e7ed;cursor:not-allowed;} .op-off:hover{background:#fff;}
+
+/* ── 分页 ── */
+.pager-wrap{display:flex;align-items:center;justify-content:flex-end;padding:16px 0;gap:8px;font-size:13px;color:#606266;}
+.pager-total{margin-right:8px;}
+.pager-size{border:1px solid #dcdfe6;border-radius:4px;height:28px;padding:0 6px;font-size:13px;background:#fff;cursor:pointer;outline:none;}
+.pager-nav{display:flex;align-items:center;gap:4px;}
+.pager-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;cursor:pointer;font-size:13px;color:#606266;border-radius:4px;} .pager-btn:hover{color:rgb(65,181,132);}
+.pager-btn[disabled]{color:#c0c4cc;cursor:not-allowed;}
+.pager-num{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer;font-size:13px;color:#606266;background:transparent;border:none;} .pager-num:hover{color:rgb(65,181,132);}
+.pager-num.active{background:rgb(65,181,132);color:#fff;border-radius:4px;}
+.pager-dots{width:28px;text-align:center;color:#909399;font-size:12px;cursor:default;}
+.pager-goto{display:flex;align-items:center;gap:6px;font-size:13px;}
+.pager-goto input{width:46px;height:28px;border:1px solid #dcdfe6;border-radius:4px;text-align:center;font-size:13px;outline:none;} .pager-goto input:focus{border-color:rgb(65,181,132);}
+
+/* ── 弹窗 ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;justify-content:center;align-items:center;}
+.overlay.show{display:flex;}
+.modal{background:#fff;border-radius:6px;box-shadow:0 6px 30px rgba(0,0,0,.12);max-height:85vh;overflow:hidden;}
+.m-hd{padding:16px 20px;border-bottom:1px solid #e8e8e8;display:flex;justify-content:space-between;align-items:center;}
+.m-hd h3{font-size:16px;font-weight:500;color:#303133;} .m-close{background:none;border:none;font-size:20px;cursor:pointer;color:#909399;padding:2px 6px;} .m-close:hover{color:#303133;}
+.m-bd{padding:20px;overflow-y:auto;max-height:calc(85vh - 110px);}
+.m-ft{padding:12px 20px;border-top:1px solid #e8e8e8;display:flex;justify-content:flex-end;gap:10px;}
+.modal-player{max-width:600px;width:90%;} .modal-player video{width:100%;border-radius:4px;background:#000;}
+.modal-inst{max-width:520px;width:90%;}
+.inst-info-box{background:#f5f7fa;border-radius:4px;padding:12px 16px;margin-bottom:16px;font-size:13px;line-height:1.8;color:#606266;} .inst-info-box b{color:#303133;}
+.inst-sec{font-size:14px;font-weight:500;color:#303133;margin-bottom:8px;margin-top:16px;}
+.inst-item{padding:10px 14px;border:1px solid #e8e8e8;border-radius:4px;margin-bottom:8px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;transition:all .12s;font-size:13px;line-height:1.6;}
+.inst-item:hover{border-color:rgb(65,181,132);background:#f0f9eb;}
+.inst-item.sub{cursor:default;background:#f5f7fa;border-color:#e8e8e8;}
+.inst-item.sub:hover{background:#f5f7fa;border-color:#e8e8e8;}
+.inst-item input[type="radio"]{margin-top:3px;accent-color:rgb(65,181,132);}
+.inst-item .il{flex:1;color:#606266;}
+.inst-badge{font-size:11px;padding:2px 8px;border-radius:4px;white-space:nowrap;}
+.ci-input{width:100%;border:1px solid #dcdfe6;border-radius:4px;padding:10px 12px;font-size:13px;resize:vertical;min-height:70px;outline:none;font-family:inherit;} .ci-input:focus{border-color:rgb(65,181,132);}
+#toast{position:fixed;top:56px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);color:#fff;padding:8px 24px;border-radius:4px;font-size:14px;z-index:2000;display:none;}
+</style>
+</head>
+<body>
+<div class="top-nav">
+  <div class="breadcrumb"><span>☰</span> <a href="#">素材管理</a> <span style="margin:0 4px;color:#c0c4cc">&gt;</span> <span class="cur">🎬 AI视频切片汇总</span></div>
+  <div class="user-info">👤 张高翔</div>
+</div>
+<div class="container">
+
+<div class="toolbar">
+  <div class="tb-row">
+    <div class="tb-group"><div class="tb-label">SPU</div><input class="tb-input" id="fSpu" placeholder="请输入SPU编号" onkeydown="if(event.key==='Enter')doFilter()"></div>
+    <div class="tb-group"><div class="tb-label">生成状态</div><select class="tb-select" id="fGen"><option value="">请选择状态</option><option value="pending">待生成</option><option value="generating">生成中</option><option value="done">生成成功</option><option value="fail">生成失败</option></select></div>
+    <div class="tb-group"><div class="tb-label">审核状态</div><select class="tb-select" id="fAp"><option value="">请选择状态</option><option value="pending">待审核</option><option value="pass">审核通过</option><option value="fail">审核不通过</option></select></div>
+    <div class="tb-group"><div class="tb-label">上传状态</div><select class="tb-select" id="fUp"><option value="">请选择状态</option><option value="uploaded">上传成功</option><option value="upload_pending">上传素材库中</option><option value="upload_fail">上传失败</option></select></div>
+    
+    <div class="tb-right">
+      <button class="btn btn-primary" onclick="doFilter()">查询</button>
+      <button class="btn btn-outline" onclick="doReset()">重置</button>
+      <button class="btn btn-success-plain" onclick="batchAct('pass')">批量通过</button>
+      <button class="btn btn-danger-plain" onclick="batchAct('reject')">批量不通过</button>
+    </div>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <div class="t-head">
+    <div class="t-col-cb"><label class="custom-cb-wrap"><input type="checkbox" id="ckAllTop" class="custom-cb" onclick="toggleAllTop()"></label></div>
+    <div>缩略图</div><div>SPU</div><div>视频名称</div><div>指令内容</div><div>生成状态</div><div>审核状态</div><div style="text-align:center">操作</div>
+  </div>
+  <div id="tbody"></div>
+</div>
+
+<div class="pager-wrap">
+  <span class="pager-total">共 <b id="pTotal">0</b> 条</span>
+  <select class="pager-size" id="pSize" onchange="pageSize=+this.value;curPage=1;renderPage()"><option value="20">20条/页</option><option value="50">50条/页</option><option value="100">100条/页</option></select>
+  <div class="pager-nav" id="pagerNav"></div>
+  <div class="pager-goto">前往 <input id="pGoto" onkeydown="if(event.key==='Enter')gotoPage(+this.value)"> 页</div>
+</div>
+
+</div>
+
+<div class="overlay" id="ovPlayer"><div class="modal modal-player"><div class="m-hd"><h3 id="pTitle">视频预览</h3><button class="m-close" onclick="closePlayer()">×</button></div><div class="m-bd"><video id="vPlayer" controls><source src="https://media.flamingo.shop/v/06a562172ddc4d4db2131e22f83c3827.mp4" type="video/mp4"></video></div></div></div>
+
+<div class="overlay" id="ovInst"><div class="modal modal-inst"><div class="m-hd"><h3>+ 新指令</h3><button class="m-close" onclick="closeInst()">×</button></div><div class="m-bd" id="instBody"></div><div class="m-ft"><button class="btn btn-outline" onclick="closeInst()">取消</button><button class="btn btn-primary" onclick="submitInst()">提交生成</button></div></div></div>
+
+<div id="toast"></div>
+
+<script>
+/* ══ Mock 数据生成 ══ */
+const IMGS=['https://img.flamingo.shop/p/b48852063cb44843a608fd556e3785ea.jpg','https://img.flamingo.shop/p/1441c581d8684cbea75886c0b09ea0e8.jpg','https://img.flamingo.shop/p/3502450998574f678263e7645ff6b84d.jpg','https://img.flamingo.shop/p/7ab8df1aa65443b68920104ecfcb0a16.jpg','https://img.flamingo.shop/p/a17cc840a2d8417890620747d83a96d9.jpeg','https://img.flamingo.shop/p/4847eeeea63d4b45904785905de4d261.jpeg','https://img.flamingo.shop/p/d84eda32c28a40a197537eb69faf8424.jpeg','https://img.flamingo.shop/p/33d10ebc9ed9414fb5018a8a0603af23.jpg','https://img.flamingo.shop/p/f8f127b79c7d4e29a3810c849860b27a.jpg','https://img.flamingo.shop/p/62ff702083e14097bd659b1c81efc5ce.jpg','https://img.flamingo.shop/p/175695fca86641ddb3fa9e3329a2cccc.jpg','https://img.flamingo.shop/p/abbf740ed0c04a0b865b8ac234e70a28.jpg'];
+const SPUS=['271812','271812','271812','271812','271812','271812','180390','180390','180390','180390'];
+const COLORS=['MidBlue','MidBlue','NavyBlue','Black','MidBlue','NavyBlue','Black','NavyBlue','Black','MidBlue'];
+const GRPS=['正面展示','正面细节展示','正面拉弹力','正面走出画面','背面展示','背面细节展示','深蹲','裤脚特写','侧面抚摸','正转背','面料纹理展示','侧面抬腿'];
+const INSTS=['左右转移身体重心，摆姿势，镜头固定','镜头推进，模特双手抚过裤子两边的口袋','用手大力拉扯大腿两侧的裤子，展示弹力','向镜头走，直到走出画面，镜头不动','左右来回扭动几次，展示裤子正面','镜头推进，展示背面口袋','深蹲2次（需要蹲下去）','镜头对准裤脚，模特轻微抬脚','模特不转身，手抚摸大腿','左右转移重心摆姿势然后转身','镜头贴近裤子展示面料纹理','模特不转身翘起一只脚然后放下'];
+const GEN_VALS=['done','done','done','done','done','fail','generating','done','done','done','done','done'];
+const AP_VALS=['pass','pending','pending','fail','pending','none','none','pending','fail','pending','pass','pending'];
+const UP_VALS=['uploaded','upload_pending','upload_fail']; // 只保留有效上传状态
+
+const DATA=[];
+let rid=1000;
+for(let i=0;i<48;i++){
+  const si=i%SPUS.length, gi=i%GRPS.length, ii=i%INSTS.length;
+  const gen=GEN_VALS[i%GEN_VALS.length];
+  // 严格控制流转逻辑：只有生成成功才可能有审核状态
+  let ap = gen==='done' ? AP_VALS[i%AP_VALS.length] : 'none';
+  // 严格控制流转逻辑：只有审核通过才绝对有上传状态，其他一律为无
+  let up = ap==='pass' ? UP_VALS[i%UP_VALS.length] : 'upload_none';
+
+  const hasVid=gen==='done';
+  const spu=SPUS[si], color=COLORS[si], grp=GRPS[gi];
+  const shortInst=INSTS[ii].slice(0,4);
+  DATA.push({
+    id:++rid, spu, color, grp, inst:INSTS[ii],
+    vname:hasVid?`${spu}_20260506_${color}_${grp}_${shortInst}-${(i*7+13)%99}.mp4`:'',
+    gen, approve: ap, upload: up,
+    img:i%IMGS.length, type:i%8===7?2:1
+  });
+}
+
+const G={pending:['待生成','tag-pending'],generating:['生成中','tag-generating'],done:['生成成功','tag-done'],fail:['生成失败','tag-fail']};
+const A={none:['—',''],pending:['待审核','tag-ap-pending'],pass:['审核通过','tag-ap-pass'],fail:['审核不通过','tag-ap-fail']};
+const U={uploaded:['上传成功','tag-up-done'],upload_pending:['上传素材库中','tag-up-pending'],upload_fail:['上传失败','tag-up-fail'],upload_none:['—','']};
+
+/* ══ 筛选 & 分页 ══ */
+let filtered=[...DATA], curPage=1, pageSize=20;
+
+function doFilter(){
+  const spu=document.getElementById('fSpu').value.trim();
+  const gen=document.getElementById('fGen').value;
+  const ap=document.getElementById('fAp').value;
+  const up=document.getElementById('fUp').value;
+  filtered=DATA.filter(d=>{
+    if(spu&&!d.spu.includes(spu))return false;
+    if(gen&&d.gen!==gen)return false;
+    if(ap&&d.approve!==ap)return false;
+    if(up&&d.upload!==up)return false; // 因为我们已经在 Mock 时彻底隔离了未通过的数据，筛选会100%精准
+    return true;
+  });
+  curPage=1; renderPage(); uncheckAll();
+  toast('查询完成，共 '+filtered.length+' 条');
+}
+
+function doReset(){
+  document.getElementById('fSpu').value='';
+  document.getElementById('fGen').value='';
+  document.getElementById('fAp').value='';
+  document.getElementById('fUp').value='';
+  filtered=[...DATA]; curPage=1; renderPage(); uncheckAll();
+  toast('已重置');
+}
+
+/* ══ 渲染 ══ */
+function renderPage(){
+  const total=filtered.length;
+  document.getElementById('pTotal').textContent=total;
+  const totalPages=Math.max(1,Math.ceil(total/pageSize));
+  if(curPage>totalPages)curPage=totalPages;
+  const start=(curPage-1)*pageSize, end=Math.min(start+pageSize,total);
+  const page=filtered.slice(start,end);
+
+  const tb=document.getElementById('tbody');
+  if(!page.length){tb.innerHTML='<div style="text-align:center;padding:48px;color:#909399">暂无匹配数据</div>';renderPager(totalPages);return;}
+
+  tb.innerHTML=page.map((d,idx)=>{
+    const gi=start+idx;
+    const g=G[d.gen]||['—','tag-pending'];
+    const a=A[d.approve]||['—',''];
+    const hasVid=d.gen==='done'&&d.vname;
+    const rowCls=d.approve==='pass'?'row-pass':d.approve==='fail'||d.gen==='fail'?'row-fail':d.gen==='generating'?'row-generating':'';
+    const disCk=d.gen==='generating'?' disabled':'';
+
+    // 缩略图：全状态强制展示，只有完成生成且有视频的情况下才有播放蒙层
+    let thumbHtml;
+    if(hasVid){
+      thumbHtml=`<div class="thumb-box clickable" onclick="openPlayer('${d.vname.replace(/'/g,"\\'")}')"><img src="${IMGS[d.img]}"><div class="play-mask">▶</div></div>`;
+    }else{
+      thumbHtml=`<div class="thumb-box"><img src="${IMGS[d.img]}"></div>`;
+    }
+
+    // 审核状态列 (带有上传状态堆叠逻辑)
+    let apHtml;
+    if(d.gen==='done'){
+      let upTag = '';
+      const u = U[d.upload] || ['—',''];
+      // 只有审核通过且存在有效的上传状态时，才在底下挂载子 Tag
+      if(d.approve==='pass' && d.upload && d.upload!=='upload_none') {
+        upTag = `<span class="tag upload-sub-tag ${u[1]}">${u[0]}</span>`;
+      }
+      apHtml=`<div class="row-ap-stack"><span class="tag ${a[1]}">${a[0]}</span>${upTag}</div>`;
+    }else{
+      apHtml='<span class="muted">—</span>';
+    }
+
+    // 操作
+    let ops='';
+    if(d.gen==='done'&&d.approve==='pending'){
+      ops=`<button class="op op-pass" onclick="actApprove(${gi})">通过</button><button class="op op-reject" onclick="actReject(${gi})">不通过</button><button class="op op-new" onclick="openInst(${gi})">+ 新指令</button>`;
+    }else if(d.gen==='done'&&d.approve==='pass'){
+      // 仅在上传失败时显示重试上传按钮
+      if(d.upload === 'upload_fail') {
+        ops += `<button class="op op-retry" onclick="actRetryUpload(${gi})">重试上传素材库</button>`;
+      }
+      ops += `<button class="op op-new" onclick="openInst(${gi})">+ 新指令</button>`;
+    }else if(d.gen==='done'&&d.approve==='fail'){
+      ops=`<button class="op op-new" onclick="openInst(${gi})">+ 新指令</button>`;
+    }else if(d.gen==='fail'){
+      ops=`<button class="op op-retry" onclick="actRetry(${gi})">重试生成</button><button class="op op-new" onclick="openInst(${gi})">+ 新指令</button>`;
+    }else if(d.gen==='generating' || d.gen==='pending'){
+      ops=`<span class="muted">—</span>`;
+    }else{ops='<span class="muted">—</span>';}
+
+    // 视频名称处理：生成中强行占位横杠
+    const vNameStr = d.vname || (d.gen==='generating'?'-':(d.gen==='pending'?'排队中...':'—'));
+
+    return `<div class="t-row ${rowCls}" data-gi="${gi}">
+      <div class="t-col-cb"><label class="custom-cb-wrap"><input type="checkbox" class="custom-cb rck" data-gi="${gi}"${disCk}></label></div>
+      <div>${thumbHtml}</div>
+      <div class="spu-cell">${d.spu}</div>
+      <div class="vname${d.vname?'':' vname-empty'}">${vNameStr}</div>
+      <div class="inst-text">${d.inst}</div>
+      <div><span class="tag ${g[1]}">${g[0]}</span></div>
+      <div>${apHtml}</div>
+      <div class="ops">${ops}</div>
+    </div>`;
+  }).join('');
+  renderPager(totalPages);
+}
+
+/* ══ 分页器 ══ */
+function renderPager(totalPages){
+  const nav=document.getElementById('pagerNav');
+  let h=`<button class="pager-btn" ${curPage<=1?'disabled':''} onclick="goPage(${curPage-1})">&lt;</button>`;
+  const pages=calcPages(curPage,totalPages);
+  pages.forEach(p=>{
+    if(p==='...'){h+=`<span class="pager-dots">…</span>`;}
+    else{h+=`<button class="pager-num${p===curPage?' active':''}" onclick="goPage(${p})">${p}</button>`;}
+  });
+  h+=`<button class="pager-btn" ${curPage>=totalPages?'disabled':''} onclick="goPage(${curPage+1})">&gt;</button>`;
+  nav.innerHTML=h;
+}
+function calcPages(cur,total){
+  if(total<=7)return Array.from({length:total},(_,i)=>i+1);
+  const p=[];
+  p.push(1);
+  if(cur>3)p.push('...');
+  for(let i=Math.max(2,cur-1);i<=Math.min(total-1,cur+1);i++)p.push(i);
+  if(cur<total-2)p.push('...');
+  p.push(total);
+  return p;
+}
+function goPage(n){const tp=Math.max(1,Math.ceil(filtered.length/pageSize));if(n<1||n>tp)return;curPage=n;renderPage();uncheckAll();window.scrollTo(0,0);}
+function gotoPage(n){goPage(n);}
+
+/* ══ Checkbox 交互 ══ */
+function toggleAllTop(){
+  const ck = event.target.checked;
+  document.querySelectorAll('.rck:not(:disabled)').forEach(c=>c.checked=ck);
+}
+function uncheckAll(){
+  const topCk = document.getElementById('ckAllTop');
+  if(topCk) topCk.checked=false;
+  document.querySelectorAll('.rck').forEach(c=>c.checked=false);
+}
+document.addEventListener('change', e => {
+  if(e.target.classList.contains('rck')) {
+     const total = document.querySelectorAll('.rck:not(:disabled)').length;
+     const checked = document.querySelectorAll('.rck:checked').length;
+     const topCk = document.getElementById('ckAllTop');
+     if(topCk) topCk.checked = (total > 0 && total === checked);
+  }
+});
+
+/* ══ 操作 ══ */
+function actApprove(gi){
+  filtered[gi].approve='pass';
+  // 通过后自动赋予待上传(上传素材库中)状态以方便流转 UI
+  if(!filtered[gi].upload || filtered[gi].upload === 'upload_none') {
+     filtered[gi].upload = 'upload_pending';
+  }
+  renderPage();
+  toast('✓ 审核通过，已加入上传队列');
+}
+function actReject(gi){filtered[gi].approve='fail';renderPage();toast('✗ 审核不通过');}
+function actRetry(gi){filtered[gi].gen='generating';filtered[gi].vname='';renderPage();toast('↻ 已提交重试生成');}
+
+function actRetryUpload(gi){
+  filtered[gi].upload='upload_pending';
+  renderPage();
+  toast('↻ 已重试上传素材库');
+}
+
+function batchAct(type){
+  const gis=[...document.querySelectorAll('.rck:checked')].map(c=>+c.dataset.gi);
+  if(!gis.length){toast('请先在表格里勾选记录');return;}
+  const target=type==='pass'?'pass':'fail';
+  let cnt=0;
+  gis.forEach(gi=>{
+    if(filtered[gi].gen==='done'&&filtered[gi].approve==='pending'){
+      filtered[gi].approve=target;
+      // 批量通过也要挂载上传状态
+      if(target==='pass' && (!filtered[gi].upload || filtered[gi].upload==='upload_none')) {
+        filtered[gi].upload = 'upload_pending';
+      }
+      cnt++;
+    }
+  });
+  renderPage();uncheckAll();
+  toast((type==='pass'?'✓ 批量通过 ':'✗ 批量不通过 ')+cnt+' 条');
+}
+
+/* ══ 视频预览 ══ */
+function openPlayer(name){document.getElementById('pTitle').textContent=name;document.getElementById('ovPlayer').classList.add('show');document.getElementById('vPlayer').play();}
+function closePlayer(){document.getElementById('ovPlayer').classList.remove('show');document.getElementById('vPlayer').pause();}
+
+/* ══ +新指令 ══ */
+let activeInstGi = -1; 
+function openInst(gi){
+  activeInstGi = gi;
+  const d=filtered[gi];
+  const submitted = [];
+  const seen = new Set();
+  filtered.forEach(x => {
+    if(x.spu === d.spu && x.grp === d.grp && x.gen === 'done') {
+      if(!seen.has(x.inst)) {
+        seen.add(x.inst);
+        submitted.push(x);
+      }
+    }
+  });
+  
+  const avail=[{c:'左右来回扭动展示正面',sys:true},{c:'镜头推进展示细节',sys:true}];
+  let html=`<div class="inst-info-box"><b>当前记录：</b>${d.grp}<br><b>SPU：</b>${d.spu} &nbsp; <b>颜色：</b>${d.color}</div>`;
+  if(submitted.length){
+    html+=`<div class="inst-sec">已提交记录</div>`;
+    submitted.forEach(s=>{const a=A[s.approve];html+=`<div class="inst-item sub"><div class="il" style="color:#909399">${s.inst}</div><span class="inst-badge" style="background:${s.approve==='pass'?'#f0f9eb':s.approve==='pending'?'#fdf6ec':'#fef0f0'};color:${s.approve==='pass'?'#67c23a':s.approve==='pending'?'#e6a23c':'#f56c6c'}">${a[0]}</span></div>`;});
+  }
+  html+=`<div class="inst-sec">选择新指令</div>`;
+  avail.forEach((a,j)=>{html+=`<label class="inst-item"><input type="radio" name="ni" value="${j}"><div class="il">${a.c}</div><span class="inst-badge" style="background:#ecf5ff;color:#409eff">系统指令</span></label>`;});
+  html+=`<div class="inst-sec">或自定义指令</div><textarea class="ci-input" placeholder="输入自定义指令内容..." id="ciVal"></textarea>`;
+  document.getElementById('instBody').innerHTML=html;
+  document.getElementById('ovInst').classList.add('show');
+}
+function closeInst(){document.getElementById('ovInst').classList.remove('show'); activeInstGi = -1;}
+function submitInst(){
+  if (activeInstGi < 0) return;
+  const r=document.querySelector('input[name="ni"]:checked');
+  const c=document.getElementById('ciVal')?.value.trim();
+  if(!r&&!c){toast('请选择或输入指令');return;}
+  
+  const avail = ['左右来回扭动展示正面', '镜头推进展示细节'];
+  const newInstText = c ? c : avail[+r.value];
+  const oldData = filtered[activeInstGi];
+
+  const newRecord = {
+    id: ++rid,
+    spu: oldData.spu,
+    color: oldData.color,
+    grp: oldData.grp,
+    inst: newInstText,
+    vname: '',
+    gen: 'generating',
+    approve: 'none',
+    upload: 'upload_none',
+    img: oldData.img,
+    type: oldData.type
+  };
+
+  DATA.unshift(newRecord); 
+  closeInst();
+  toast('✓ 已提交新指令，等待系统生成');
+  
+  document.getElementById('fSpu').value='';
+  document.getElementById('fGen').value='';
+  document.getElementById('fAp').value='';
+  document.getElementById('fUp').value='';
+  doFilter();
+}
+
+/* ══ 弹窗关闭 ══ */
+document.querySelectorAll('.overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m){m.classList.remove('show');const v=document.getElementById('vPlayer');if(v)v.pause();}});});
+
+/* ══ Toast ══ */
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.style.display='block';el.style.opacity='1';setTimeout(()=>{el.style.opacity='0';setTimeout(()=>el.style.display='none',300);},1800);}
+
+/* ══ 初始化 ══ */
+renderPage();
+</script>
+</body>
+</html>

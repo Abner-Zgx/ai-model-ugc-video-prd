@@ -16,6 +16,7 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
   body { font-family: var(--font); font-size: 13px; color: var(--ink-2); background: var(--bg); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
   button { cursor: pointer; border: none; background: none; font-family: inherit; outline: none; }
   input, textarea, select { font-family: inherit; font-size: inherit; color: var(--ink-1); }
@@ -39,7 +40,7 @@
 
   /* 生成面板内部 */
   .panel-hd { padding: 16px 20px; border-bottom: 1px solid var(--line); font-weight: 600; font-size: 15px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background: var(--paper); z-index: 101; }
-  .panel-bd { padding: 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 24px; position: relative; }
+  .panel-bd { padding: 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 24px; position: relative; scroll-behavior: smooth; }
   .panel-ft { padding: 16px 24px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; align-items: center; background: var(--paper); flex-shrink: 0; z-index: 101; }
 
   .field { display: flex; flex-direction: column; gap: 10px; }
@@ -114,7 +115,7 @@
     background-size: cover; background-position: center; background-color: var(--ink-5);
   }
 
-  /* 全局悬浮预览窗 (Z-index 防止遮挡) */
+  /* 全局悬浮预览窗 */
   .global-preview-pop {
     position: fixed; width: 180px; aspect-ratio: 9/16; background: #000; border-radius: 6px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 10000; pointer-events: none;
@@ -185,7 +186,7 @@
   .btn-outline { border: 1px solid var(--line); background: var(--paper); color: var(--ink-2); padding: 4px 10px; border-radius: 4px; font-size: 11px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; }
   .btn-outline:hover { border-color: var(--ink-4); }
 
-  /* Toast 系统 (居中下拉) */
+  /* Toast 系统 */
   .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 100000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
   .toast { background: var(--ink-1); color: white; padding: 12px 24px; border-radius: var(--r); font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); animation: toastSlide 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 8px; transition: 0.3s opacity, 0.3s transform; }
   .toast.error { background: var(--dot-fail); }
@@ -284,9 +285,9 @@
         </div>
 
         <div class="field" id="row-spu">
-          <div class="field-label" style="display:flex; justify-content:flex-start;">
+          <div class="field-label" style="display:flex; justify-content:flex-start; align-items:center;">
             <span class="num-badge">2</span> 
-            <span>商品图片选择 <span style="color:var(--dot-fail); font-weight:normal;">*必选</span></span>
+            <span>商品图片选择 <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必选</span></span>
             <button id="btnSelectAllSpu" class="btn-select-all" onclick="toggleAllSpuImgs()">一键勾选</button>
           </div>
           <div class="row-module">
@@ -408,6 +409,24 @@
   </div>
 </div>
 
+<div class="modal-wrap" id="warnModal">
+  <div class="modal-mask" onclick="closeWarnModal()"></div>
+  <div class="modal-box" style="width: 400px;">
+    <div class="panel-hd" style="border-bottom: 1px solid var(--line);">
+      <span style="color:var(--dot-fail); display:flex; align-items:center; gap:6px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> 覆盖警告</span>
+      <button class="modal-close" onclick="closeWarnModal()" style="font-size:20px;">×</button>
+    </div>
+    <div style="padding: 24px; font-size:13px; line-height:1.6;">
+      检测到左侧创作区已有未提交的配置内容。<br><br>
+      如果您继续导入当前失败的任务数据，**左侧的现有配置将被清空并覆盖**。确认要继续吗？
+    </div>
+    <div class="panel-ft" style="background:var(--paper); border-top:1px solid var(--line);">
+      <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeWarnModal()">取消</button>
+      <button class="btn-primary" style="background:var(--dot-fail);" onclick="doForceLoadTask()">确认覆盖并载入</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-wrap" id="confirmModal">
   <div class="modal-mask" onclick="closeConfirmModal()"></div>
   <div class="modal-box sm" style="max-height: 90vh;">
@@ -436,7 +455,7 @@
       </div>
 
     </div>
-    <div class="panel-ft" style="background:var(--paper); border-top:1px solid var(--line);">
+    <div class="panel-ft" style="background:var(--paper); border-top:1px solid var(--line); justify-content:flex-end;">
       <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeConfirmModal()">取消返回</button>
       <button class="btn-primary" style="padding: 10px 32px; font-size:14px;" onclick="doSubmitTask()">确认无误，正式提交</button>
     </div>
@@ -455,7 +474,7 @@
       <button class="btn-upload">↑ 上传新素材</button>
     </div>
     <div class="picker-grid" id="pickerGrid"></div>
-    <div class="panel-ft">
+    <div class="panel-ft" style="justify-content:flex-end;">
       <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closePicker()">取消</button>
       <button class="btn-primary" style="padding: 8px 24px; font-size:13px;" onclick="confirmPicker()">确认选用</button>
     </div>
@@ -474,7 +493,7 @@
       <button class="btn-upload" style="background:var(--ink-1); color:white; border:none;" onclick="addCustomBc()">+ 添加口播</button>
     </div>
     <div class="bc-grid" id="bcGrid"></div>
-    <div class="panel-ft">
+    <div class="panel-ft" style="justify-content:flex-end;">
       <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeBcModal()">取消</button>
       <button class="btn-primary" style="padding: 8px 24px; font-size:13px;" onclick="confirmBc()">确认选用</button>
     </div>
@@ -565,7 +584,7 @@
   const ALL_TAGS = ['spu', 'scene', 'model', 'bc'];
   let activeTags = new Set();
   let isManual = false;
-  let selectedSpuImgs = new Set(); // {id, imageUrl}
+  let selectedSpuImgs = new Set(); 
   let assetsState = { video: null, scene: null, model: null };
   let currentColor = Object.keys(colorGroups)[0];
 
@@ -583,7 +602,7 @@
   function switchColor(color) {
     if (currentColor !== color) {
       currentColor = color;
-      selectedSpuImgs.clear(); // 切换颜色时取消原本的勾选
+      selectedSpuImgs.clear(); 
       initSpuUI();
       updatePrompt();
     }
@@ -654,7 +673,6 @@
     currentTotalCost = 0;
     
     tasks.forEach(t => {
-      // 只要生成成功就算是消耗了
       if(t.genStatus === 'success') {
         genCount++;
         currentTotalCost += t.cost;
@@ -683,13 +701,20 @@
 
   function handleReset() { location.reload(); }
 
-  // 列表刷新功能
   function refreshTaskList() {
     renderTaskList();
     showToast('视频生成列表已刷新');
   }
 
-  // 表单安全清空
+  // 判断当前表单是否为“脏”状态 (已被用户填写过)
+  function isFormDirty() {
+    if (assetsState.video || assetsState.scene || assetsState.model) return true;
+    if (selectedSpuImgs.size > 0) return true;
+    if (document.getElementById('bcInput').value.trim() !== '') return true;
+    if (activeTags.size > 0) return true;
+    return false;
+  }
+
   function clearForm() {
     document.getElementById('modelSelect').value = "Seedance 2.0 Fast";
     
@@ -902,11 +927,33 @@
   }
 
   // ================= 完美排版的混合流式 Prompt 引擎 =================
-  function onManualEdit() {
-    isManual = true;
-    document.getElementById('prompt-status').innerHTML = '<span style="color:#C2410C; font-weight:600;">已进入手动接管模式，不再随上方操作联动更新</span>';
-    document.getElementById('btn-reset-p').style.display = 'inline';
-  }
+  // 核心改动：监听输入更新状态文案
+  document.getElementById('richEditor').addEventListener('input', function(e) {
+    if (!isManual) {
+      isManual = true;
+      document.getElementById('prompt-status').innerHTML = '<span style="color:#C2410C; font-weight:600;">PROMPT已经被修改，改动配置操作项不会再影响PROMPT</span>';
+      document.getElementById('btn-reset-p').style.display = 'inline';
+    }
+    
+    // 监听 "@" 处理
+    const sel = window.getSelection();
+    if(!sel.rangeCount) return;
+    const range = sel.getRangeAt(0);
+    const node = range.startContainer;
+    
+    if(node.nodeType === Node.TEXT_NODE) {
+      const text = node.textContent.substring(0, range.startOffset);
+      if(text.endsWith('@')) {
+        savedMentionRange = range.cloneRange();
+        const rect = range.getBoundingClientRect();
+        showMentionMenu(rect);
+      } else {
+        hideMentionMenu();
+      }
+    } else {
+      hideMentionMenu();
+    }
+  });
 
   function resetManual() {
     isManual = false;
@@ -955,7 +1002,6 @@
       html += changes.join('，') + "，";
     }
 
-    // 动态计算「100% 保留其中的...」
     let keepItems = ["动作", "光影", "场景", "模特", "穿搭"];
     if (activeTags.has('scene')) keepItems = keepItems.filter(i => i !== '场景');
     if (activeTags.has('model')) keepItems = keepItems.filter(i => i !== '模特' && i !== '穿搭');
@@ -974,11 +1020,11 @@
     }
 
     const duration = document.getElementById('durationSelect').value;
+    html += `<br>视频生成时长固定为 ${duration} 秒，整体节奏与 ${vidChip} 保持一致`;
 
     document.getElementById('richEditor').innerHTML = html;
   }
 
-  // 构建支持单次退格删除的纯净 Chip HTML
   function createChip(type, idx, assetObj) {
     const label = type === 'video' ? '视频' : '图片';
     let mediaHtml = '';
@@ -1000,26 +1046,6 @@
 
   // ================= @ 提及唤出素材插入逻辑 =================
   let savedMentionRange = null;
-
-  document.getElementById('richEditor').addEventListener('input', function(e) {
-    const sel = window.getSelection();
-    if(!sel.rangeCount) return;
-    const range = sel.getRangeAt(0);
-    const node = range.startContainer;
-    
-    if(node.nodeType === Node.TEXT_NODE) {
-      const text = node.textContent.substring(0, range.startOffset);
-      if(text.endsWith('@')) {
-        savedMentionRange = range.cloneRange();
-        const rect = range.getBoundingClientRect();
-        showMentionMenu(rect);
-      } else {
-        hideMentionMenu();
-      }
-    } else {
-      hideMentionMenu();
-    }
-  });
 
   function showMentionMenu(rect) {
     const menu = document.getElementById('mentionMenu');
@@ -1090,7 +1116,6 @@
   // ================= 全局 Hover 悬浮预览逻辑 =================
   document.addEventListener('mouseover', function(e) {
     const chip = e.target.closest('.media-chip');
-    // 如果是在弹窗里触发的 Hover，不弹层
     if(chip && !chip.closest('#confirmModal')) {
       const rect = chip.getBoundingClientRect();
       const pop = document.getElementById('globalPreviewPop');
@@ -1124,6 +1149,52 @@
       document.getElementById('globalPreviewPop').classList.remove('show');
     }
   });
+
+
+  // ================= 编辑后再次生成逻辑 (载入回填防覆盖) =================
+  let pendingLoadTaskId = null; 
+
+  function editAndRetryTask(id) {
+    if (isFormDirty()) {
+      pendingLoadTaskId = id;
+      document.getElementById('warnModal').classList.add('open');
+    } else {
+      doForceLoadTask(id);
+    }
+  }
+
+  function closeWarnModal() {
+    pendingLoadTaskId = null;
+    document.getElementById('warnModal').classList.remove('open');
+  }
+
+  function doForceLoadTask(directId = null) {
+    const id = directId || pendingLoadTaskId;
+    closeWarnModal();
+    if(!id) return;
+    
+    const task = DB[currentSPU].tasks.find(x => x.id === id);
+    if(!task) return;
+
+    document.getElementById('modelSelect').value = task.model;
+    document.getElementById('durationSelect').value = task.duration;
+    
+    isManual = true;
+    document.getElementById('richEditor').innerHTML = task.prompt;
+    document.getElementById('prompt-status').innerHTML = '<span style="color:#C2410C; font-weight:600;">PROMPT已经被修改，改动配置操作项不会再影响PROMPT</span>';
+    document.getElementById('btn-reset-p').style.display = 'inline';
+
+    syncTagsUI();
+    renderSpuGrid();
+    syncSpuSelectAllBtn();
+    renderAssetSlot('video');
+    renderAssetSlot('scene');
+    renderAssetSlot('model');
+    
+    document.getElementById('creatorPanelBd').scrollTo({ top: 0, behavior: 'smooth' });
+    showToast('历史任务数据已载入到左侧工作区');
+  }
+
 
   // ================= 任务状态机与提交流程 =================
   const FINAL_VID = 'https://media.flamingo.shop/v/6fece3c69aa04f79809e65b2bf9eb821.mp4';
@@ -1176,7 +1247,10 @@
         bodyHtml = `
           <div style="flex:1;">
             <div class="fail-block"><strong>生成中断</strong><br>${t.failReason}</div>
-            <button class="btn-outline" onclick="retryGen('${t.id}')">重试生成</button>
+            <div style="display:flex; gap:8px;">
+              <button class="btn-outline" onclick="retryGen('${t.id}')">重试生成</button>
+              <button class="btn-outline" style="color:var(--accent); border-color:var(--accent);" onclick="editAndRetryTask('${t.id}')">编辑并重新生成</button>
+            </div>
           </div>
         `;
       } else {
@@ -1254,14 +1328,14 @@
         pop.style.left = (rect.left + rect.width / 2 - 90) + 'px';
         pop.style.top = (rect.top - 330) + 'px'; 
         pop.classList.add('show');
-        pop.style.zIndex = '10005'; // 确保盖过弹窗
+        pop.style.zIndex = '10005'; 
       }
     };
   }
 
   function closeConfirmModal() {
     document.getElementById('confirmModal').classList.remove('open');
-    document.getElementById('globalPreviewPop').style.zIndex = '10000'; // 恢复层级
+    document.getElementById('globalPreviewPop').style.zIndex = '10000'; 
   }
 
   function doSubmitTask() {
@@ -1408,7 +1482,6 @@
       window.open(url, '_blank');
     }
   }
-
 </script>
 
 </body>

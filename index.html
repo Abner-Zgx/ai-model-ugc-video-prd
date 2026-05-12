@@ -26,42 +26,28 @@
   .topbar__brand { font-weight: 700; font-size: 14px; color: var(--ink-1); }
   .topbar__crumb { font-size: 12px; color: var(--ink-3); }
 
-  /* 操作栏 */
-  .actionbar { background: var(--paper); padding: 12px 20px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-  .input-field { display: flex; align-items: center; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
-  .input-field input { border: none; outline: none; padding: 7px 12px; width: 140px; }
-  .input-field button { padding: 7px 14px; background: var(--ink-1); color: white; font-size: 12px; }
-  .spu-meta { display: none; align-items: center; gap: 12px; font-size: 12px; margin-left: 8px; padding-left: 16px; border-left: 1px solid var(--line); }
-
   /* 布局核心：7 : 3 分栏 */
-  .main-layout { flex: 1; display: flex; overflow: hidden; padding: 20px; gap: 20px; }
+  .main-layout { flex: 1; display: flex; overflow: hidden; padding: 16px 20px; gap: 20px; }
   .creator-panel { flex: 7; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); display: flex; flex-direction: column; overflow: hidden; min-width: 0; position: relative; }
   .list-panel { flex: 3; display: flex; flex-direction: column; min-width: 320px; }
 
   /* 生成面板内部头部 */
-  .panel-hd { padding: 16px 20px; border-bottom: 1px solid var(--line); font-weight: 600; font-size: 15px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background: var(--paper); z-index: 101; }
-  
-  /* 恢复经典底部样式 */
-  .panel-ft { padding: 16px 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; background: var(--paper); flex-shrink: 0; }
+  .panel-hd { padding: 14px 20px; border-bottom: 1px solid var(--line); font-weight: 600; font-size: 15px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background: var(--paper); z-index: 101; }
 
-  .field { display: flex; flex-direction: column; gap: 10px; }
+  /* 极致紧凑的表单间距 */
+  .field { display: flex; flex-direction: column; gap: 6px; }
   .field-label { font-size: 12px; font-weight: 600; color: var(--ink-1); display: flex; align-items: center; gap: 8px; }
-  .field-label .num-badge { background: var(--ink-1); color: #fff; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+  .field-label .num-badge { background: var(--ink-1); color: #fff; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0;}
   
-  .btn-select-all { margin-left: 8px; padding: 2px 8px; font-size: 11px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--ink-3); transition: 0.2s; font-weight: normal;}
+  .btn-select-all { padding: 2px 8px; font-size: 11px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--ink-3); transition: 0.2s; font-weight: normal;}
   .btn-select-all:hover { border-color: var(--ink-4); color: var(--ink-1); }
   .btn-select-all.is-all { background: var(--ink-1); border-color: var(--ink-1); color: white; }
 
-  /* 选项卡 (Tags) */
-  .tag-group { display: flex; gap: 10px; flex-wrap: wrap; }
-  .tag { padding: 7px 16px; border: 1px solid var(--line); border-radius: 100px; font-size: 12px; background: var(--paper); transition: 0.2s; color: var(--ink-3); user-select: none; cursor: pointer; }
-  .tag.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-ink); font-weight: 600; }
-
-  /* 单个模块行样式 */
-  .row-module { padding: 16px; border: 1px solid var(--line-2); border-radius: var(--r); background: var(--bg); }
+  /* 行模块样式压缩 */
+  .row-module { padding: 12px; border: 1px solid var(--line-2); border-radius: var(--r); background: var(--bg); }
   
   /* SPU选图 */
-  .color-tabs { display: flex; gap: 8px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; }
+  .color-tabs { display: flex; gap: 8px; margin-bottom: 8px; overflow-x: auto; padding-bottom: 4px; }
   .color-tab { padding: 4px 12px; border-radius: 100px; border: 1px solid var(--line); font-size: 12px; color: var(--ink-3); cursor: pointer; transition: 0.1s; white-space: nowrap; }
   .color-tab.active { background: var(--ink-1); color: white; border-color: var(--ink-1); }
   .img-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 8px; }
@@ -71,7 +57,7 @@
   .img-item.selected::after { content: "✓"; position: absolute; top: -4px; right: -4px; width: 14px; height: 14px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: bold; }
   
   /* SPU 购物车已选池 */
-  .spu-cart-pool { margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--line); display: flex; flex-direction: column; gap: 8px; }
+  .spu-cart-pool { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); display: flex; flex-direction: column; gap: 8px; }
   .spu-cart-title { font-size: 12px; color: var(--ink-2); font-weight: 600; display: flex; justify-content: space-between;}
   .spu-cart-list { display: flex; gap: 10px; overflow-x: auto; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; margin-top: -8px; margin-right: -8px; }
   .cart-item { width: 64px; height: 85px; border-radius: 4px; position: relative; background-size: cover; background-position: center; border: 1px solid var(--line); flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
@@ -81,12 +67,12 @@
   .cart-add-btn:hover { border-color: var(--accent); color: var(--accent); }
 
   /* 双选按钮与素材槽 */
-  .asset-slot { display: flex; gap: 8px; align-items: center; background: var(--paper); border: 1px dashed var(--line); padding: 16px 24px; border-radius: var(--r); justify-content: flex-start; }
-  .btn-upload { padding: 8px 16px; font-size: 12px; color: var(--ink-2); border: 1px solid var(--line); border-radius: var(--r); cursor: pointer; background: var(--paper); transition: all .12s; display: inline-flex; align-items: center; gap: 6px; }
+  .asset-slot { display: flex; gap: 8px; align-items: center; background: var(--paper); border: 1px dashed var(--line); padding: 12px 20px; border-radius: var(--r); justify-content: flex-start; }
+  .btn-upload { padding: 6px 14px; font-size: 12px; color: var(--ink-2); border: 1px solid var(--line); border-radius: var(--r); cursor: pointer; background: var(--paper); transition: all .12s; display: inline-flex; align-items: center; gap: 6px; }
   .btn-upload:hover { border-color: var(--ink-1); color: var(--ink-1); }
   
-  .asset-filled { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); }
-  .asset-thumb { width: 48px; height: 48px; border-radius: var(--r-sm); background-size: cover; background-position: center; flex-shrink: 0; background-color: var(--line-2); position: relative; overflow: hidden; border: 1px solid var(--line-2); display: flex; align-items: center; justify-content: center;}
+  .asset-filled { display: flex; align-items: center; gap: 12px; padding: 10px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); }
+  .asset-thumb { width: 44px; height: 44px; border-radius: var(--r-sm); background-size: cover; background-position: center; flex-shrink: 0; background-color: var(--line-2); position: relative; overflow: hidden; border: 1px solid var(--line-2); display: flex; align-items: center; justify-content: center;}
   .asset-info { flex: 1; min-width: 0; font-size: 12px; color: var(--ink-1); font-weight: 500; }
   .asset-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .btn-change { padding: 4px 12px; font-size: 12px; color: var(--ink-2); border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--paper); cursor: pointer; transition: 0.2s; }
@@ -94,14 +80,14 @@
   .asset-remove { width: 26px; height: 26px; border-radius: 50%; color: var(--ink-3); display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; background: var(--line-2); transition: 0.1s; }
   .asset-remove:hover { background: var(--line); color: var(--dot-fail); }
 
-  /* 核心：Prompt 配置区右侧栏 */
+  /* Prompt 配置区右侧栏 */
   .prompt-container { border: 1px solid var(--line); border-radius: var(--r); background: var(--paper); overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
   .prompt-toolbar { padding: 8px 14px; background: var(--line-2); border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--ink-4); }
   
   .rich-editor { 
-    padding: 16px; font-size: 13px; outline: none; 
+    padding: 12px 16px; font-size: 13px; outline: none; 
     white-space: pre-wrap; word-break: break-word; color: var(--ink-2);
-    line-height: 2.2; position: relative;
+    line-height: 2.2; position: relative; min-height: 60px; max-height: 140px; overflow-y: auto;
   }
 
   /* 媒体芯片 Media Chip */
@@ -145,7 +131,7 @@
   .mention-item:hover { background: var(--line-2); color: var(--accent); }
   .mention-item img { width: 18px; height: 18px; object-fit: cover; border-radius: 2px; }
 
-  /* 通用弹窗组件 */
+  /* 弹窗通用还原 */
   .modal-wrap { position: fixed; inset: 0; z-index: 500; display: none; align-items: center; justify-content: center; }
   .modal-wrap.open { display: flex; }
   .modal-mask { position: absolute; inset: 0; background: rgba(17, 20, 24, 0.4); }
@@ -154,10 +140,13 @@
   .modal-box.mini { width: 440px; }
   @keyframes modalScale { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   
+  /* 恢复正常的底部按钮对齐与留白 */
+  .modal-box .panel-ft { padding: 16px 24px; background: var(--bg); border-top: 1px solid var(--line); display: flex; justify-content: flex-end; align-items: center; gap: 12px; flex-shrink: 0; }
+  
   .picker-toolbar { padding: 12px 20px; border-bottom: 1px solid var(--line-2); display: flex; gap: 12px; align-items: center; justify-content: space-between;}
   .picker-toolbar input { flex: 1; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--r); font-size: 12px; outline: none; }
   
-  /* 素材库 Item 排版 */
+  /* 素材库 Item 排版 (网格紧凑型) */
   .picker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); align-content: flex-start; gap: 16px; padding: 20px; overflow-y: auto; flex: 1; }
   .picker-item-wrap { display: flex; flex-direction: column; gap: 6px; cursor: pointer; }
   .picker-item-wrap:hover .picker-item { border-color: var(--ink-4); }
@@ -181,7 +170,7 @@
   .bc-text { color: var(--ink-3); font-size: 12px; line-height: 1.6; }
 
   /* 右侧任务列表 */
-  .task-list-title { font-weight: 600; margin-bottom: 16px; font-size: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .task-list-title { font-weight: 600; margin-bottom: 12px; font-size: 14px; display: flex; flex-direction: column; gap: 10px; }
   .filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
   .filter-group select { font-size: 11px; border: 1px solid var(--line); border-radius: 4px; padding: 4px 6px; outline: none; background: var(--paper); color: var(--ink-2); flex: 1; min-width: 85px;}
   
@@ -196,7 +185,7 @@
 
   .fail-block { background: #FEF2F2; border: 1px solid #FECACA; border-radius: var(--r-sm); padding: 8px 10px; font-size: 11px; color: var(--dot-fail); margin-bottom: 8px; }
 
-  .btn-primary { background: var(--ink-1); color: white; padding: 10px 32px; border-radius: var(--r); font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; min-width: 120px; }
+  .btn-primary { background: var(--ink-1); color: white; padding: 8px 24px; border-radius: var(--r); font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; }
   .btn-primary:hover { background: var(--accent); }
   .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
   .btn-outline { border: 1px solid var(--line); background: var(--paper); color: var(--ink-2); padding: 6px 12px; border-radius: 4px; font-size: 11px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
@@ -225,7 +214,7 @@
 
   .empty-state { text-align: center; margin-top: 100px; color: var(--ink-4); width: 100%; }
 
-  /* 自定义 Select */
+  /* 自定义 Select 防重叠加宽 */
   .styled-select {
     padding: 6px 24px 6px 10px; border: 1px solid var(--line); border-radius: var(--r);
     outline: none; font-size: 12px; color: var(--ink-1); background: var(--paper);
@@ -242,16 +231,12 @@
 <body>
 
 <div class="toast-container" id="toastContainer"></div>
-
 <div class="global-loading" id="globalLoading">
   <div class="spinner"></div>
   <div class="loading-text">正在处理任务...</div>
 </div>
-
 <div class="global-preview-pop" id="globalPreviewPop"></div>
-
 <div class="mention-menu" id="mentionMenu"></div>
-
 <div class="player-mask" id="playerMask" onclick="if(event.target===this)closePlayer()">
   <div class="player-close" onclick="closePlayer()">×</div>
   <video class="player-frame" id="mainVideoPlayer" controls></video>
@@ -263,59 +248,34 @@
   <div class="topbar__crumb">视频生产线 › <strong>AI模特UGC视频生成工作台</strong></div>
 </div>
 
-<div class="actionbar">
-  <div class="input-field">
-    <input type="text" id="spuInput" placeholder="请输入 SPU">
-    <button onclick="handleSearch()">查询</button>
-  </div>
-  <button class="btn-upload" style="padding: 7px 12px;" onclick="handleReset()">重置</button>
-  <div class="spu-meta" id="spuMeta">
-    <span id="metaSpuText"></span>
-  </div>
-</div>
-
 <div class="main-layout">
-  <div id="emptyState" class="empty-state">请输入 SPU 号并点击查询，唤醒生产线</div>
 
-  <div id="contentArea" style="display:none; width:100%; height:100%; gap:20px;">
+  <div class="creator-panel">
+    <div class="panel-hd">新建视频生成任务</div>
     
-    <div class="creator-panel">
-      <div class="panel-hd">新建视频生成任务</div>
+    <div style="display:flex; flex:1; overflow:hidden;">
       
-      <div style="display:flex; flex:1; overflow:hidden;">
+      <div id="creatorLeft" style="flex: 5; padding: 16px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; border-right: 1px solid var(--line); scroll-behavior: smooth;">
         
-        <div id="creatorLeft" style="flex: 5; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; scroll-behavior: smooth;">
-          <div class="field" style="gap:6px;">
-            <div class="field-label" style="display:flex; justify-content:flex-start;">
-              <span>配置操作项 (任意多选组合)</span>
-              <button id="btnSelectAll" class="btn-select-all" onclick="toggleAllTags()">一键全选</button>
-            </div>
-            <div class="tag-group">
-              <div class="tag" data-tag="spu" onclick="toggleTag(this)">换 SPU</div>
-              <div class="tag" data-tag="scene" onclick="toggleTag(this)">换场景</div>
-              <div class="tag" data-tag="model" onclick="toggleTag(this)">换模特形象与穿搭</div>
-              <div class="tag" data-tag="bc" onclick="toggleTag(this)">模特对嘴型口播</div>
-              <div class="tag" data-tag="audio" onclick="toggleTag(this)">🎵 换模特音色</div>
+        <div class="field" id="row-spu">
+          <div class="field-label" style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="num-badge">1</span> 
+              <span>商品图片选择 <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></span>
             </div>
           </div>
-
-          <div class="field">
-            <div class="field-label"><span class="num-badge">1</span> 参考源 (视频素材) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
-            <div class="row-module" id="box-video">
-              <div class="asset-slot">
-                <button class="btn-upload" onclick="openPicker('video')">📁 从素材库选择</button>
-                <button class="btn-upload" onclick="handleUploadAction('video')">↑ 上传参考视频</button>
+          <div class="row-module" style="display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="spuInput" placeholder="请输入 SPU 编号进行查询" style="flex:1; padding:6px 12px; border:1px solid var(--line); border-radius:4px; outline:none;" onkeydown="if(event.key==='Enter')handleSearch()">
+              <button class="btn-primary" onclick="handleSearch()" style="border-radius:4px; width: 68px; padding:0; text-align:center;">查询</button>
+              <button class="btn-outline" onclick="handleResetSpu()" style="border-radius:4px; width: 68px; padding:0; text-align:center;">重置</button>
+            </div>
+            
+            <div id="spuContentArea" style="display:none; flex-direction:column; gap:12px; margin-top:4px; padding-top:16px; border-top:1px dashed var(--line);">
+              <div style="display:flex; align-items:center; gap: 8px;">
+                 <span style="font-size:12px; color:var(--ink-3);">勾选商品图</span>
+                 <button id="btnSelectAllSpu" class="btn-select-all" style="margin:0;" onclick="toggleAllSpuImgs()">一键勾选</button>
               </div>
-            </div>
-          </div>
-
-          <div class="field" id="row-spu">
-            <div class="field-label" style="display:flex; justify-content:flex-start; align-items:center;">
-              <span class="num-badge">2</span> 
-              <span>商品图片选择 <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必选</span></span>
-              <button id="btnSelectAllSpu" class="btn-select-all" onclick="toggleAllSpuImgs()">一键勾选</button>
-            </div>
-            <div class="row-module">
               <div class="color-tabs" id="colorTabsContainer"></div>
               <div class="img-grid" id="spuGrid"></div>
               <div class="spu-cart-pool" id="spuCartPool" style="display:none;">
@@ -326,125 +286,174 @@
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="field" id="row-scene" style="display:none;">
-            <div class="field-label"><span class="num-badge" id="lbl-scene">3</span> 换场景 (场景背景图) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
-            <div class="row-module" id="box-scene">
-              <div class="asset-slot">
-                <button class="btn-upload" onclick="openPicker('scene')">📁 从素材库选择</button>
-                <button class="btn-upload" onclick="handleUploadAction('scene')">↑ 上传新素材</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="field" id="row-model" style="display:none;">
-            <div class="field-label"><span class="num-badge" id="lbl-model">4</span> 换模特形象与穿搭 (模特展示图) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
-            <div class="row-module" id="box-model">
-              <div class="asset-slot">
-                <button class="btn-upload" onclick="openPicker('model')">📁 从素材库选择</button>
-                <button class="btn-upload" onclick="handleUploadAction('model')">↑ 上传新素材</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="field" id="row-bc" style="display:none;">
-            <div class="field-label"><span class="num-badge" id="lbl-bc">5</span> 模特对嘴型口播 (文案内容) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
-            <div class="row-module" style="display:flex; gap:12px; align-items: flex-start;">
-              <textarea id="bcInput" placeholder="输入口播内容..." style="flex:1; height:60px; padding:10px; border:1px solid var(--line); border-radius:var(--r); outline:none; font-family:inherit; resize:none;" oninput="updatePrompt()"></textarea>
-              <button class="btn-upload" style="height:38px;" onclick="openBcModal()">📁 从口播库选择</button>
-            </div>
-          </div>
-
-          <div class="field" id="row-audio" style="display:none;">
-            <div class="field-label"><span class="num-badge" id="lbl-audio">6</span> 换模特音色 (参考音频源) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
-            <div class="row-module" id="box-audio">
-              <div class="asset-slot">
-                <button class="btn-upload" onclick="openPicker('audio')">📁 从音频库选择</button>
-                <button class="btn-upload" onclick="handleUploadAction('audio')">↑ 上传新素材</button>
-              </div>
+        <div class="field">
+          <div class="field-label"><span class="num-badge">2</span> 参考源 (视频素材) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
+          <div class="row-module" id="box-video">
+            <div class="asset-slot">
+              <button class="btn-upload" onclick="openPicker('video')">📁 从素材库选择</button>
+              <button class="btn-upload" onclick="handleUploadAction('video')">↑ 上传参考视频</button>
             </div>
           </div>
         </div>
-        
-        <div id="creatorRight" style="flex: 3; border-left: 1px solid var(--line); display: flex; flex-direction: column; background: var(--bg); min-width: 320px;">
-          <div style="flex: 1; display: flex; flex-direction: column; padding: 20px; overflow: hidden;">
-            <div class="field-label" style="font-size:14px; justify-content:space-between; margin-bottom:12px;">
-              <span>PROMPT 指令实时生成</span>
-              <button onclick="resetManual()" style="color:var(--accent); font-size:11px; display:none; background:var(--accent-soft); padding:4px 8px; border-radius:4px; font-weight:500;" id="btn-reset-p">恢复自动生成</button>
-            </div>
-            <div class="prompt-container" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-              <div class="prompt-toolbar">
-                <span id="prompt-status">系统自动构建中，输入 "@" 可手动插入上方素材</span>
-              </div>
-              <div class="rich-editor" id="richEditor" contenteditable="true" style="flex: 1; max-height: none; overflow-y: auto;"></div>
-            </div>
-          </div>
-          
-          <div style="padding: 20px; border-top: 1px solid var(--line); background: var(--paper); display: flex; flex-direction: column; gap: 16px; flex-shrink: 0;">
-            <div style="display:flex; align-items:center; justify-content:space-between;">
-              <span style="font-weight:600; color:var(--ink-1); font-size:12px;">调用模型</span>
-              <select id="modelSelect" class="styled-select" style="width: 160px;">
-                <option value="Seedance 2.0 Fast" selected>Seedance 2.0 Fast</option>
-                <option value="Seedance 2.0">Seedance 2.0</option>
-              </select>
-            </div>
-            
-            <div style="display:flex; align-items:center; justify-content:space-between;">
-              <span style="font-weight:600; color:var(--ink-1); font-size:12px;">时长</span>
-              <select id="durationSelect" class="styled-select" style="width: 160px;">
-                <option value="4">4 秒</option>
-                <option value="5">5 秒</option>
-                <option value="6">6 秒</option>
-                <option value="7">7 秒</option>
-                <option value="8">8 秒</option>
-                <option value="9">9 秒</option>
-                <option value="10">10 秒</option>
-                <option value="11">11 秒</option>
-                <option value="12">12 秒</option>
-                <option value="13">13 秒</option>
-                <option value="14">14 秒</option>
-                <option value="15" selected>15 秒</option>
-              </select>
-            </div>
-  
-            <button class="btn-primary" style="width: 100%; margin-top: 4px; justify-content:center;" onclick="openConfirmModal()">提交生成任务</button>
-          </div>
-        </div>
-
       </div>
+      
+      <div id="creatorRight" style="flex: 3; padding: 16px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: var(--bg);">
+        
+        <div style="font-size: 13px; font-weight: 600; color: var(--ink-4); padding-bottom: 8px; border-bottom: 1px dashed var(--line);">可选附加配置 (非必填)</div>
+
+        <div class="field" id="row-replace-spu">
+          <div class="field-label"><span class="num-badge" style="background:var(--ink-4);">3</span> 换 SPU</div>
+          <div class="row-module" style="padding: 10px 16px;">
+             <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:13px; font-weight:500; color:var(--ink-1);">
+                <input type="checkbox" id="chkReplaceSpu" checked onchange="updatePrompt()" style="width:16px; height:16px; cursor:pointer; accent-color: var(--accent);">
+                将视频中的下装替换为选中的商品图
+             </label>
+          </div>
+        </div>
+
+        <div class="field" id="row-scene">
+          <div class="field-label"><span class="num-badge" style="background:var(--ink-4);">4</span> 换场景 (场景背景图)</div>
+          <div class="row-module" id="box-scene">
+            <div class="asset-slot">
+              <button class="btn-upload" onclick="openPicker('scene')">📁 从素材库选择</button>
+              <button class="btn-upload" onclick="handleUploadAction('scene')">↑ 上传新素材</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field" id="row-model">
+          <div class="field-label"><span class="num-badge" style="background:var(--ink-4);">5</span> 换模特形象与穿搭 (模特展示图)</div>
+          <div class="row-module" id="box-model">
+            <div class="asset-slot">
+              <button class="btn-upload" onclick="openPicker('model')">📁 从素材库选择</button>
+              <button class="btn-upload" onclick="handleUploadAction('model')">↑ 上传新素材</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field" id="row-bc">
+          <div class="field-label"><span class="num-badge" style="background:var(--ink-4);">6</span> 模特对嘴型口播 (文案内容)</div>
+          <div class="row-module" style="display:flex; gap:12px; align-items: flex-start;">
+            <textarea id="bcInput" placeholder="输入口播内容..." style="flex:1; height:48px; padding:10px; border:1px solid var(--line); border-radius:var(--r); outline:none; font-family:inherit; resize:none;" oninput="updatePrompt()"></textarea>
+            <button class="btn-upload" style="height:34px;" onclick="openBcModal()">📁 从口播库</button>
+          </div>
+        </div>
+
+        <div class="field" id="row-audio">
+          <div class="field-label"><span class="num-badge" style="background:var(--ink-4);">7</span> 换模特音色 (参考音频源)</div>
+          <div class="row-module" id="box-audio">
+            <div class="asset-slot">
+              <button class="btn-upload" onclick="openPicker('audio')">📁 从音频库选择</button>
+              <button class="btn-upload" onclick="handleUploadAction('audio')">↑ 上传新素材</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <div class="list-panel">
-      <div class="task-list-title">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div style="border-top:1px solid var(--line); background:var(--paper); display:flex; flex-direction:column; flex-shrink:0;">
+       
+       <div style="padding:16px 24px; border-bottom:1px solid var(--line-2);">
+          <div class="field-label" style="font-size:14px; justify-content:space-between; margin-bottom:10px;">
+            <span>PROMPT 指令实时生成</span>
+            <button onclick="resetManual()" style="color:var(--accent); font-size:11px; display:none; background:var(--accent-soft); padding:4px 8px; border-radius:4px; font-weight:500;" id="btn-reset-p">恢复自动生成</button>
+          </div>
+          <div class="prompt-container">
+            <div class="prompt-toolbar">
+              <span id="prompt-status">系统自动构建中，支持悬浮预览，输入 "@" 可手动插入上方素材</span>
+            </div>
+            <div class="rich-editor" id="richEditor" contenteditable="true" style="min-height: 48px; max-height: 120px;"></div>
+          </div>
+       </div>
+       
+       <div style="padding:16px 24px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; background:#fafbfc;">
+          <div style="display:flex; gap:16px; flex-wrap:wrap; align-items:center;">
+             <div style="display:flex; align-items:center; gap:6px;">
+                <span style="font-weight:600; color:var(--ink-1); font-size:12px;">模型</span>
+                <select id="modelSelect" class="styled-select" style="width: 180px;">
+                  <option value="Seedance 2.0 Fast" selected>Seedance 2.0 Fast</option>
+                  <option value="Seedance 2.0">Seedance 2.0</option>
+                </select>
+             </div>
+             <div style="display:flex; align-items:center; gap:6px;">
+                <span style="font-weight:600; color:var(--ink-1); font-size:12px;">比例</span>
+                <select id="ratioSelect" class="styled-select" style="width: 90px;" onchange="updatePrompt()">
+                  <option value="21:9">21:9</option>
+                  <option value="16:9">16:9</option>
+                  <option value="4:3">4:3</option>
+                  <option value="1:1">1:1</option>
+                  <option value="3:4">3:4</option>
+                  <option value="9:16" selected>9:16</option>
+                </select>
+             </div>
+             <div style="display:flex; align-items:center; gap:6px;">
+                <span style="font-weight:600; color:var(--ink-1); font-size:12px;">分辨率</span>
+                <select id="resSelect" class="styled-select" style="width: 90px;" onchange="updatePrompt()">
+                  <option value="720P" selected>720P</option>
+                  <option value="1080P">1080P</option>
+                </select>
+             </div>
+             <div style="display:flex; align-items:center; gap:6px;">
+                <span style="font-weight:600; color:var(--ink-1); font-size:12px;">时长</span>
+                <select id="durationSelect" class="styled-select" style="width: 80px;" onchange="updatePrompt()">
+                  <option value="4">4 秒</option>
+                  <option value="5">5 秒</option>
+                  <option value="6">6 秒</option>
+                  <option value="7">7 秒</option>
+                  <option value="8">8 秒</option>
+                  <option value="9">9 秒</option>
+                  <option value="10">10 秒</option>
+                  <option value="11">11 秒</option>
+                  <option value="12">12 秒</option>
+                  <option value="13">13 秒</option>
+                  <option value="14">14 秒</option>
+                  <option value="15" selected>15 秒</option>
+                </select>
+             </div>
+          </div>
+          <button class="btn-primary" onclick="openConfirmModal()">提交生成任务</button>
+       </div>
+    </div>
+  </div>
+
+  <div class="list-panel">
+    <div class="task-list-title">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+        <div style="display:flex; flex-direction:column; gap:4px;">
           <span>视频生成列表</span>
-          <button class="btn-outline" style="padding: 2px 8px; cursor: pointer; display:flex; align-items:center; gap:4px; font-weight:normal;" onclick="refreshTaskList()">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
-            刷新
-          </button>
+          <span id="metaSpuText" style="font-size:12px; font-weight:normal; color:var(--ink-4); display:none;">已生成视频 0 个 | 成本：0.00元</span>
         </div>
-        <div class="filter-group">
-          <select id="filterGenStatus" onchange="renderTaskList()">
-            <option value="all">生成状态</option>
-            <option value="progress">生成中</option>
-            <option value="success">生成成功</option>
-            <option value="fail">生成失败</option>
-          </select>
-          <select id="filterAuditStatus" onchange="renderTaskList()">
-            <option value="all">审核状态</option>
-            <option value="pending">待审核</option>
-            <option value="approved">审核通过</option>
-            <option value="rejected">审核不通过</option>
-          </select>
-          <select id="filterUploadStatus" onchange="renderTaskList()">
-            <option value="all">上传状态</option>
-            <option value="uploading">上传素材库中</option>
-            <option value="success">上传库成功</option>
-            <option value="fail">上传库失败</option>
-          </select>
-        </div>
+        <button class="btn-outline" style="padding: 2px 8px; cursor: pointer; display:flex; align-items:center; gap:4px; font-weight:normal;" onclick="refreshTaskList()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+          刷新
+        </button>
       </div>
-      <div id="taskList" style="overflow-y:auto; flex:1;"></div>
+      <div class="filter-group" style="margin-top: 6px;">
+        <select id="filterGenStatus" onchange="renderTaskList()">
+          <option value="all">生成状态</option>
+          <option value="progress">生成中</option>
+          <option value="success">生成成功</option>
+          <option value="fail">生成失败</option>
+        </select>
+        <select id="filterAuditStatus" onchange="renderTaskList()">
+          <option value="all">审核状态</option>
+          <option value="pending">待审核</option>
+          <option value="approved">审核通过</option>
+          <option value="rejected">审核不通过</option>
+        </select>
+        <select id="filterUploadStatus" onchange="renderTaskList()">
+          <option value="all">上传状态</option>
+          <option value="uploading">上传中</option>
+          <option value="success">上传成功</option>
+          <option value="fail">上传失败</option>
+        </select>
+      </div>
+    </div>
+    <div id="taskList" style="overflow-y:auto; flex:1;">
+       <div style="padding:60px 20px; text-align:center; color:var(--ink-4);">请先在左侧输入 SPU 并查询</div>
     </div>
   </div>
 </div>
@@ -461,7 +470,7 @@
       如果您继续导入当前所选的任务数据，**左侧的现有配置将被清空并覆盖**。确认要继续吗？
     </div>
     <div class="panel-ft">
-      <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeWarnModal()">取消</button>
+      <button class="btn-outline" onclick="closeWarnModal()">取消</button>
       <button class="btn-primary" style="background:var(--dot-fail);" onclick="doForceLoadTask()">确认覆盖并载入</button>
     </div>
   </div>
@@ -476,10 +485,18 @@
     </div>
     <div style="padding: 24px; display:flex; flex-direction:column; gap:20px; overflow-y:auto;">
       
-      <div style="display:flex; gap:32px; background:var(--bg); padding:16px; border-radius:var(--r); border:1px solid var(--line);">
+      <div style="display:flex; gap:24px; background:var(--bg); padding:16px; border-radius:var(--r); border:1px solid var(--line); flex-wrap:wrap;">
         <div style="display:flex; flex-direction:column; gap:4px;">
           <span style="color:var(--ink-4); font-size:12px;">调用模型</span>
           <strong id="confirmModel" style="font-size:14px; color:var(--ink-1);"></strong>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <span style="color:var(--ink-4); font-size:12px;">生成比例</span>
+          <strong id="confirmRatio" style="font-size:14px; color:var(--ink-1);"></strong>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <span style="color:var(--ink-4); font-size:12px;">分辨率</span>
+          <strong id="confirmRes" style="font-size:14px; color:var(--ink-1);"></strong>
         </div>
         <div style="display:flex; flex-direction:column; gap:4px;">
           <span style="color:var(--ink-4); font-size:12px;">生成时长</span>
@@ -496,8 +513,8 @@
 
     </div>
     <div class="panel-ft">
-      <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeConfirmModal()">取消返回</button>
-      <button class="btn-primary" style="padding: 10px 32px; font-size:14px;" onclick="doSubmitTask()">确认无误，正式提交</button>
+      <button class="btn-outline" onclick="closeConfirmModal()">取消返回</button>
+      <button class="btn-primary" onclick="doSubmitTask()">确认无误，正式提交</button>
     </div>
   </div>
 </div>
@@ -517,8 +534,8 @@
     </div>
     <div class="picker-grid" id="pickerGrid"></div>
     <div class="panel-ft">
-      <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closePicker()">取消</button>
-      <button class="btn-primary" style="padding: 8px 24px; font-size:13px;" onclick="confirmPicker()">确认选用</button>
+      <button class="btn-outline" onclick="closePicker()">取消</button>
+      <button class="btn-primary" onclick="confirmPicker()">确认选用</button>
     </div>
   </div>
 </div>
@@ -544,8 +561,8 @@
       <div id="videoUploadList" style="display:flex; flex-direction:column; gap:8px; max-height:200px; overflow-y:auto;"></div>
     </div>
     <div class="panel-ft">
-      <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeUploadVideoModal()">取消</button>
-      <button class="btn-primary" style="padding: 8px 24px; font-size:13px;" onclick="confirmUploadVideoGroup()">确认打包上传</button>
+      <button class="btn-outline" onclick="closeUploadVideoModal()">取消</button>
+      <button class="btn-primary" onclick="confirmUploadVideoGroup()">确认打包上传</button>
     </div>
   </div>
 </div>
@@ -565,8 +582,8 @@
     </div>
     <div class="bc-grid" id="bcGrid"></div>
     <div class="panel-ft">
-      <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeBcModal()">取消</button>
-      <button class="btn-primary" style="padding: 8px 24px; font-size:13px;" onclick="confirmBc()">确认选用</button>
+      <button class="btn-outline" onclick="closeBcModal()">取消</button>
+      <button class="btn-primary" onclick="confirmBc()">确认选用</button>
     </div>
   </div>
 </div>
@@ -583,14 +600,12 @@
         <label>所属口播分组名 <span style="color:var(--dot-fail); font-weight:normal;">*</span> <span style="color:var(--ink-4); font-weight:normal;">(若填新名则创建新组)</span></label>
         <input type="text" id="newBcGroup" placeholder="如：春季上新系列话术">
       </div>
-      
       <div id="bcParagraphs"></div>
-
       <button class="btn-outline" style="width:100%; border-style:dashed; padding:10px;" onclick="appendBcParagraph()">+ 添加下一段口播</button>
     </div>
     <div class="panel-ft">
-      <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeAddBcModal()">取消</button>
-      <button class="btn-primary" style="padding: 8px 24px; font-size:13px;" onclick="confirmAddBc()">保存并应用</button>
+      <button class="btn-outline" onclick="closeAddBcModal()">取消</button>
+      <button class="btn-primary" onclick="confirmAddBc()">保存并应用</button>
     </div>
   </div>
 </div>
@@ -678,14 +693,37 @@
     colorGroups[p.optionValue].push(p);
   });
 
-  const ALL_TAGS = ['spu', 'scene', 'model', 'bc', 'audio'];
-  let activeTags = new Set();
   let isManual = false;
   let selectedSpuCart = []; 
   let assetsState = { video: null, scene: null, model: null, audio: null };
   let currentColor = Object.keys(colorGroups)[0];
 
   // ================= SPU 购物车交互 =================
+  function handleSearch() {
+    const val = document.getElementById('spuInput').value.trim();
+    if(!val) return showToast('请输入SPU号', 'error');
+    currentSPU = val;
+    if (!DB[currentSPU]) DB[currentSPU] = { tasks: [] };
+
+    document.getElementById('spuContentArea').style.display = 'flex';
+    document.getElementById('metaSpuText').style.display = 'inline-block';
+    
+    updateSpuMetaInfo();
+    initSpuUI();
+    updatePrompt();
+    renderTaskList();
+  }
+
+  function handleResetSpu() {
+    document.getElementById('spuInput').value = '';
+    document.getElementById('spuContentArea').style.display = 'none';
+    document.getElementById('metaSpuText').style.display = 'none';
+    currentSPU = null;
+    selectedSpuCart = [];
+    renderTaskList();
+    updatePrompt();
+  }
+
   function initSpuUI() {
     const tabsContainer = document.getElementById('colorTabsContainer');
     tabsContainer.innerHTML = Object.keys(colorGroups).map(color => `
@@ -778,7 +816,7 @@
       `).join('') + `
         <div class="cart-item cart-add-btn" onclick="handleUploadAction('spuExtra')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-          添加自定义
+          自定义
         </div>
       `;
     }
@@ -792,7 +830,7 @@
     updatePrompt();
   }
 
-  // ================= 顶栏与全局 =================
+  // ================= 全局 =================
   function updateSpuMetaInfo() {
     if (!currentSPU || !DB[currentSPU]) return;
     const tasks = DB[currentSPU].tasks;
@@ -804,24 +842,7 @@
         currentTotalCost += t.cost;
       }
     });
-    document.getElementById('metaSpuText').innerHTML = `<strong>${currentSPU}</strong> <span style="color:var(--line); margin:0 8px;">|</span> 已生成视频 ${genCount} 个 <span style="color:var(--line); margin:0 8px;">|</span> 成本：${currentTotalCost.toFixed(2)}元`;
-  }
-
-  function handleSearch() {
-    const val = document.getElementById('spuInput').value.trim();
-    if(!val) return showToast('请输入SPU号', 'error');
-    currentSPU = val;
-    if (!DB[currentSPU]) DB[currentSPU] = { tasks: [] };
-
-    document.getElementById('emptyState').style.display = 'none';
-    document.getElementById('contentArea').style.display = 'flex';
-    document.getElementById('spuMeta').style.display = 'flex';
-    
-    updateSpuMetaInfo();
-    initSpuUI();
-    document.getElementById('durationSelect').value = "15";
-    updatePrompt();
-    renderTaskList();
+    document.getElementById('metaSpuText').innerHTML = `已生成视频 ${genCount} 个 &nbsp;|&nbsp; 成本：${currentTotalCost.toFixed(2)}元`;
   }
 
   function handleReset() { location.reload(); }
@@ -831,72 +852,21 @@
     if (assetsState.video || assetsState.scene || assetsState.model || assetsState.audio) return true;
     if (selectedSpuCart.length > 0) return true;
     if (document.getElementById('bcInput').value.trim() !== '') return true;
-    if (activeTags.size > 0) return true;
     return false;
   }
 
   function clearForm() {
-    document.getElementById('modelSelect').value = "Seedance 2.0 Fast";
-    activeTags.clear();
-    syncTagsUI();
     assetsState = { video: null, scene: null, model: null, audio: null };
     renderAssetSlot('video'); renderAssetSlot('scene'); renderAssetSlot('model'); renderAssetSlot('audio');
     
     selectedSpuCart = [];
-    initSpuUI();
+    if(currentSPU) initSpuUI();
     
     document.getElementById('bcInput').value = '';
     selectedBcIdx = null;
     renderBcGrid();
     
-    document.getElementById('durationSelect').value = "15";
     resetManual();
-  }
-
-  function toggleTag(el) {
-    const t = el.dataset.tag;
-    if(activeTags.has(t)) activeTags.delete(t);
-    else activeTags.add(t);
-    syncTagsUI();
-  }
-
-  function toggleAllTags() {
-    if (activeTags.size === ALL_TAGS.length) {
-      activeTags.clear(); 
-    } else {
-      ALL_TAGS.forEach(t => activeTags.add(t)); 
-    }
-    syncTagsUI();
-  }
-
-  function syncTagsUI() {
-    document.querySelectorAll('.tag[data-tag]').forEach(el => {
-      if (activeTags.has(el.dataset.tag)) el.classList.add('active');
-      else el.classList.remove('active');
-    });
-
-    document.getElementById('row-scene').style.display = activeTags.has('scene') ? 'flex' : 'none';
-    document.getElementById('row-model').style.display = activeTags.has('model') ? 'flex' : 'none';
-    document.getElementById('row-bc').style.display = activeTags.has('bc') ? 'flex' : 'none';
-    document.getElementById('row-audio').style.display = activeTags.has('audio') ? 'flex' : 'none';
-
-    const btnAll = document.getElementById('btnSelectAll');
-    if (activeTags.size === ALL_TAGS.length) {
-      btnAll.innerText = '取消全选'; btnAll.classList.add('is-all');
-    } else {
-      btnAll.innerText = '一键全选'; btnAll.classList.remove('is-all');
-    }
-
-    updateBadges();
-    updatePrompt();
-  }
-
-  function updateBadges() {
-    let nextNum = 3; 
-    if(activeTags.has('scene')) document.getElementById('lbl-scene').innerText = nextNum++;
-    if(activeTags.has('model')) document.getElementById('lbl-model').innerText = nextNum++;
-    if(activeTags.has('bc')) document.getElementById('lbl-bc').innerText = nextNum++;
-    if(activeTags.has('audio')) document.getElementById('lbl-audio').innerText = nextNum++;
   }
 
   // ================= 弹窗素材库 =================
@@ -1056,7 +1026,6 @@
     e.target.value = '';
   }
 
-  // 确认上传视频组弹窗
   function closeUploadVideoModal() {
     document.getElementById('uploadVideoModal').classList.remove('open');
     pendingVideoUploadFiles = [];
@@ -1276,7 +1245,7 @@
   document.getElementById('richEditor').addEventListener('input', function(e) {
     if (!isManual) {
       isManual = true;
-      document.getElementById('prompt-status').innerHTML = '<span style="color:#C2410C; font-weight:600;">PROMPT已经被修改，改动配置操作项不会再影响PROMPT</span>';
+      document.getElementById('prompt-status').innerHTML = '<span style="color:#C2410C; font-weight:600;">PROMPT已经被修改，右侧模块改动不再影响PROMPT</span>';
       document.getElementById('btn-reset-p').style.display = 'inline';
     }
     
@@ -1327,27 +1296,18 @@
       spuChipsStr = createChip('image', imgIdx++, null);
     }
 
-    let sceneChip = "";
-    if(activeTags.has('scene')) {
-      sceneChip = createChip('image', imgIdx++, assetsState.scene);
-    }
-
-    let modelChip = "";
-    if(activeTags.has('model')) {
-      modelChip = createChip('image', imgIdx++, assetsState.model);
-    }
-    
-    let audioChip = "";
-    if(activeTags.has('audio')) {
-      audioChip = createChip('audio', audioIdx++, assetsState.audio);
-    }
+    let sceneChip = assetsState.scene ? createChip('image', imgIdx++, assetsState.scene) : "";
+    let modelChip = assetsState.model ? createChip('image', imgIdx++, assetsState.model) : "";
+    let audioChip = assetsState.audio ? createChip('audio', audioIdx++, assetsState.audio) : "";
 
     let html = `把 ${vidChip} 中的`;
     let changes = [];
 
-    if(activeTags.has('spu')) changes.push(`下装裤子换成 ${spuChipsStr}`);
-    if(activeTags.has('scene')) changes.push(`场景背景换成 ${sceneChip}`);
-    if(activeTags.has('model')) changes.push(`模特穿搭换成 ${modelChip}`);
+    if(document.getElementById('chkReplaceSpu') && document.getElementById('chkReplaceSpu').checked && spuChipsStr !== "") {
+        changes.push(`下装裤子换成 ${spuChipsStr}`);
+    }
+    if(sceneChip !== "") changes.push(`场景背景换成 ${sceneChip}`);
+    if(modelChip !== "") changes.push(`模特穿搭换成 ${modelChip}`);
 
     if(changes.length === 0) {
       html += "元素替换，";
@@ -1355,25 +1315,25 @@
       html += changes.join('，') + "，";
     }
 
-    let keepItems = ["动作", "光影", "场景", "模特", "穿搭"];
-    if (activeTags.has('scene')) keepItems = keepItems.filter(i => i !== '场景');
-    if (activeTags.has('model')) keepItems = keepItems.filter(i => i !== '模特' && i !== '穿搭');
-    if (activeTags.has('spu') && !activeTags.has('model')) {
+    let keepItems = ["动作", "镜头", "光影", "场景", "模特", "穿搭"];
+    if (sceneChip !== "") keepItems = keepItems.filter(i => i !== '场景');
+    if (modelChip !== "") keepItems = keepItems.filter(i => i !== '模特' && i !== '穿搭');
+    if (document.getElementById('chkReplaceSpu') && document.getElementById('chkReplaceSpu').checked && spuChipsStr !== "" && modelChip === "") {
       const idx = keepItems.indexOf('穿搭');
       if (idx !== -1) keepItems[idx] = '上身服饰';
     }
     
-    html += `100% 保留其中的${keepItems.join('、')}全部保持不变；`;
+    html += `100% 保留 ${vidChip} 中的${keepItems.join('、')}全部保持不变；`;
     html += `<br>严格保持裤子 ${spuChipsStr} 版型、颜色、腰头、弹力、走线100%还原，不变形、不走样；`;
     html += `<br>无穿模、无崩环、无破交、无字幕，画面稳定流畅；`;
 
-    if(activeTags.has('bc')) {
-      let val = document.getElementById('bcInput').value || "口播内容";
-      html += `<br>模特对嘴型口播：【${val}】`;
+    const bcVal = document.getElementById('bcInput').value.trim();
+    if(bcVal !== "") {
+      html += `<br>模特对嘴型口播：【${bcVal}】`;
     }
     
-    if(activeTags.has('audio')) {
-      html += `<br>模特音色可以用 ${audioChip}`;
+    if(audioChip !== "") {
+      html += `<br>视频口播声音和音色100%按照 ${audioChip}，不用 ${vidChip} 的声音和音色。`;
     }
 
     document.getElementById('richEditor').innerHTML = html;
@@ -1425,17 +1385,17 @@
       });
     }
 
-    if (activeTags.has('scene') && assetsState.scene) {
+    if (assetsState.scene) {
       listHtml += `<div class="mention-item" onclick="insertMention('image', ${iIdx}, '${assetsState.scene.url}', '')"><img src="${displayImageUrl(assetsState.scene.url)}"> 图片${iIdx} (场景图)</div>`;
       iIdx++;
     }
     
-    if (activeTags.has('model') && assetsState.model) {
+    if (assetsState.model) {
       listHtml += `<div class="mention-item" onclick="insertMention('image', ${iIdx}, '${assetsState.model.url}', '')"><img src="${displayImageUrl(assetsState.model.url)}"> 图片${iIdx} (模特图)</div>`;
       iIdx++;
     }
     
-    if (activeTags.has('audio') && assetsState.audio) {
+    if (assetsState.audio) {
       listHtml += `<div class="mention-item" onclick="insertMention('audio', ${aIdx}, '${assetsState.audio.url}', '')">🎵 音频${aIdx} (参考音色)</div>`;
       aIdx++;
     }
@@ -1556,9 +1516,10 @@
 
     // 回填配置项快照
     document.getElementById('modelSelect').value = task.model;
-    document.getElementById('durationSelect').value = task.duration;
+    document.getElementById('durationSelect').value = task.duration || "15";
+    document.getElementById('ratioSelect').value = task.config.ratio || "9:16";
+    document.getElementById('resSelect').value = task.config.res || "720P";
     
-    activeTags = new Set(task.config.tags);
     assetsState = JSON.parse(JSON.stringify(task.config.assets));
     selectedSpuCart = JSON.parse(JSON.stringify(task.config.spuCart));
     document.getElementById('bcInput').value = task.config.bcText;
@@ -1569,16 +1530,15 @@
 
     // 同步重绘所有UI组件
     initSpuUI();
-    syncTagsUI();
     renderAssetSlot('video');
     renderAssetSlot('scene');
     renderAssetSlot('model');
     renderAssetSlot('audio');
 
-    // 状态接管逻辑
+    // 状态接管逻辑修复
     if (isManual) {
       document.getElementById('richEditor').innerHTML = task.prompt;
-      document.getElementById('prompt-status').innerHTML = '<span style="color:#C2410C; font-weight:600;">PROMPT已经被修改，改动配置操作项不会再影响PROMPT</span>';
+      document.getElementById('prompt-status').innerHTML = '<span style="color:#C2410C; font-weight:600;">PROMPT已经被修改，右侧模块改动不再影响PROMPT</span>';
       document.getElementById('btn-reset-p').style.display = 'inline';
     } else {
       document.getElementById('prompt-status').innerText = '系统自动构建中，支持悬浮预览，输入 "@" 可手动插入上方素材';
@@ -1601,7 +1561,10 @@
     const fAud = document.getElementById('filterAuditStatus').value;
     const fUp = document.getElementById('filterUploadStatus').value;
     
-    if(!currentSPU || !DB[currentSPU]) return;
+    if(!currentSPU || !DB[currentSPU]) {
+        list.innerHTML = `<div style="padding:60px 20px; text-align:center; color:var(--ink-4);">请先在左侧输入 SPU 并查询</div>`;
+        return;
+    }
     let tasks = DB[currentSPU].tasks;
     
     if (fGen !== 'all') tasks = tasks.filter(t => t.genStatus === fGen);
@@ -1669,7 +1632,7 @@
               <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
                 ${actionsHtml}
                 ${t.auditStatus === 'pending' ? `<button class="btn-outline" style="color:var(--dot-fail);" onclick="doAudit('${t.id}', 'rejected')">不通过</button><button class="btn-outline" style="color:var(--dot-ok); border-color:var(--dot-ok);" onclick="doAudit('${t.id}', 'approved')">通过</button>` : ''}
-                ${t.auditStatus === 'approved' && t.uploadStatus === 'fail' ? `<button class="btn-outline" style="color:var(--dot-fail);" onclick="retryUpload('${t.id}')">重传库</button>` : ''}
+                ${t.auditStatus === 'approved' && t.uploadStatus === 'fail' ? `<button class="btn-outline" style="color:var(--dot-fail);" onclick="retryUpload('${t.id}')">重试上传</button>` : ''}
                 ${t.auditStatus === 'approved' ? `<button class="btn-outline" style="color:var(--accent); border-color:var(--accent);" onclick="downloadVideo('${t.finalVideo}')">下载视频</button>` : ''}
               </div>
             </div>
@@ -1690,15 +1653,15 @@
   }
 
   function openConfirmModal() {
+    if (!currentSPU) return showToast('请先输入 SPU 并点击查询', 'error');
     if (!assetsState.video) return showToast('必须上传/选择参考视频', 'error');
     if (selectedSpuCart.length === 0) return showToast('必须至少选择一张商品图', 'error');
-    if (activeTags.has('scene') && !assetsState.scene) return showToast('已勾选换场景，请选择场景素材', 'error');
-    if (activeTags.has('model') && !assetsState.model) return showToast('已勾选换模特形象，请选择模特素材', 'error');
-    if (activeTags.has('audio') && !assetsState.audio) return showToast('已勾选换音色，请选择音频素材', 'error');
-    if (activeTags.has('bc') && !document.getElementById('bcInput').value.trim()) return showToast('已勾选口播，请输入口播文案', 'error');
 
     document.getElementById('confirmModel').innerText = document.getElementById('modelSelect').value;
+    document.getElementById('confirmRatio').innerText = document.getElementById('ratioSelect').value;
+    document.getElementById('confirmRes').innerText = document.getElementById('resSelect').value;
     document.getElementById('confirmDuration').innerText = document.getElementById('durationSelect').value + " 秒";
+    
     document.getElementById('confirmPrompt').innerHTML = document.getElementById('richEditor').innerHTML;
     
     document.getElementById('confirmModal').classList.add('open');
@@ -1758,6 +1721,8 @@
     const promptText = document.getElementById('richEditor').innerText;
     const modelName = document.getElementById('modelSelect').value;
     const duration = document.getElementById('durationSelect').value;
+    const ratio = document.getElementById('ratioSelect').value;
+    const res = document.getElementById('resSelect').value;
     
     console.log("================================");
     console.log("【提交的 Prompt 纯文本】\n", promptText);
@@ -1783,11 +1748,12 @@
         cost: 14.27,
         videoCover: assetsState.video.cover || assetsState.video.url,
         config: {
-          tags: Array.from(activeTags),
           assets: JSON.parse(JSON.stringify(assetsState)),
           spuCart: JSON.parse(JSON.stringify(selectedSpuCart)),
           bcText: document.getElementById('bcInput').value,
           color: currentColor,
+          ratio: ratio,
+          res: res,
           isManual: isManual
         }
       };
@@ -1831,7 +1797,7 @@
     }, 1500);
   }
 
-  // 修复：优化后严格执行 renderTaskList()
+  // 修复：通过后实时原地刷新
   function doAudit(id, status) {
     if (!currentSPU || !DB[currentSPU]) return;
     const t = DB[currentSPU].tasks.find(x => x.id === id);
@@ -1842,7 +1808,7 @@
        t.uploadStatus = 'uploading';
     }
     
-    renderTaskList();
+    renderTaskList(); // 立即重新渲染卡片状态
     
     if (status === 'approved') {
        setTimeout(() => {

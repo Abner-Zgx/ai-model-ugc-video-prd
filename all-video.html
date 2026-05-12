@@ -68,12 +68,13 @@
   .custom-cb:disabled { background-color:#f2f6fc; border-color:#dcdfe6; cursor:not-allowed; }
 
   /* ── 表格 ── */
-  .table-wrap{background:#fff;border:1px solid #e4e4e4;border-radius:6px;overflow:hidden;}
+  /* 移除 overflow:hidden 防止 Hover 弹窗被裁剪 */
+  .table-wrap{background:#fff;border:1px solid #e4e4e4;border-radius:6px;}
   
-  /* 调整列宽占比：缩小视频名称(0.7fr)，放大Prompt(1.8fr) */
-  .t-head{display:grid;grid-template-columns:40px 60px 60px minmax(100px,0.7fr) 120px 60px minmax(220px,1.8fr) 76px 86px 86px 130px;column-gap:12px;padding:0 16px;height:40px;align-items:center;background:#f8f8f9;border-bottom:1px solid #e8e8e8;font-size:13px;font-weight:500;color:#606266;}
-  .t-row{display:grid;grid-template-columns:40px 60px 60px minmax(100px,0.7fr) 120px 60px minmax(220px,1.8fr) 76px 86px 86px 130px;column-gap:12px;padding:12px 16px;align-items:center;border-bottom:1px solid #f0f0f0;font-size:13px;transition:background .1s;}
-  .t-row:last-child{border-bottom:none;}
+  /* 调整列宽占比，共 12 列。缩小Prompt占比并增加可选操作项 */
+  .t-head{display:grid;grid-template-columns:40px 60px 60px minmax(100px,0.7fr) 120px 60px minmax(120px,0.9fr) minmax(160px,1.4fr) 76px 86px 86px 130px;column-gap:12px;padding:0 16px;height:40px;align-items:center;background:#f8f8f9;border-bottom:1px solid #e8e8e8;font-size:13px;font-weight:500;color:#606266; border-radius: 6px 6px 0 0;}
+  .t-row{display:grid;grid-template-columns:40px 60px 60px minmax(100px,0.7fr) 120px 60px minmax(120px,0.9fr) minmax(160px,1.4fr) 76px 86px 86px 130px;column-gap:12px;padding:12px 16px;align-items:center;border-bottom:1px solid #f0f0f0;font-size:13px;transition:background .1s;}
+  .t-row:last-child{border-bottom:none; border-radius: 0 0 6px 6px;}
   .t-row:hover{background:#f5f7fa;}
   .t-row>*{min-width:0;}
   .t-col-cb{display:flex;align-items:center;justify-content:center; height: 100%;} 
@@ -85,11 +86,45 @@
   .thumb-box .play-mask{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);opacity:0;transition:opacity .15s;color:#fff;font-size:20px;}
   .thumb-box.clickable:hover .play-mask{opacity:1;}
 
-  /* 取消元素的强制 margin-top 保证完美居中 */
+  /* 垂直居中 SPU */
   .spu-cell{font-weight:600;font-size:13px;color:#303133;}
   .creator-cell{color:#606266;}
   .vname{font-size:12px;color:#909399;font-family:monospace;word-break:break-all;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4;}
   .vdate{color:#606266; font-family: sans-serif;}
+  
+  /* 操作项 Tag */
+  .op-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .op-tag { padding: 2px 6px; background: var(--line-2); border: 1px solid var(--line); border-radius: 4px; font-size: 11px; color: var(--ink-3); white-space: nowrap; }
+
+  /* ── 媒体芯片 Prompt 样式及 Hover 折叠 ── */
+  .prompt-wrap { position: relative; }
+  .prompt-wrap:hover { z-index: 10; }
+  .prompt-cell { 
+    font-size: 12px; color: var(--ink-2); line-height: 1.6; 
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; 
+    overflow: hidden; word-break: break-all; cursor: default;
+  }
+  /* 自定义内联 Hover 弹窗 */
+  .prompt-pop {
+    display: none; position: absolute; left: -12px; top: -12px; 
+    background: var(--paper); border: 1px solid var(--accent); border-radius: var(--r); 
+    padding: 12px; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.15); 
+    width: 380px; line-height: 1.6; font-size: 12px; color: var(--ink-2);
+  }
+  .prompt-wrap:hover .prompt-pop { display: block; }
+
+  .media-chip {
+    display: inline-flex; align-items: center; vertical-align: middle;
+    background: #F3F4F6; border-radius: 3px; padding: 0 4px 0 2px; margin: 0 2px;
+    height: 18px; color: var(--accent-ink); font-weight: 500; font-size: 11px;
+    cursor: default; position: relative; white-space: nowrap; transition: 0.1s;
+    user-select: all; -webkit-user-select: all; border: 1px solid transparent;
+  }
+  .media-chip:hover { background: var(--accent-soft); border-color: #b3d8ff;}
+  .media-chip img { 
+    width: 14px; height: 14px; border-radius: 2px; margin-right: 4px; 
+    background-size: cover; background-position: center; background-color: var(--ink-5);
+  }
   
   /* el-tag 风格 */
   .tag{display:inline-block;padding:0 8px;border-radius:4px;font-size:11px;border:1px solid;line-height:20px;white-space:nowrap;}
@@ -116,22 +151,7 @@
   .op-retry{color:#e6a23c;border-color:#f5dab1;} .op-retry:hover{background:#fdf6ec;}
   .op-down{color:#409eff;border-color:#b3d8ff;} .op-down:hover{background:#ecf5ff;}
 
-  /* ── 媒体芯片 Prompt 样式 (去除截断限制全量展示) ── */
-  .prompt-cell { font-size: 12px; color: var(--ink-2); line-height: 1.6; word-break: break-all;}
-  .media-chip {
-    display: inline-flex; align-items: center; vertical-align: middle;
-    background: #F3F4F6; border-radius: 3px; padding: 0 4px 0 2px; margin: 0 2px;
-    height: 18px; color: var(--accent-ink); font-weight: 500; font-size: 11px;
-    cursor: default; position: relative; white-space: nowrap; transition: 0.1s;
-    user-select: all; -webkit-user-select: all; border: 1px solid transparent;
-  }
-  .media-chip:hover { background: var(--accent-soft); border-color: #b3d8ff;}
-  .media-chip img { 
-    width: 14px; height: 14px; border-radius: 2px; margin-right: 4px; 
-    background-size: cover; background-position: center; background-color: var(--ink-5);
-  }
-  
-  /* 全局悬浮预览窗 */
+  /* 全局悬浮预览窗 (层级需最高) */
   .global-preview-pop {
     position: fixed; width: 180px; aspect-ratio: 9/16; background: #000; border-radius: 6px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 10000; pointer-events: none;
@@ -214,7 +234,7 @@
 <div class="table-wrap">
   <div class="t-head">
     <div class="t-col-cb"><label class="custom-cb-wrap"><input type="checkbox" id="ckAllTop" class="custom-cb" onclick="toggleAllTop()"></label></div>
-    <div>SPU</div><div>缩略图</div><div>视频名称</div><div>创建时间</div><div>创建人</div><div>生成 Prompt</div><div>生成状态</div><div>审核状态</div><div>上传状态</div><div>操作</div>
+    <div>SPU</div><div>缩略图</div><div>视频名称</div><div>创建时间</div><div>创建人</div><div>可选操作项</div><div>生成 Prompt</div><div>生成状态</div><div>审核状态</div><div>上传状态</div><div>操作</div>
   </div>
   <div id="tbody"></div>
 </div>
@@ -284,6 +304,7 @@ const IMG_URLS = [
 ];
 const CREATORS = ['王运营', '李投放', '张编导', '陈增长'];
 const REF_NAMES = ['拉伸裤脚参考视频', '口袋细节展示', '模特走秀背面', '360度旋转'];
+const OPS_POOL = ['换 SPU', '换场景', '换模特形象与穿搭', '模特对嘴型口播', '换模特音色'];
 
 const DATA=[];
 let rid=1000;
@@ -318,11 +339,20 @@ for(let i=0;i<65;i++){
       }
   }
 
+  // 随机操作项
+  let selectedOps = [];
+  if (i % 2 === 0) selectedOps.push('换 SPU');
+  if (i % 3 === 0) selectedOps.push('换场景');
+  if (i % 4 === 0) selectedOps.push('换模特形象与穿搭');
+  if (i % 2 !== 0) selectedOps.push('模特对嘴型口播');
+  if (i % 5 === 0) selectedOps.push('换模特音色');
+  if (selectedOps.length === 0) selectedOps.push('换 SPU'); // 兜底
+
   // 拼接逼真的 Prompt
   let vChip = createChipHtml('video', 1, VID_URL, VID_COV);
   let iChip = createChipHtml('image', 1, IMG_URLS[i%3], IMG_URLS[i%3]);
   let promptHtml = `把 ${vChip} 中的下装裤子换成 ${iChip}，100% 保留其中的光影、模特全部保持不变；<br>严格保持裤子 ${iChip} 版型、颜色、腰头、弹力、走线100%还原，不变形、不走样；<br>无穿模、无崩环、无破交、无字幕，画面稳定流畅；<br>模特对嘴型口播：【Look at this amazing pair of jeans!】`;
-  if (i % 5 === 0) promptHtml += `<br>模特音色可以用 ${createChipHtml('audio', 1, 'mock.mp3')}`;
+  if (selectedOps.includes('换模特音色')) promptHtml += `<br>模特音色可以用 ${createChipHtml('audio', 1, 'mock.mp3')}`;
 
   // 视频命名规则 SPU-YYMMDD-参考视频名字-2位随机数.mp4
   let vname = '';
@@ -338,7 +368,7 @@ for(let i=0;i<65;i++){
 
   DATA.push({
     id: ++rid, spu, date: dateStr, creator, prompt: promptHtml, vname,
-    gen, approve: ap, upload: up,
+    gen, approve: ap, upload: up, opsList: selectedOps,
     finalVid: VID_URL, finalCov: VID_COV
   });
 }
@@ -442,6 +472,9 @@ function renderPage(){
       upHtml = `<span class="tag ${u[1]}">${u[0]}</span>`;
     }
 
+    // 操作选项 Tags
+    const opsItemsHtml = `<div class="op-tags">${d.opsList.map(op => `<span class="op-tag">${op}</span>`).join('')}</div>`;
+
     // 操作按钮
     let ops='';
     if(d.gen==='success' && d.approve==='pending'){
@@ -465,7 +498,11 @@ function renderPage(){
       <div class="vname${d.vname?'':' vname-empty'}" title="${vNameStr}">${vNameStr}</div>
       <div class="vdate">${d.date}</div>
       <div class="creator-cell">${d.creator}</div>
-      <div class="prompt-cell">${d.prompt}</div>
+      <div>${opsItemsHtml}</div>
+      <div class="prompt-wrap">
+         <div class="prompt-cell">${d.prompt}</div>
+         <div class="prompt-pop">${d.prompt}</div>
+      </div>
       <div><span class="tag ${g[1]}">${g[0]}</span></div>
       <div>${apHtml}</div>
       <div>${upHtml}</div>
@@ -589,8 +626,9 @@ function openPlayer(url, name){
 function closePlayer(){document.getElementById('ovPlayer').classList.remove('show');document.getElementById('vPlayer').pause();}
 document.getElementById('ovPlayer').addEventListener('click', e => { if(e.target.id==='ovPlayer') closePlayer(); });
 
-/* ══ Prompt 悬浮预览逻辑 (完美继承) ══ */
+/* ══ 媒体芯片与 Prompt 悬浮预览逻辑 ══ */
 document.addEventListener('mouseover', function(e) {
+  // 拦截内联弹窗中的悬浮，由内部接管
   const chip = e.target.closest('.media-chip');
   if(chip) {
     const rect = chip.getBoundingClientRect();
@@ -623,7 +661,7 @@ document.addEventListener('mouseover', function(e) {
     }
     
     pop.innerHTML = popHtml;
-    // 弹窗定位修正 (表格可能会滚动，使用 fixed 定位)
+    // 弹窗定位修正，防止 z-index 穿透和遮挡
     pop.style.left = (rect.left + rect.width / 2 - 90) + 'px';
     pop.style.top = (rect.top - (type==='audio'?90:330)) + 'px'; 
     
@@ -632,6 +670,7 @@ document.addEventListener('mouseover', function(e) {
         pop.style.top = (rect.bottom + 10) + 'px';
     }
     
+    pop.style.zIndex = '10005'; 
     pop.classList.add('show');
   }
 });

@@ -26,7 +26,7 @@
   .topbar__brand { font-weight: 700; font-size: 14px; color: var(--ink-1); }
   .topbar__crumb { font-size: 12px; color: var(--ink-3); }
 
-  /* 布局核心：调整为 7.5 : 2.5 分栏 */
+  /* 布局核心：7.5 : 2.5 分栏 */
   .main-layout { flex: 1; display: flex; overflow: hidden; padding: 16px 20px; gap: 20px; }
   .creator-panel { flex: 7.5; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); display: flex; flex-direction: column; overflow: hidden; min-width: 0; position: relative; }
   .list-panel { flex: 2.5; display: flex; flex-direction: column; min-width: 280px; }
@@ -88,6 +88,9 @@
   .asset-remove { width: 26px; height: 26px; border-radius: 50%; color: var(--ink-3); display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; background: var(--line-2); transition: 0.1s; }
   .asset-remove:hover { background: var(--line); color: var(--dot-fail); }
 
+  /* 视频时长角标 */
+  .duration-badge { position: absolute; bottom: 6px; left: 6px; color: #fff; font-size: 11px; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,0.8); z-index: 10; font-family: monospace; pointer-events: none; }
+
   /* Prompt 配置区右侧栏 */
   .prompt-container { border: 1px solid var(--line); border-radius: var(--r); background: var(--paper); overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
   .prompt-toolbar { padding: 8px 14px; background: var(--line-2); border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--ink-4); }
@@ -95,7 +98,7 @@
   .rich-editor { 
     padding: 12px 16px; font-size: 13px; outline: none; 
     white-space: pre-wrap; word-break: break-word; color: var(--ink-2);
-    line-height: 2.2; position: relative; min-height: 60px; max-height: 300px; overflow-y: auto;
+    line-height: 2.2; position: relative; min-height: 60px; max-height: 140px; overflow-y: auto;
   }
 
   /* 媒体芯片 Media Chip */
@@ -391,6 +394,10 @@
              <div style="display:flex; align-items:center; gap:6px;">
                 <span style="font-weight:600; color:var(--ink-1); font-size:12px;">比例</span>
                 <select id="ratioSelect" class="styled-select" style="width: 90px;" onchange="updatePrompt()">
+                  <option value="21:9">21:9</option>
+                  <option value="16:9">16:9</option>
+                  <option value="4:3">4:3</option>
+                  <option value="1:1">1:1</option>
                   <option value="3:4">3:4</option>
                   <option value="9:16" selected>9:16</option>
                 </select>
@@ -674,8 +681,8 @@
 
   const ASSETS_LIB = {
     video: [
-      { id: 'v1_1', name: '春季风衣大促系列-Part1.mp4', url: 'https://media.flamingo.shop/v/7481748d89f4436c85b563b9b0c8623f.mp4', isVideo: true, cover: 'https://img.flamingo.shop/p/show/89eff2e31686479cbbfa3ad62f28cfdf.png' },
-      { id: 'v1_2', name: '春季风衣大促系列-Part2.mp4', url: 'https://media.flamingo.shop/v/6fece3c69aa04f79809e65b2bf9eb821.mp4', isVideo: true, cover: 'https://img.flamingo.shop/video_snapshot/3ddb42b2c0e94cf08c3ed0a6793dee23.jpg' }
+      { id: 'v1_1', name: '春季风衣大促系列-Part1.mp4', url: 'https://media.flamingo.shop/v/7481748d89f4436c85b563b9b0c8623f.mp4', isVideo: true, cover: 'https://img.flamingo.shop/p/show/89eff2e31686479cbbfa3ad62f28cfdf.png', duration: '00:15' },
+      { id: 'v1_2', name: '春季风衣大促系列-Part2.mp4', url: 'https://media.flamingo.shop/v/6fece3c69aa04f79809e65b2bf9eb821.mp4', isVideo: true, cover: 'https://img.flamingo.shop/video_snapshot/3ddb42b2c0e94cf08c3ed0a6793dee23.jpg', duration: '00:04' }
     ],
     scene: [
       { id: 's1', name: '房间-落地窗旁', url: 'https://img.flamingo.shop/p/show/f7d1df7b9cac45f0a9e7aee005d1813f.jpg' },
@@ -939,7 +946,11 @@
          mediaHtml = `<div class="picker-item audio ${isSel ? 'selected' : ''}">🔊</div>`;
       } else {
          const mediaUrl = displayImageUrl(item.cover || item.url); 
-         const inner = item.isVideo ? `<video src="${item.url}" muted onmouseenter="this.play()" onmouseleave="this.pause()" poster="${mediaUrl}"></video>` : `<img src="${mediaUrl}">`;
+         let durHtml = '';
+         if (item.isVideo && item.duration) {
+            durHtml = `<div class="duration-badge">${item.duration}</div>`;
+         }
+         const inner = item.isVideo ? `<video src="${item.url}" muted onmouseenter="this.play()" onmouseleave="this.pause()" poster="${mediaUrl}"></video>${durHtml}` : `<img src="${mediaUrl}">`;
          mediaHtml = `<div class="picker-item ${isSel ? 'selected' : ''}">${inner}</div>`;
       }
       return `
@@ -1071,7 +1082,8 @@
           name: pendingVideoUploadFiles.length > 1 ? `${title}-Part${index+1}` : title,
           url: URL.createObjectURL(file),
           isVideo: true,
-          cover: null
+          cover: null,
+          duration: '00:12'
       };
       ASSETS_LIB.video.unshift(newObj);
       if (index === 0) firstObj = newObj;
@@ -1108,7 +1120,10 @@
       } else {
          const thumbUrl = displayImageUrl(item.cover || item.url);
          thumbStyle = `background-image:url('${thumbUrl}');`;
-         if(item.isVideo) thumbContent = `<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">▶</div>`;
+         if(item.isVideo) {
+            let durHtml = item.duration ? `<div class="duration-badge" style="bottom:2px; left:4px; font-size:10px;">${item.duration}</div>` : '';
+            thumbContent = `<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">▶</div>${durHtml}`;
+         }
       }
       
       box.innerHTML = `
@@ -1374,10 +1389,12 @@
     let mediaHtml = '';
     let url = '';
     let cover = '';
+    let duration = '';
     
     if (assetObj && (assetObj.url || type === 'audio')) {
       url = assetObj.url || '';
       cover = assetObj.cover || assetObj.url || '';
+      if (assetObj.duration) duration = assetObj.duration;
       if (type === 'audio') {
          mediaHtml = `<span style="font-size:12px; margin-right:2px; vertical-align:middle;">🎵</span>`;
       } else {
@@ -1389,7 +1406,7 @@
       mediaHtml = `<span class="chip-ph ${phClass}" style="display:inline-block;width:16px;height:16px;border-radius:2px;margin-right:4px;background-size:cover;background-position:center;background-color:var(--ink-5);"></span>`;
     }
 
-    return `<span class="media-chip" contenteditable="false" data-type="${type}" data-url="${url}" data-cover="${cover}" data-label="${label}${idx}">${mediaHtml}<span class="chip-txt">${label}${idx}</span></span>&#8203;`;
+    return `<span class="media-chip" contenteditable="false" data-type="${type}" data-url="${url}" data-cover="${cover}" data-duration="${duration}" data-label="${label}${idx}">${mediaHtml}<span class="chip-txt">${label}${idx}</span></span>&#8203;`;
   }
 
   // ================= @ 提及唤出素材插入逻辑 =================
@@ -1471,6 +1488,7 @@
       const type = chip.dataset.type;
       const url = chip.dataset.url;
       const label = chip.dataset.label;
+      const duration = chip.dataset.duration;
       
       pop.className = 'global-preview-pop'; 
       
@@ -1479,6 +1497,9 @@
         if(type === 'video') {
           popHtml += `<video src="${url}" autoplay loop muted style="width:100%;height:100%;object-fit:cover;"></video>`;
           popHtml += `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:32px;text-shadow:0 2px 8px rgba(0,0,0,0.5);">▶</div>`;
+          if (duration) {
+            popHtml += `<div class="duration-badge" style="font-size:12px; bottom:8px; left:8px;">${duration}</div>`;
+          }
         } else if (type === 'audio') {
           pop.classList.add('audio-pop');
           popHtml = `
@@ -1568,7 +1589,7 @@
     renderAssetSlot('model');
     renderAssetSlot('audio');
 
-    // 状态接管逻辑
+    // 状态接管逻辑修复
     if (isManual) {
       document.getElementById('richEditor').innerHTML = task.prompt;
       document.getElementById('prompt-status').innerHTML = '<span style="color:#C2410C; font-weight:600;">PROMPT已经被修改，右侧模块改动不再影响PROMPT</span>';
@@ -1709,6 +1730,7 @@
         const type = chip.dataset.type;
         const url = chip.dataset.url;
         const label = chip.dataset.label;
+        const duration = chip.dataset.duration;
         
         pop.className = 'global-preview-pop'; 
         
@@ -1717,6 +1739,9 @@
           if(type === 'video') {
             popHtml += `<video src="${url}" autoplay loop muted style="width:100%;height:100%;object-fit:cover;"></video>`;
             popHtml += `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:32px;text-shadow:0 2px 8px rgba(0,0,0,0.5);">▶</div>`;
+            if (duration) {
+              popHtml += `<div class="duration-badge" style="font-size:12px; bottom:8px; left:8px;">${duration}</div>`;
+            }
           } else if (type === 'audio') {
              pop.classList.add('audio-pop');
              popHtml = `<div style="font-weight:600; margin-bottom:8px; font-size:12px;">${label} 预览</div><div style="display:flex; align-items:center; gap:8px;"><div class="spinner" style="width:16px; height:16px; border-width:2px;"></div><span style="font-size:11px; color:var(--ink-3);">波形解析中...</span></div>`;
@@ -1851,7 +1876,7 @@
        t.uploadStatus = 'uploading';
     }
     
-    renderTaskList(); 
+    renderTaskList(); // 立即重新渲染卡片状态
     
     if (status === 'approved') {
        setTimeout(() => {

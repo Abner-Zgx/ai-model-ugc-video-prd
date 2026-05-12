@@ -95,7 +95,7 @@
   .rich-editor { 
     padding: 12px 16px; font-size: 13px; outline: none; 
     white-space: pre-wrap; word-break: break-word; color: var(--ink-2);
-    line-height: 2.2; position: relative; min-height: 60px; max-height: 140px; overflow-y: auto;
+    line-height: 2.2; position: relative; min-height: 60px; max-height: 300px; overflow-y: auto;
   }
 
   /* 媒体芯片 Media Chip */
@@ -391,10 +391,6 @@
              <div style="display:flex; align-items:center; gap:6px;">
                 <span style="font-weight:600; color:var(--ink-1); font-size:12px;">比例</span>
                 <select id="ratioSelect" class="styled-select" style="width: 90px;" onchange="updatePrompt()">
-                  <option value="21:9">21:9</option>
-                  <option value="16:9">16:9</option>
-                  <option value="4:3">4:3</option>
-                  <option value="1:1">1:1</option>
                   <option value="3:4">3:4</option>
                   <option value="9:16" selected>9:16</option>
                 </select>

@@ -121,9 +121,10 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 10000; pointer-events: none;
     transition: opacity 0.2s; opacity: 0; display: none; border: 2px solid #fff; overflow: hidden;
   }
+  /* 音频弹窗专属定制样式 */
   .global-preview-pop.audio-pop {
-    aspect-ratio: auto; min-height: 80px; padding: 12px; background: #fff; border: 1px solid var(--line); 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: var(--ink-1);
+    aspect-ratio: auto; min-height: 80px; padding: 16px; background: #fff; border: 1px solid var(--line); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: var(--ink-1); border-radius: 12px; width: 220px;
   }
   .global-preview-pop.show { display: block; opacity: 1; }
   .pop-tag { display: inline-block; position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: #fff; padding: 2px 6px; border-radius: 3px; font-size: 10px; z-index: 10; }
@@ -1479,18 +1480,28 @@
     }
   });
 
-  // ================= 全局 Hover 悬浮预览逻辑 =================
+  // ================= 全局 Hover 悬浮预览逻辑 (音频强化版) =================
+  let previewHideTimer = null;
+
   document.addEventListener('mouseover', function(e) {
     const chip = e.target.closest('.media-chip');
+    const pop = document.getElementById('globalPreviewPop');
+    
+    if (e.target.closest('.global-preview-pop')) {
+      clearTimeout(previewHideTimer);
+      return;
+    }
+
     if(chip && !chip.closest('#confirmModal')) {
+      clearTimeout(previewHideTimer);
       const rect = chip.getBoundingClientRect();
-      const pop = document.getElementById('globalPreviewPop');
       const type = chip.dataset.type;
       const url = chip.dataset.url;
       const label = chip.dataset.label;
       const duration = chip.dataset.duration;
       
       pop.className = 'global-preview-pop'; 
+      pop.style.pointerEvents = type === 'audio' ? 'auto' : 'none'; // 允许音频弹窗被交互点击
       
       let popHtml = `<div class="pop-tag">${label} 预览</div>`;
       if(url) {
@@ -1498,16 +1509,19 @@
           popHtml += `<video src="${url}" autoplay loop muted style="width:100%;height:100%;object-fit:cover;"></video>`;
           popHtml += `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:32px;text-shadow:0 2px 8px rgba(0,0,0,0.5);">▶</div>`;
           if (duration) {
-            popHtml += `<div class="duration-badge" style="font-size:12px; bottom:8px; left:8px;">${duration}</div>`;
+             popHtml += `<div class="duration-badge" style="font-size:12px; bottom:8px; left:8px;">${duration}</div>`;
           }
         } else if (type === 'audio') {
           pop.classList.add('audio-pop');
           popHtml = `
-            <div style="font-weight:600; margin-bottom:8px; font-size:12px;">${label} 预览</div>
-            <div style="display:flex; align-items:center; gap:8px;">
-               <div class="spinner" style="width:16px; height:16px; border-width:2px;"></div>
-               <span style="font-size:11px; color:var(--ink-3);">波形解析中...</span>
+            <div style="font-weight:600; font-size:14px; color:var(--ink-1); margin-bottom:12px;">${label}</div>
+            <div style="display:flex; align-items:center; background:#F4F5F7; border-radius:30px; padding:6px 16px 6px 6px; gap:12px;">
+               <div id="popPlayBtn" style="width:32px; height:32px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.08); color:#333; font-size:14px; cursor:pointer;"><span style="margin-left:2px;">▶</span></div>
+               <div style="font-size:13px; color:#444; font-family:'Inter', monospace; font-weight:500;">
+                 <span id="popAudioCur">00:00</span> &nbsp;/&nbsp; <span id="popAudioTot">${duration || '00:00'}</span>
+               </div>
             </div>
+            <audio id="popAudioEl" src="${url}" autoplay></audio>
           `;
         } else {
           popHtml += `<img src="${url}" style="width:100%;height:100%;object-fit:cover;">`;
@@ -1525,16 +1539,57 @@
       pop.innerHTML = popHtml;
       pop.style.left = (rect.left + rect.width / 2 - 90) + 'px';
       pop.style.top = (rect.top - (type==='audio'?100:330)) + 'px'; 
+      
+      if (rect.top < 330 && type !== 'audio') {
+          pop.style.top = (rect.bottom + 10) + 'px';
+      }
+
       pop.classList.add('show');
+      pop.style.zIndex = '10005'; 
+
+      if (type === 'audio' && url) {
+         const audioEl = document.getElementById('popAudioEl');
+         const playBtn = document.getElementById('popPlayBtn');
+         if(audioEl && playBtn) {
+            audioEl.addEventListener('timeupdate', function() {
+               const cur = document.getElementById('popAudioCur');
+               if(cur) cur.innerText = formatPopTime(this.currentTime);
+            });
+            audioEl.addEventListener('loadedmetadata', function() {
+               const tot = document.getElementById('popAudioTot');
+               if(tot && !duration) tot.innerText = formatPopTime(this.duration);
+            });
+            audioEl.addEventListener('play', () => playBtn.innerHTML = '⏸');
+            audioEl.addEventListener('pause', () => playBtn.innerHTML = '<span style="margin-left:2px;">▶</span>');
+            
+            playBtn.addEventListener('click', () => {
+              if(audioEl.paused) audioEl.play();
+              else audioEl.pause();
+            });
+         }
+      }
     }
   });
 
   document.addEventListener('mouseout', function(e) {
     const chip = e.target.closest('.media-chip');
-    if(chip) {
-      document.getElementById('globalPreviewPop').classList.remove('show');
+    const pop = e.target.closest('.global-preview-pop');
+    if(chip || pop) {
+      previewHideTimer = setTimeout(() => {
+        const popEl = document.getElementById('globalPreviewPop');
+        popEl.classList.remove('show');
+        popEl.innerHTML = ''; 
+        popEl.style.pointerEvents = 'none'; 
+      }, 150);
     }
   });
+
+  function formatPopTime(sec) {
+    if(isNaN(sec)) return "00:00";
+    const m = Math.floor(sec / 60).toString().padStart(2, '0');
+    const s = Math.floor(sec % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  }
 
 
   // ================= 载入回填防覆盖 =================
@@ -1876,7 +1931,7 @@
        t.uploadStatus = 'uploading';
     }
     
-    renderTaskList(); // 立即重新渲染卡片状态
+    renderTaskList(); 
     
     if (status === 'approved') {
        setTimeout(() => {

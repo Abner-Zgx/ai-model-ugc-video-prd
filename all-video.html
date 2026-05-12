@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI模特UGC视频生成汇总</title>
+<style>
+  :root {
+    --ink-1: #111418; --ink-2: #2A2F36; --ink-3: #5C636B; --ink-4: #8A9099; --ink-5: #B6BBC2;
+    --line: #E8EAEE; --line-2: #F0F2F5; --bg: #FAFBFC; --paper: #FFFFFF;
+    --accent: #1F4FE0; --accent-soft: #EEF2FE; --accent-ink: #1339B3;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#f0f2f5;color:#333;font-size:13px;}
+
+  /* ── 顶部导航 ── */
+  .top-nav{background:#fff;height:48px;display:flex;align-items:center;padding:0 20px;border-bottom:1px solid #e8e8e8;justify-content:space-between;}
+  .breadcrumb{display:flex;align-items:center;gap:8px;color:#888;font-size:14px;}
+  .breadcrumb a{color:#888;text-decoration:none;} .breadcrumb a:hover{color:rgb(65,181,132);}
+  .breadcrumb .cur{color:#333;font-weight:500;}
+  .user-info{color:#888;font-size:13px;}
+
+  /* ── 容器 ── */
+  .container{padding:16px 20px;}
+
+  /* ── 顶部操作栏（筛选+批量，放到一行） ── */
+  .toolbar{background:#fff;border:1px solid #e8e8e8;border-radius:4px;padding:16px;margin-bottom:12px;display:flex;flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+
+  /* Element UI 风格表单项 */
+  .tb-group{display:inline-flex;align-items:center;margin:0;}
+  .tb-label{font-size:13px;color:#606266;text-align:right;padding-right:8px;flex-shrink:0;}
+  .tb-input, .tb-select{
+    width: 160px; height:32px; line-height:32px; border:1px solid #dcdfe6; border-radius:4px;
+    padding:0 12px; font-size:13px; color:#606266; outline:none; background:#fff;
+    transition:border-color .2s cubic-bezier(.645,.045,.355,1);
+  }
+  .tb-input::placeholder{color:#c0c4cc;}
+  .tb-input:hover, .tb-select:hover{border-color:#c0c4cc;}
+  .tb-input:focus, .tb-select:focus{border-color:rgb(65,181,132);}
+
+  .tb-select{
+    appearance:none; -webkit-appearance:none; padding-right:30px; cursor:pointer;
+    background: #fff url("data:image/svg+xml;utf8,<svg viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'><path d='M7 9L3.5 5h7L7 9z' fill='%23C0C4CC'/></svg>") no-repeat right 10px center / 12px 12px;
+  }
+
+  .tb-right{display:flex;align-items:center;gap:10px; flex-shrink: 0;}
+  .btn{border:none;border-radius:4px;padding:0 16px;font-size:13px;cursor:pointer;height:32px;display:inline-flex;align-items:center;gap:4px;transition:all .15s;white-space:nowrap;}
+  .btn-primary{background:rgb(65,181,132);color:#fff;} .btn-primary:hover{background:rgb(85,201,152);}
+  .btn-outline{background:#fff;color:#606266;border:1px solid #dcdfe6;} .btn-outline:hover{border-color:rgb(65,181,132);color:rgb(65,181,132);}
+  .btn-success-plain{background:#f0f9eb;color:#67c23a;border:1px solid #c2e7b0;} .btn-success-plain:hover{background:#e1f3d8;}
+  .btn-danger-plain{background:#fef0f0;color:#f56c6c;border:1px solid #fbc4c4;} .btn-danger-plain:hover{background:#fde2e2;}
+  .btn[disabled]{opacity:.45;cursor:not-allowed;}
+
+  /* ── 自定义 Checkbox ── */
+  .custom-cb-wrap { display:inline-flex; align-items:center; justify-content:center; cursor:pointer; vertical-align:middle; margin:0; }
+  .custom-cb {
+    appearance:none; -webkit-appearance:none; width:14px; height:14px;
+    border:1px solid #dcdfe6; border-radius:2px; background:#fff;
+    position:relative; cursor:pointer; transition:all .2s; outline:none; margin:0;
+  }
+  .custom-cb:hover { border-color:rgb(65, 181, 132); }
+  .custom-cb:checked { background-color:rgb(65, 181, 132); border-color:rgb(65, 181, 132); }
+  .custom-cb:checked::after {
+    content:""; position:absolute; left:3.5px; top:1px; width:3px; height:7px;
+    border:1px solid #fff; border-left:0; border-top:0; transform:rotate(45deg);
+  }
+  .custom-cb:disabled { background-color:#f2f6fc; border-color:#dcdfe6; cursor:not-allowed; }
+
+  /* ── 表格 ── */
+  .table-wrap{background:#fff;border:1px solid #e4e4e4;border-radius:6px;overflow:hidden;}
+  
+  /* 调整列宽占比：缩小视频名称(0.7fr)，放大Prompt(1.8fr) */
+  .t-head{display:grid;grid-template-columns:40px 60px 60px minmax(100px,0.7fr) 120px 60px minmax(220px,1.8fr) 76px 86px 86px 130px;column-gap:12px;padding:0 16px;height:40px;align-items:center;background:#f8f8f9;border-bottom:1px solid #e8e8e8;font-size:13px;font-weight:500;color:#606266;}
+  .t-row{display:grid;grid-template-columns:40px 60px 60px minmax(100px,0.7fr) 120px 60px minmax(220px,1.8fr) 76px 86px 86px 130px;column-gap:12px;padding:12px 16px;align-items:center;border-bottom:1px solid #f0f0f0;font-size:13px;transition:background .1s;}
+  .t-row:last-child{border-bottom:none;}
+  .t-row:hover{background:#f5f7fa;}
+  .t-row>*{min-width:0;}
+  .t-col-cb{display:flex;align-items:center;justify-content:center; height: 100%;} 
+
+  /* 缩略图 */
+  .thumb-box{width:44px;height:60px;border-radius:4px;overflow:hidden;border:1px solid #e8e8e8;background:#111;position:relative;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .thumb-box img{width:100%;height:100%;object-fit:cover;display:block;}
+  .thumb-box.clickable{cursor:pointer;}
+  .thumb-box .play-mask{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);opacity:0;transition:opacity .15s;color:#fff;font-size:20px;}
+  .thumb-box.clickable:hover .play-mask{opacity:1;}
+
+  /* 取消元素的强制 margin-top 保证完美居中 */
+  .spu-cell{font-weight:600;font-size:13px;color:#303133;}
+  .creator-cell{color:#606266;}
+  .vname{font-size:12px;color:#909399;font-family:monospace;word-break:break-all;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4;}
+  .vdate{color:#606266; font-family: sans-serif;}
+  
+  /* el-tag 风格 */
+  .tag{display:inline-block;padding:0 8px;border-radius:4px;font-size:11px;border:1px solid;line-height:20px;white-space:nowrap;}
+  .tag-generating{color:#e6a23c;background:#fdf6ec;border-color:#faecd8;animation:pulse 1.5s ease-in-out infinite;}
+  .tag-done{color:#67c23a;background:#f0f9eb;border-color:#e1f3d8;}
+  .tag-fail{color:#f56c6c;background:#fef0f0;border-color:#fde2e2;}
+  
+  .tag-ap-pending{color:#e6a23c;background:#fdf6ec;border-color:#faecd8;}
+  .tag-ap-pass{color:#67c23a;background:#f0f9eb;border-color:#e1f3d8;}
+  .tag-ap-fail{color:#f56c6c;background:#fef0f0;border-color:#fde2e2;}
+  
+  .tag-up-uploading{color:#409eff;background:#ecf5ff;border-color:#d9ecff;}
+  .tag-up-done{color:#606266;background:#f4f4f5;border-color:#e9e9eb;}
+  .tag-up-fail{color:#f56c6c;background:#fef0f0;border-color:#fde2e2;}
+
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+  .muted{color:#c0c4cc;font-size:13px;}
+
+  /* 操作按钮居中显示 */
+  .ops{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:flex-start;}
+  .op{padding:0 10px;border-radius:3px;font-size:11px;cursor:pointer;border:1px solid;background:#fff;height:24px;display:inline-flex;align-items:center;transition:all .12s;white-space:nowrap;}
+  .op-pass{color:#67c23a;border-color:#c2e7b0;} .op-pass:hover{background:#f0f9eb;}
+  .op-reject{color:#f56c6c;border-color:#fbc4c4;} .op-reject:hover{background:#fef0f0;}
+  .op-retry{color:#e6a23c;border-color:#f5dab1;} .op-retry:hover{background:#fdf6ec;}
+  .op-down{color:#409eff;border-color:#b3d8ff;} .op-down:hover{background:#ecf5ff;}
+
+  /* ── 媒体芯片 Prompt 样式 (去除截断限制全量展示) ── */
+  .prompt-cell { font-size: 12px; color: var(--ink-2); line-height: 1.6; word-break: break-all;}
+  .media-chip {
+    display: inline-flex; align-items: center; vertical-align: middle;
+    background: #F3F4F6; border-radius: 3px; padding: 0 4px 0 2px; margin: 0 2px;
+    height: 18px; color: var(--accent-ink); font-weight: 500; font-size: 11px;
+    cursor: default; position: relative; white-space: nowrap; transition: 0.1s;
+    user-select: all; -webkit-user-select: all; border: 1px solid transparent;
+  }
+  .media-chip:hover { background: var(--accent-soft); border-color: #b3d8ff;}
+  .media-chip img { 
+    width: 14px; height: 14px; border-radius: 2px; margin-right: 4px; 
+    background-size: cover; background-position: center; background-color: var(--ink-5);
+  }
+  
+  /* 全局悬浮预览窗 */
+  .global-preview-pop {
+    position: fixed; width: 180px; aspect-ratio: 9/16; background: #000; border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 10000; pointer-events: none;
+    transition: opacity 0.2s; opacity: 0; display: none; border: 2px solid #fff; overflow: hidden;
+  }
+  .global-preview-pop.audio-pop {
+    aspect-ratio: auto; min-height: 80px; padding: 12px; background: #fff; border: 1px solid var(--line); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: var(--ink-1);
+  }
+  .global-preview-pop.show { display: block; opacity: 1; }
+  .pop-tag { display: inline-block; position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: #fff; padding: 2px 6px; border-radius: 3px; font-size: 10px; z-index: 10; }
+
+  /* ── 分页 ── */
+  .pager-wrap{display:flex;align-items:center;justify-content:flex-end;padding:16px 0;gap:8px;font-size:13px;color:#606266;}
+  .pager-total{margin-right:8px;}
+  .pager-size{border:1px solid #dcdfe6;border-radius:4px;height:28px;padding:0 6px;font-size:13px;background:#fff;cursor:pointer;outline:none;}
+  .pager-nav{display:flex;align-items:center;gap:4px;}
+  .pager-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;cursor:pointer;font-size:13px;color:#606266;border-radius:4px;} .pager-btn:hover{color:rgb(65,181,132);}
+  .pager-btn[disabled]{color:#c0c4cc;cursor:not-allowed;}
+  .pager-num{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer;font-size:13px;color:#606266;background:transparent;border:none;} .pager-num:hover{color:rgb(65,181,132);}
+  .pager-num.active{background:rgb(65,181,132);color:#fff;border-radius:4px;}
+  .pager-dots{width:28px;text-align:center;color:#909399;font-size:12px;cursor:default;}
+  .pager-goto{display:flex;align-items:center;gap:6px;font-size:13px;}
+  .pager-goto input{width:46px;height:28px;border:1px solid #dcdfe6;border-radius:4px;text-align:center;font-size:13px;outline:none;} .pager-goto input:focus{border-color:rgb(65,181,132);}
+
+  /* ── 弹窗 ── */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;justify-content:center;align-items:center; backdrop-filter: blur(2px);}
+  .overlay.show{display:flex;}
+  .modal{background:#fff;border-radius:6px;box-shadow:0 6px 30px rgba(0,0,0,.12);max-height:85vh;overflow:hidden;}
+  .m-hd{padding:16px 20px;border-bottom:1px solid #e8e8e8;display:flex;justify-content:space-between;align-items:center;}
+  .m-hd h3{font-size:16px;font-weight:500;color:#303133;} 
+  .m-close{background:none;border:none;font-size:24px;cursor:pointer;color:#909399;padding:2px 6px; line-height: 1;} .m-close:hover{color:#303133;}
+  .m-bd{padding:20px;overflow-y:auto;max-height:calc(85vh - 110px);}
+  .modal-player{max-width:400px;width:90%;} .modal-player video{width:100%;border-radius:4px;background:#000; aspect-ratio: 9/16; display: block;}
+  
+  #toast{position:fixed;top:56px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.8);color:#fff;padding:10px 24px;border-radius:4px;font-size:14px;z-index:20000;display:none; box-shadow: 0 4px 12px rgba(0,0,0,0.15);}
+</style>
+</head>
+<body>
+
+<div class="global-preview-pop" id="globalPreviewPop"></div>
+
+<div class="overlay" id="ovPlayer"><div class="modal modal-player"><div class="m-hd"><h3 id="pTitle" style="font-size: 14px; width:280px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">视频预览</h3><button class="m-close" onclick="closePlayer()">×</button></div><div class="m-bd" style="padding: 16px;"><video id="vPlayer" controls autoplay></video></div></div></div>
+
+<div id="toast"></div>
+
+<div class="top-nav">
+  <div class="breadcrumb"><span>☰</span> <a href="#">素材管理</a> <span style="margin:0 4px;color:#c0c4cc">&gt;</span> <span class="cur">🎬 AI模特UGC视频生成汇总</span></div>
+  <div class="user-info">👤 王运营</div>
+</div>
+
+<div class="container">
+
+<div class="toolbar">
+  <div style="display:flex; align-items:center; flex-wrap:wrap; gap:16px;">
+    <div class="tb-group"><div class="tb-label">SPU</div><input class="tb-input" id="fSpu" placeholder="请输入SPU编号" onkeydown="if(event.key==='Enter')doFilter()"></div>
+    <div class="tb-group">
+      <div class="tb-label">创建时间</div>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <input type="date" class="tb-input" id="fDateStart" style="width: 130px;">
+        <span style="color:#c0c4cc;">-</span>
+        <input type="date" class="tb-input" id="fDateEnd" style="width: 130px;">
+      </div>
+    </div>
+    <div class="tb-group"><div class="tb-label">生成状态</div><select class="tb-select" id="fGen"><option value="">全部状态</option><option value="progress">生成中</option><option value="success">生成成功</option><option value="fail">生成失败</option></select></div>
+    <div class="tb-group"><div class="tb-label">审核状态</div><select class="tb-select" id="fAp"><option value="">全部状态</option><option value="pending">待审核</option><option value="approved">审核通过</option><option value="rejected">审核不通过</option></select></div>
+    <div class="tb-group"><div class="tb-label">上传状态</div><select class="tb-select" id="fUp"><option value="">全部状态</option><option value="uploading">上传素材库中</option><option value="success">上传成功</option><option value="fail">上传失败</option></select></div>
+  </div>
+  
+  <div class="tb-right">
+    <button class="btn btn-primary" onclick="doFilter()">查询</button>
+    <button class="btn btn-outline" onclick="doReset()">重置</button>
+    <span style="width: 1px; height: 16px; background: #e8e8e8; margin: 0 8px;"></span>
+    <button class="btn btn-success-plain" onclick="batchAct('approve')">批量通过</button>
+    <button class="btn btn-danger-plain" onclick="batchAct('reject')">批量不通过</button>
+    <button class="btn btn-outline" style="color: #409eff; border-color: #b3d8ff;" onclick="batchDownload()">⬇ 批量下载</button>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <div class="t-head">
+    <div class="t-col-cb"><label class="custom-cb-wrap"><input type="checkbox" id="ckAllTop" class="custom-cb" onclick="toggleAllTop()"></label></div>
+    <div>SPU</div><div>缩略图</div><div>视频名称</div><div>创建时间</div><div>创建人</div><div>生成 Prompt</div><div>生成状态</div><div>审核状态</div><div>上传状态</div><div>操作</div>
+  </div>
+  <div id="tbody"></div>
+</div>
+
+<div class="pager-wrap">
+  <span class="pager-total">共 <b id="pTotal">0</b> 条记录</span>
+  <select class="pager-size" id="pSize" onchange="pageSize=+this.value;curPage=1;renderPage()"><option value="20">20条/页</option><option value="50">50条/页</option><option value="100">100条/页</option></select>
+  <div class="pager-nav" id="pagerNav"></div>
+  <div class="pager-goto">前往 <input id="pGoto" onkeydown="if(event.key==='Enter')gotoPage(+this.value)"> 页</div>
+</div>
+
+</div>
+
+<script>
+/* ══ 核心辅助函数 ══ */
+function toast(msg, type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.style.display='block';
+  t.style.background = type==='error' ? 'rgba(245,108,108,0.9)' : 'rgba(0,0,0,0.8)';
+  setTimeout(()=>t.style.display='none',3000);
+}
+
+function displayImageUrl(url) {
+  const raw = String(url || '').trim();
+  if (!raw) return raw;
+  const PREFIX = 'https://img.flamingo.shop/';
+  if (!raw.startsWith(PREFIX)) return raw;
+  if (raw.startsWith(`${PREFIX}120x180/`)) return raw;
+  return raw.replace(PREFIX, `${PREFIX}120x180/`);
+}
+
+function createChipHtml(type, idx, url, cover) {
+  let label = '图片';
+  if(type==='video') label='视频';
+  if(type==='audio') label='音频';
+  
+  let mediaHtml = '';
+  if (type === 'audio') {
+     mediaHtml = `<span style="font-size:12px; margin-right:2px; vertical-align:middle;">🎵</span>`;
+  } else {
+     const thumbUrl = displayImageUrl(cover || url);
+     mediaHtml = `<img src="${thumbUrl}" style="width:14px; height:14px; object-fit:cover; border-radius:2px; margin-right:4px; vertical-align:middle; background:#111;">`;
+  }
+  return `<span class="media-chip" contenteditable="false" data-type="${type}" data-url="${url}" data-cover="${cover}" data-label="${label}${idx}">${mediaHtml}<span class="chip-txt">${label}${idx}</span></span>`;
+}
+
+function getRandomDate() {
+  const start = new Date(2026, 4, 1); // 2026-05-01
+  const end = new Date(2026, 4, 15);
+  const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  const time = date.toTimeString().split(' ')[0].substring(0, 5);
+  
+  return `${yyyy}-${mm}-${dd} ${time}`;
+}
+
+/* ══ Mock 数据生成 ══ */
+const VID_URL = 'https://media.flamingo.shop/v/7481748d89f4436c85b563b9b0c8623f.mp4';
+const VID_COV = 'https://img.flamingo.shop/p/show/89eff2e31686479cbbfa3ad62f28cfdf.png';
+const IMG_URLS = [
+  'https://img.flamingo.shop/p/show/product/b63344bafc504524a0b6e28b43580c70.jpg',
+  'https://img.flamingo.shop/p/show/373095764b6a4d0f82ad90e43744459e.jpg',
+  'https://img.flamingo.shop/p/show/product/6e027fb7b1674c149cc66f2dbb864d76.jpg'
+];
+const CREATORS = ['王运营', '李投放', '张编导', '陈增长'];
+const REF_NAMES = ['拉伸裤脚参考视频', '口袋细节展示', '模特走秀背面', '360度旋转'];
+
+const DATA=[];
+let rid=1000;
+for(let i=0;i<65;i++){
+  const spu = ['271812', '180390', '391002', '512999'][i % 4];
+  const dateStr = getRandomDate();
+  const creator = CREATORS[i % 4];
+  
+  // 状态流转分配
+  let gen = 'success';
+  let ap = 'pending';
+  let up = 'none';
+  
+  const rand = Math.random();
+  if (rand < 0.15) {
+      gen = 'progress'; ap = 'none'; up = 'none';
+  } else if (rand < 0.3) {
+      gen = 'fail'; ap = 'none'; up = 'none';
+  } else {
+      gen = 'success';
+      const randAp = Math.random();
+      if (randAp < 0.3) {
+          ap = 'pending'; up = 'none';
+      } else if (randAp < 0.4) {
+          ap = 'rejected'; up = 'none';
+      } else {
+          ap = 'approved';
+          const randUp = Math.random();
+          if (randUp < 0.2) up = 'uploading';
+          else if (randUp < 0.3) up = 'fail';
+          else up = 'success';
+      }
+  }
+
+  // 拼接逼真的 Prompt
+  let vChip = createChipHtml('video', 1, VID_URL, VID_COV);
+  let iChip = createChipHtml('image', 1, IMG_URLS[i%3], IMG_URLS[i%3]);
+  let promptHtml = `把 ${vChip} 中的下装裤子换成 ${iChip}，100% 保留其中的光影、模特全部保持不变；<br>严格保持裤子 ${iChip} 版型、颜色、腰头、弹力、走线100%还原，不变形、不走样；<br>无穿模、无崩环、无破交、无字幕，画面稳定流畅；<br>模特对嘴型口播：【Look at this amazing pair of jeans!】`;
+  if (i % 5 === 0) promptHtml += `<br>模特音色可以用 ${createChipHtml('audio', 1, 'mock.mp3')}`;
+
+  // 视频命名规则 SPU-YYMMDD-参考视频名字-2位随机数.mp4
+  let vname = '';
+  if (gen === 'success') {
+     const yy = dateStr.substring(2, 4);
+     const mm = dateStr.substring(5, 7);
+     const dd = dateStr.substring(8, 10);
+     const timeStr = yy + mm + dd;
+     const refName = REF_NAMES[i % 4];
+     const r2 = Math.floor(Math.random() * 90 + 10); // 10-99
+     vname = `${spu}-${timeStr}-${refName}-${r2}.mp4`;
+  }
+
+  DATA.push({
+    id: ++rid, spu, date: dateStr, creator, prompt: promptHtml, vname,
+    gen, approve: ap, upload: up,
+    finalVid: VID_URL, finalCov: VID_COV
+  });
+}
+
+// 降序排序时间模拟最新在最上
+DATA.sort((a,b) => b.date.localeCompare(a.date));
+
+/* ══ 字典配置 ══ */
+const GEN_MAP = {
+  'progress': ['生成中', 'tag-generating'],
+  'success': ['生成成功', 'tag-done'],
+  'fail': ['生成失败', 'tag-fail']
+};
+const AP_MAP = {
+  'none': ['—', ''],
+  'pending': ['待审核', 'tag-ap-pending'],
+  'approved': ['审核通过', 'tag-ap-pass'],
+  'rejected': ['审核不通过', 'tag-ap-fail']
+};
+const UP_MAP = {
+  'uploading': ['上传中', 'tag-up-uploading'],
+  'success': ['上传成功', 'tag-up-done'],
+  'fail': ['上传失败', 'tag-up-fail'],
+  'none': ['—', '']
+};
+
+/* ══ 筛选 & 分页 ══ */
+let filtered=[...DATA], curPage=1, pageSize=20;
+
+function doFilter(){
+  const spu = document.getElementById('fSpu').value.trim();
+  const dateStart = document.getElementById('fDateStart').value; // YYYY-MM-DD
+  const dateEnd = document.getElementById('fDateEnd').value; // YYYY-MM-DD
+  const gen = document.getElementById('fGen').value;
+  const ap = document.getElementById('fAp').value;
+  const up = document.getElementById('fUp').value;
+  
+  filtered=DATA.filter(d=>{
+    if(spu && !d.spu.includes(spu)) return false;
+    if(dateStart && d.date < dateStart) return false;
+    if(dateEnd && d.date > dateEnd + ' 23:59:59') return false;
+    if(gen && d.gen !== gen) return false;
+    if(ap && d.approve !== ap) return false;
+    if(up && d.upload !== up) return false;
+    return true;
+  });
+  curPage=1; renderPage(); uncheckAll();
+  toast('查询完成，共 '+filtered.length+' 条记录');
+}
+
+function doReset(){
+  document.getElementById('fSpu').value='';
+  document.getElementById('fDateStart').value='';
+  document.getElementById('fDateEnd').value='';
+  document.getElementById('fGen').value='';
+  document.getElementById('fAp').value='';
+  document.getElementById('fUp').value='';
+  filtered=[...DATA]; curPage=1; renderPage(); uncheckAll();
+  toast('已重置');
+}
+
+/* ══ 渲染 ══ */
+function renderPage(){
+  const total=filtered.length;
+  document.getElementById('pTotal').textContent=total;
+  const totalPages=Math.max(1,Math.ceil(total/pageSize));
+  if(curPage>totalPages) curPage=totalPages;
+  const start=(curPage-1)*pageSize, end=Math.min(start+pageSize,total);
+  const page=filtered.slice(start,end);
+
+  const tb=document.getElementById('tbody');
+  if(!page.length){tb.innerHTML='<div style="text-align:center;padding:60px;color:#909399">暂无匹配数据</div>'; renderPager(totalPages); return;}
+
+  tb.innerHTML=page.map((d,idx)=>{
+    const gi=start+idx;
+    const g=GEN_MAP[d.gen];
+    const a=AP_MAP[d.approve];
+    const hasVid = d.gen === 'success';
+    
+    // Checkbox 仅允许对审核通过且无上传、或待审核状态启用（作为批处理条件）
+    const canCheck = (d.gen==='success' && d.approve==='pending') || (d.gen==='success' && d.approve==='approved');
+    const disCk = canCheck ? '' : ' disabled';
+
+    // 缩略图
+    let thumbHtml;
+    if(hasVid){
+      thumbHtml=`<div class="thumb-box clickable" onclick="openPlayer('${d.finalVid}', '${d.vname}')"><img src="${d.finalCov}"><div class="play-mask">▶</div></div>`;
+    }else{
+      thumbHtml=`<div class="thumb-box"><span style="color:#606266; font-size:10px;">处理中</span></div>`;
+    }
+
+    // 状态
+    let apHtml = `<span class="muted">—</span>`;
+    if(d.gen === 'success' && d.approve !== 'none'){
+      apHtml = `<span class="tag ${a[1]}">${a[0]}</span>`;
+    }
+
+    let upHtml = `<span class="muted">—</span>`;
+    if(d.gen === 'success' && d.upload && d.upload !== 'none'){
+      const u = UP_MAP[d.upload];
+      upHtml = `<span class="tag ${u[1]}">${u[0]}</span>`;
+    }
+
+    // 操作按钮
+    let ops='';
+    if(d.gen==='success' && d.approve==='pending'){
+      ops=`<button class="op op-pass" onclick="actApprove(${gi}, 'approved')">通过</button><button class="op op-reject" onclick="actApprove(${gi}, 'rejected')">不通过</button>`;
+    }else if(d.gen==='success' && d.approve==='approved'){
+      if(d.upload === 'fail') {
+        ops += `<button class="op op-retry" onclick="actRetryUpload(${gi})">重传库</button>`;
+      }
+      ops += `<button class="op op-down" onclick="downloadVid('${d.finalVid}')">下载</button>`;
+    }else if(d.gen==='fail'){
+      ops=`<button class="op op-retry" onclick="actRetry(${gi})">重试生成</button>`;
+    }
+    if(!ops) ops = `<span class="muted">—</span>`;
+
+    const vNameStr = d.vname || (d.gen==='progress'?'-':(d.gen==='fail'?'—':'—'));
+
+    return `<div class="t-row" data-gi="${gi}">
+      <div class="t-col-cb"><label class="custom-cb-wrap"><input type="checkbox" class="custom-cb rck" data-gi="${gi}"${disCk}></label></div>
+      <div class="spu-cell">${d.spu}</div>
+      <div>${thumbHtml}</div>
+      <div class="vname${d.vname?'':' vname-empty'}" title="${vNameStr}">${vNameStr}</div>
+      <div class="vdate">${d.date}</div>
+      <div class="creator-cell">${d.creator}</div>
+      <div class="prompt-cell">${d.prompt}</div>
+      <div><span class="tag ${g[1]}">${g[0]}</span></div>
+      <div>${apHtml}</div>
+      <div>${upHtml}</div>
+      <div class="ops">${ops}</div>
+    </div>`;
+  }).join('');
+  renderPager(totalPages);
+}
+
+/* ══ 分页器 ══ */
+function renderPager(totalPages){
+  const nav=document.getElementById('pagerNav');
+  let h=`<button class="pager-btn" ${curPage<=1?'disabled':''} onclick="goPage(${curPage-1})">&lt;</button>`;
+  const pages=calcPages(curPage,totalPages);
+  pages.forEach(p=>{
+    if(p==='...'){h+=`<span class="pager-dots">…</span>`;}
+    else{h+=`<button class="pager-num${p===curPage?' active':''}" onclick="goPage(${p})">${p}</button>`;}
+  });
+  h+=`<button class="pager-btn" ${curPage>=totalPages?'disabled':''} onclick="goPage(${curPage+1})">&gt;</button>`;
+  nav.innerHTML=h;
+}
+function calcPages(cur,total){
+  if(total<=7)return Array.from({length:total},(_,i)=>i+1);
+  const p=[];
+  p.push(1);
+  if(cur>3)p.push('...');
+  for(let i=Math.max(2,cur-1);i<=Math.min(total-1,cur+1);i++)p.push(i);
+  if(cur<total-2)p.push('...');
+  p.push(total);
+  return p;
+}
+function goPage(n){const tp=Math.max(1,Math.ceil(filtered.length/pageSize));if(n<1||n>tp)return;curPage=n;renderPage();uncheckAll();window.scrollTo(0,0);}
+function gotoPage(n){goPage(n);}
+
+/* ══ Checkbox 交互 ══ */
+function toggleAllTop(){
+  const ck = event.target.checked;
+  document.querySelectorAll('.rck:not(:disabled)').forEach(c=>c.checked=ck);
+}
+function uncheckAll(){
+  const topCk = document.getElementById('ckAllTop');
+  if(topCk) topCk.checked=false;
+  document.querySelectorAll('.rck').forEach(c=>c.checked=false);
+}
+document.addEventListener('change', e => {
+  if(e.target.classList.contains('rck')) {
+     const total = document.querySelectorAll('.rck:not(:disabled)').length;
+     const checked = document.querySelectorAll('.rck:checked').length;
+     const topCk = document.getElementById('ckAllTop');
+     if(topCk) topCk.checked = (total > 0 && total === checked);
+  }
+});
+
+/* ══ 行内/批量 操作 ══ */
+function actApprove(gi, status){
+  filtered[gi].approve = status;
+  if(status === 'approved' && (!filtered[gi].upload || filtered[gi].upload === 'none')) {
+     filtered[gi].upload = 'uploading';
+     setTimeout(()=>{ filtered[gi].upload = 'success'; renderPage(); }, 2000);
+  }
+  renderPage();
+  toast(status==='approved' ? '✓ 审核通过，加入自动上传队列' : '✗ 审核不通过');
+}
+
+function actRetry(gi){filtered[gi].gen='progress';filtered[gi].vname='';renderPage();toast('↻ 已提交重试生成'); setTimeout(()=>{ filtered[gi].gen='success'; filtered[gi].approve='pending'; renderPage();}, 2000);}
+
+function actRetryUpload(gi){
+  filtered[gi].upload='uploading';
+  renderPage();
+  toast('↻ 已重试上传至素材库');
+  setTimeout(()=>{ filtered[gi].upload='success'; renderPage();}, 2000);
+}
+
+function downloadVid(url) {
+  toast('⬇ 开始下载视频...');
+  setTimeout(()=> window.open(url, '_blank'), 500);
+}
+
+function batchAct(type){
+  const gis=[...document.querySelectorAll('.rck:checked')].map(c=>+c.dataset.gi);
+  if(!gis.length){toast('请先在表格里勾选记录', 'error');return;}
+  
+  let cnt=0;
+  gis.forEach(gi=>{
+    if(filtered[gi].gen==='success' && filtered[gi].approve==='pending'){
+      filtered[gi].approve = type==='approve' ? 'approved' : 'rejected';
+      if(type==='approve') {
+        filtered[gi].upload = 'uploading';
+        setTimeout(()=>{ filtered[gi].upload = 'success'; renderPage(); }, 2000);
+      }
+      cnt++;
+    }
+  });
+  renderPage(); uncheckAll();
+  if(cnt>0) toast((type==='approve'?'✓ 批量审核通过 ':'✗ 批量审核驳回 ')+cnt+' 条记录');
+  else toast('勾选的记录中没有待审核状态的视频', 'error');
+}
+
+function batchDownload(){
+  const gis=[...document.querySelectorAll('.rck:checked')].map(c=>+c.dataset.gi);
+  if(!gis.length){toast('请先在表格里勾选记录', 'error');return;}
+  
+  let cnt=0;
+  gis.forEach(gi=>{
+    if(filtered[gi].gen==='success' && filtered[gi].approve==='approved'){
+      cnt++;
+    }
+  });
+  
+  uncheckAll();
+  if(cnt>0) toast(`⬇ 已将 ${cnt} 个视频加入打包下载队列，请稍候...`);
+  else toast('勾选的记录中没有审核通过可下载的视频', 'error');
+}
+
+/* ══ 视频预览 ══ */
+function openPlayer(url, name){
+  document.getElementById('pTitle').textContent = name || '视频预览';
+  document.getElementById('vPlayer').src = url;
+  document.getElementById('ovPlayer').classList.add('show');
+}
+function closePlayer(){document.getElementById('ovPlayer').classList.remove('show');document.getElementById('vPlayer').pause();}
+document.getElementById('ovPlayer').addEventListener('click', e => { if(e.target.id==='ovPlayer') closePlayer(); });
+
+/* ══ Prompt 悬浮预览逻辑 (完美继承) ══ */
+document.addEventListener('mouseover', function(e) {
+  const chip = e.target.closest('.media-chip');
+  if(chip) {
+    const rect = chip.getBoundingClientRect();
+    const pop = document.getElementById('globalPreviewPop');
+    const type = chip.dataset.type;
+    const url = chip.dataset.url;
+    const label = chip.dataset.label;
+    
+    pop.className = 'global-preview-pop'; 
+    
+    let popHtml = `<div class="pop-tag">${label} 预览</div>`;
+    if(url && url !== 'undefined') {
+      if(type === 'video') {
+        popHtml += `<video src="${url}" autoplay loop muted style="width:100%;height:100%;object-fit:cover;"></video>`;
+        popHtml += `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:32px;text-shadow:0 2px 8px rgba(0,0,0,0.5);">▶</div>`;
+      } else if (type === 'audio') {
+        pop.classList.add('audio-pop');
+        popHtml = `
+          <div style="font-weight:600; margin-bottom:8px; font-size:12px;">${label} 预览</div>
+          <div style="display:flex; align-items:center; gap:8px;">
+             <div style="width:16px; height:16px; border:2px solid var(--accent); border-radius:50%; border-top-color:transparent; animation:spin 1s linear infinite;"></div>
+             <span style="font-size:11px; color:var(--ink-3);">波形解析中...</span>
+          </div>
+        `;
+      } else {
+        popHtml += `<img src="${url}" style="width:100%;height:100%;object-fit:cover;">`;
+      }
+    } else {
+       popHtml += `<div style="width:100%;height:100%; background:#e8e8e8;"></div>`;
+    }
+    
+    pop.innerHTML = popHtml;
+    // 弹窗定位修正 (表格可能会滚动，使用 fixed 定位)
+    pop.style.left = (rect.left + rect.width / 2 - 90) + 'px';
+    pop.style.top = (rect.top - (type==='audio'?90:330)) + 'px'; 
+    
+    // 防顶部溢出
+    if (rect.top < 330 && type !== 'audio') {
+        pop.style.top = (rect.bottom + 10) + 'px';
+    }
+    
+    pop.classList.add('show');
+  }
+});
+
+document.addEventListener('mouseout', function(e) {
+  const chip = e.target.closest('.media-chip');
+  if(chip) {
+    document.getElementById('globalPreviewPop').classList.remove('show');
+  }
+});
+
+/* ══ 初始化 ══ */
+renderPage();
+</script>
+</body>
+</html>

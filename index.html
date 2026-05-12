@@ -38,10 +38,11 @@
   .creator-panel { flex: 7; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); display: flex; flex-direction: column; overflow: hidden; min-width: 0; position: relative; }
   .list-panel { flex: 3; display: flex; flex-direction: column; min-width: 320px; }
 
-  /* 生成面板内部 */
+  /* 生成面板内部头部 */
   .panel-hd { padding: 16px 20px; border-bottom: 1px solid var(--line); font-weight: 600; font-size: 15px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background: var(--paper); z-index: 101; }
-  .panel-bd { padding: 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 24px; position: relative; scroll-behavior: smooth; }
-  .panel-ft { padding: 16px 24px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; align-items: center; background: var(--paper); flex-shrink: 0; z-index: 101; }
+  
+  /* 恢复经典底部样式 */
+  .panel-ft { padding: 16px 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; background: var(--paper); flex-shrink: 0; }
 
   .field { display: flex; flex-direction: column; gap: 10px; }
   .field-label { font-size: 12px; font-weight: 600; color: var(--ink-1); display: flex; align-items: center; gap: 8px; }
@@ -93,19 +94,11 @@
   .asset-remove { width: 26px; height: 26px; border-radius: 50%; color: var(--ink-3); display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; background: var(--line-2); transition: 0.1s; }
   .asset-remove:hover { background: var(--line); color: var(--dot-fail); }
 
-  /* ================== 核心：底部悬浮的 Prompt 配置区 ================== */
-  .sticky-prompt-bar {
-    position: sticky; bottom: -24px; background: rgba(255, 255, 255, 0.94);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    z-index: 100; margin: 12px -24px -24px -24px; padding: 20px 24px 24px 24px;
-    border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(0,0,0,0.06);
-  }
-
+  /* 核心：Prompt 配置区右侧栏 */
   .prompt-container { border: 1px solid var(--line); border-radius: var(--r); background: var(--paper); overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
   .prompt-toolbar { padding: 8px 14px; background: var(--line-2); border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--ink-4); }
   
   .rich-editor { 
-    min-height: 120px; max-height: 180px; overflow-y: auto;
     padding: 16px; font-size: 13px; outline: none; 
     white-space: pre-wrap; word-break: break-word; color: var(--ink-2);
     line-height: 2.2; position: relative;
@@ -164,9 +157,8 @@
   .picker-toolbar { padding: 12px 20px; border-bottom: 1px solid var(--line-2); display: flex; gap: 12px; align-items: center; justify-content: space-between;}
   .picker-toolbar input { flex: 1; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--r); font-size: 12px; outline: none; }
   
-  /* 素材库 Item 平铺排版 (无折叠，纯净网格流) */
+  /* 素材库 Item 排版 */
   .picker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); align-content: flex-start; gap: 16px; padding: 20px; overflow-y: auto; flex: 1; }
-
   .picker-item-wrap { display: flex; flex-direction: column; gap: 6px; cursor: pointer; }
   .picker-item-wrap:hover .picker-item { border-color: var(--ink-4); }
   .picker-item-wrap:hover .picker-item-name { color: var(--accent); }
@@ -177,7 +169,7 @@
   .picker-item img, .picker-item video { width: 100%; height: 100%; object-fit: cover; }
   .picker-item-name { font-size: 11px; color: var(--ink-2); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; transition: 0.1s; }
 
-  /* 口播文本列表 (完全复用场景库卡片风格，垂直排布防遮挡) */
+  /* 口播文本列表 */
   .bc-grid { display: flex; flex-direction: column; gap: 20px; padding: 20px; overflow-y: auto; flex: 1; }
   .bc-group-card { border: 1px solid var(--line); border-radius: var(--r); background: var(--paper); overflow: hidden; flex-shrink:0; }
   .bc-group-header { padding: 12px 16px; background: var(--bg); font-weight: 600; font-size: 13px; color: var(--ink-1); border-bottom: 1px solid var(--line); }
@@ -188,7 +180,7 @@
   .bc-item.selected { border-color: var(--accent); background: var(--accent-soft); }
   .bc-text { color: var(--ink-3); font-size: 12px; line-height: 1.6; }
 
-  /* 右侧任务列表 (放大视频缩略图) */
+  /* 右侧任务列表 */
   .task-list-title { font-weight: 600; margin-bottom: 16px; font-size: 14px; display: flex; flex-direction: column; gap: 10px; }
   .filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
   .filter-group select { font-size: 11px; border: 1px solid var(--line); border-radius: 4px; padding: 4px 6px; outline: none; background: var(--paper); color: var(--ink-2); flex: 1; min-width: 85px;}
@@ -196,7 +188,6 @@
   .task-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; margin-bottom: 12px; }
   .task-card-hd { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 11px; align-items:center; }
   .task-card-body { display: flex; gap: 14px; }
-  /* 缩略图增大至 108x192 */
   .task-card-vid { width: 108px; height: 192px; background: #111; border-radius: 6px; flex-shrink: 0; position: relative; background-size: cover; background-position: center; border: 1px solid var(--line-2); cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
   .task-card-vid::after { content: "▶"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 24px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
   .task-card-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
@@ -234,7 +225,7 @@
 
   .empty-state { text-align: center; margin-top: 100px; color: var(--ink-4); width: 100%; }
 
-  /* 自定义 Select 加宽 */
+  /* 自定义 Select */
   .styled-select {
     padding: 6px 24px 6px 10px; border: 1px solid var(--line); border-radius: var(--r);
     outline: none; font-size: 12px; color: var(--ink-1); background: var(--paper);
@@ -290,135 +281,136 @@
     
     <div class="creator-panel">
       <div class="panel-hd">新建视频生成任务</div>
-      <div class="panel-bd" id="creatorPanelBd">
-
-        <div class="field" style="gap:6px;">
-          <div class="field-label" style="display:flex; justify-content:flex-start;">
-            <span>配置操作项 (任意多选组合)</span>
-            <button id="btnSelectAll" class="btn-select-all" onclick="toggleAllTags()">一键全选</button>
-          </div>
-          <div class="tag-group">
-            <div class="tag" data-tag="spu" onclick="toggleTag(this)">换 SPU</div>
-            <div class="tag" data-tag="scene" onclick="toggleTag(this)">换场景</div>
-            <div class="tag" data-tag="model" onclick="toggleTag(this)">换模特形象与穿搭</div>
-            <div class="tag" data-tag="bc" onclick="toggleTag(this)">模特对嘴型口播</div>
-            <div class="tag" data-tag="audio" onclick="toggleTag(this)">🎵 换模特音色</div>
-          </div>
-        </div>
-
-        <div class="field">
-          <div class="field-label"><span class="num-badge">1</span> 参考源 (视频素材) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
-          <div class="row-module" id="box-video">
-            <div class="asset-slot">
-              <button class="btn-upload" onclick="openPicker('video')">📁 从素材库选择</button>
-              <button class="btn-upload" onclick="handleUploadAction('video')">↑ 上传参考视频</button>
+      
+      <div style="display:flex; flex:1; overflow:hidden;">
+        
+        <div id="creatorLeft" style="flex: 5; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; scroll-behavior: smooth;">
+          <div class="field" style="gap:6px;">
+            <div class="field-label" style="display:flex; justify-content:flex-start;">
+              <span>配置操作项 (任意多选组合)</span>
+              <button id="btnSelectAll" class="btn-select-all" onclick="toggleAllTags()">一键全选</button>
+            </div>
+            <div class="tag-group">
+              <div class="tag" data-tag="spu" onclick="toggleTag(this)">换 SPU</div>
+              <div class="tag" data-tag="scene" onclick="toggleTag(this)">换场景</div>
+              <div class="tag" data-tag="model" onclick="toggleTag(this)">换模特形象与穿搭</div>
+              <div class="tag" data-tag="bc" onclick="toggleTag(this)">模特对嘴型口播</div>
+              <div class="tag" data-tag="audio" onclick="toggleTag(this)">🎵 换模特音色</div>
             </div>
           </div>
-        </div>
 
-        <div class="field" id="row-spu">
-          <div class="field-label" style="display:flex; justify-content:flex-start; align-items:center;">
-            <span class="num-badge">2</span> 
-            <span>商品图片选择 <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必选</span></span>
-            <button id="btnSelectAllSpu" class="btn-select-all" onclick="toggleAllSpuImgs()">一键勾选</button>
-          </div>
-          <div class="row-module">
-            <div class="color-tabs" id="colorTabsContainer"></div>
-            <div class="img-grid" id="spuGrid"></div>
-            <div class="spu-cart-pool" id="spuCartPool" style="display:none;">
-              <div class="spu-cart-title">
-                <span>🖼️ 已选商品图 (<span id="cartCount">0</span>)</span>
-              </div>
-              <div class="spu-cart-list" id="spuCartList"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="field" id="row-scene" style="display:none;">
-          <div class="field-label"><span class="num-badge" id="lbl-scene">3</span> 换场景 (场景背景图) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
-          <div class="row-module" id="box-scene">
-            <div class="asset-slot">
-              <button class="btn-upload" onclick="openPicker('scene')">📁 从素材库选择</button>
-              <button class="btn-upload" onclick="handleUploadAction('scene')">↑ 上传新素材</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="field" id="row-model" style="display:none;">
-          <div class="field-label"><span class="num-badge" id="lbl-model">4</span> 换模特形象与穿搭 (模特展示图) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
-          <div class="row-module" id="box-model">
-            <div class="asset-slot">
-              <button class="btn-upload" onclick="openPicker('model')">📁 从素材库选择</button>
-              <button class="btn-upload" onclick="handleUploadAction('model')">↑ 上传新素材</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="field" id="row-bc" style="display:none;">
-          <div class="field-label"><span class="num-badge" id="lbl-bc">5</span> 模特对嘴型口播 (文案内容) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
-          <div class="row-module" style="display:flex; gap:12px; align-items: flex-start;">
-            <textarea id="bcInput" placeholder="输入口播内容..." style="flex:1; height:60px; padding:10px; border:1px solid var(--line); border-radius:var(--r); outline:none; font-family:inherit; resize:none;" oninput="updatePrompt()"></textarea>
-            <button class="btn-upload" style="height:38px;" onclick="openBcModal()">📁 从口播库选择</button>
-          </div>
-        </div>
-
-        <div class="field" id="row-audio" style="display:none;">
-          <div class="field-label"><span class="num-badge" id="lbl-audio">6</span> 换模特音色 (参考音频源) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
-          <div class="row-module" id="box-audio">
-            <div class="asset-slot">
-              <button class="btn-upload" onclick="openPicker('audio')">📁 从音频库选择</button>
-              <button class="btn-upload" onclick="handleUploadAction('audio')">↑ 上传新素材</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="sticky-prompt-bar">
           <div class="field">
-            <div class="field-label" style="font-size:14px; justify-content:space-between;">
-              <span>PROMPT 指令实时生成</span>
-              <button onclick="resetManual()" style="color:var(--accent); font-size:11px; display:none; background:var(--accent-soft); padding:4px 8px; border-radius:4px; font-weight:500;" id="btn-reset-p">恢复系统自动生成</button>
-            </div>
-            <div class="prompt-container">
-              <div class="prompt-toolbar">
-                <span id="prompt-status">系统自动构建中，支持悬浮预览，输入 "@" 可手动插入上方素材</span>
+            <div class="field-label"><span class="num-badge">1</span> 参考源 (视频素材) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
+            <div class="row-module" id="box-video">
+              <div class="asset-slot">
+                <button class="btn-upload" onclick="openPicker('video')">📁 从素材库选择</button>
+                <button class="btn-upload" onclick="handleUploadAction('video')">↑ 上传参考视频</button>
               </div>
-              <div class="rich-editor" id="richEditor" contenteditable="true"></div>
+            </div>
+          </div>
+
+          <div class="field" id="row-spu">
+            <div class="field-label" style="display:flex; justify-content:flex-start; align-items:center;">
+              <span class="num-badge">2</span> 
+              <span>商品图片选择 <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必选</span></span>
+              <button id="btnSelectAllSpu" class="btn-select-all" onclick="toggleAllSpuImgs()">一键勾选</button>
+            </div>
+            <div class="row-module">
+              <div class="color-tabs" id="colorTabsContainer"></div>
+              <div class="img-grid" id="spuGrid"></div>
+              <div class="spu-cart-pool" id="spuCartPool" style="display:none;">
+                <div class="spu-cart-title">
+                  <span>🖼️ 已选商品图 (<span id="cartCount">0</span>)</span>
+                </div>
+                <div class="spu-cart-list" id="spuCartList"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" id="row-scene" style="display:none;">
+            <div class="field-label"><span class="num-badge" id="lbl-scene">3</span> 换场景 (场景背景图) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
+            <div class="row-module" id="box-scene">
+              <div class="asset-slot">
+                <button class="btn-upload" onclick="openPicker('scene')">📁 从素材库选择</button>
+                <button class="btn-upload" onclick="handleUploadAction('scene')">↑ 上传新素材</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" id="row-model" style="display:none;">
+            <div class="field-label"><span class="num-badge" id="lbl-model">4</span> 换模特形象与穿搭 (模特展示图) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
+            <div class="row-module" id="box-model">
+              <div class="asset-slot">
+                <button class="btn-upload" onclick="openPicker('model')">📁 从素材库选择</button>
+                <button class="btn-upload" onclick="handleUploadAction('model')">↑ 上传新素材</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" id="row-bc" style="display:none;">
+            <div class="field-label"><span class="num-badge" id="lbl-bc">5</span> 模特对嘴型口播 (文案内容) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
+            <div class="row-module" style="display:flex; gap:12px; align-items: flex-start;">
+              <textarea id="bcInput" placeholder="输入口播内容..." style="flex:1; height:60px; padding:10px; border:1px solid var(--line); border-radius:var(--r); outline:none; font-family:inherit; resize:none;" oninput="updatePrompt()"></textarea>
+              <button class="btn-upload" style="height:38px;" onclick="openBcModal()">📁 从口播库选择</button>
+            </div>
+          </div>
+
+          <div class="field" id="row-audio" style="display:none;">
+            <div class="field-label"><span class="num-badge" id="lbl-audio">6</span> 换模特音色 (参考音频源) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
+            <div class="row-module" id="box-audio">
+              <div class="asset-slot">
+                <button class="btn-upload" onclick="openPicker('audio')">📁 从音频库选择</button>
+                <button class="btn-upload" onclick="handleUploadAction('audio')">↑ 上传新素材</button>
+              </div>
             </div>
           </div>
         </div>
-
-      </div>
-
-      <div class="panel-ft">
-        <div style="display:flex; flex-wrap: wrap; gap:12px; align-items:center; justify-content:flex-end; width:100%;">
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span style="font-weight:600; color:var(--ink-1); font-size:12px;">调用模型</span>
-            <select id="modelSelect" class="styled-select" style="width: 160px;">
-              <option value="Seedance 2.0 Fast" selected>Seedance 2.0 Fast</option>
-              <option value="Seedance 2.0">Seedance 2.0</option>
-            </select>
+        
+        <div id="creatorRight" style="flex: 3; border-left: 1px solid var(--line); display: flex; flex-direction: column; background: var(--bg); min-width: 320px;">
+          <div style="flex: 1; display: flex; flex-direction: column; padding: 20px; overflow: hidden;">
+            <div class="field-label" style="font-size:14px; justify-content:space-between; margin-bottom:12px;">
+              <span>PROMPT 指令实时生成</span>
+              <button onclick="resetManual()" style="color:var(--accent); font-size:11px; display:none; background:var(--accent-soft); padding:4px 8px; border-radius:4px; font-weight:500;" id="btn-reset-p">恢复自动生成</button>
+            </div>
+            <div class="prompt-container" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
+              <div class="prompt-toolbar">
+                <span id="prompt-status">系统自动构建中，输入 "@" 可手动插入上方素材</span>
+              </div>
+              <div class="rich-editor" id="richEditor" contenteditable="true" style="flex: 1; max-height: none; overflow-y: auto;"></div>
+            </div>
           </div>
           
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span style="font-weight:600; color:var(--ink-1); font-size:12px;">时长</span>
-            <select id="durationSelect" class="styled-select" style="width: 70px;">
-              <option value="4">4 秒</option>
-              <option value="5">5 秒</option>
-              <option value="6">6 秒</option>
-              <option value="7">7 秒</option>
-              <option value="8">8 秒</option>
-              <option value="9">9 秒</option>
-              <option value="10">10 秒</option>
-              <option value="11">11 秒</option>
-              <option value="12">12 秒</option>
-              <option value="13">13 秒</option>
-              <option value="14">14 秒</option>
-              <option value="15" selected>15 秒</option>
-            </select>
+          <div style="padding: 20px; border-top: 1px solid var(--line); background: var(--paper); display: flex; flex-direction: column; gap: 16px; flex-shrink: 0;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <span style="font-weight:600; color:var(--ink-1); font-size:12px;">调用模型</span>
+              <select id="modelSelect" class="styled-select" style="width: 160px;">
+                <option value="Seedance 2.0 Fast" selected>Seedance 2.0 Fast</option>
+                <option value="Seedance 2.0">Seedance 2.0</option>
+              </select>
+            </div>
+            
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <span style="font-weight:600; color:var(--ink-1); font-size:12px;">时长</span>
+              <select id="durationSelect" class="styled-select" style="width: 160px;">
+                <option value="4">4 秒</option>
+                <option value="5">5 秒</option>
+                <option value="6">6 秒</option>
+                <option value="7">7 秒</option>
+                <option value="8">8 秒</option>
+                <option value="9">9 秒</option>
+                <option value="10">10 秒</option>
+                <option value="11">11 秒</option>
+                <option value="12">12 秒</option>
+                <option value="13">13 秒</option>
+                <option value="14">14 秒</option>
+                <option value="15" selected>15 秒</option>
+              </select>
+            </div>
+  
+            <button class="btn-primary" style="width: 100%; margin-top: 4px; justify-content:center;" onclick="openConfirmModal()">提交生成任务</button>
           </div>
-
-          <button class="btn-primary" style="margin-left: 8px;" onclick="openConfirmModal()">提交生成任务</button>
         </div>
+
       </div>
     </div>
 
@@ -468,7 +460,7 @@
       检测到左侧创作区已有未提交的配置内容。<br><br>
       如果您继续导入当前所选的任务数据，**左侧的现有配置将被清空并覆盖**。确认要继续吗？
     </div>
-    <div class="panel-ft" style="background:var(--paper); border-top:1px solid var(--line);">
+    <div class="panel-ft">
       <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeWarnModal()">取消</button>
       <button class="btn-primary" style="background:var(--dot-fail);" onclick="doForceLoadTask()">确认覆盖并载入</button>
     </div>
@@ -503,7 +495,7 @@
       </div>
 
     </div>
-    <div class="panel-ft" style="background:var(--paper); border-top:1px solid var(--line); justify-content:flex-end;">
+    <div class="panel-ft">
       <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeConfirmModal()">取消返回</button>
       <button class="btn-primary" style="padding: 10px 32px; font-size:14px;" onclick="doSubmitTask()">确认无误，正式提交</button>
     </div>
@@ -524,9 +516,36 @@
       <button class="btn-upload" onclick="handleUploadAction(pickerCurrentType, true)">↑ 上传新素材</button>
     </div>
     <div class="picker-grid" id="pickerGrid"></div>
-    <div class="panel-ft" style="justify-content:flex-end;">
+    <div class="panel-ft">
       <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closePicker()">取消</button>
       <button class="btn-primary" style="padding: 8px 24px; font-size:13px;" onclick="confirmPicker()">确认选用</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-wrap" id="uploadVideoModal">
+  <div class="modal-mask" onclick="closeUploadVideoModal()"></div>
+  <div class="modal-box mini">
+    <div class="panel-hd" style="border-bottom: 1px solid var(--line);">
+      <span>上传参考视频</span>
+      <button class="modal-close" onclick="closeUploadVideoModal()" style="font-size:20px;">×</button>
+    </div>
+    <div style="padding: 24px;">
+      <div class="form-group">
+        <label>视频组标题 <span style="color:var(--dot-fail); font-weight:normal;">*</span></label>
+        <input type="text" id="newVideoGroupTitle" placeholder="如：春季风衣大促系列">
+      </div>
+      <div class="form-group" style="margin-bottom:8px;">
+        <label>选择视频文件 (支持单选/多选) <span style="color:var(--dot-fail); font-weight:normal;">*</span></label>
+        <button class="btn-outline" style="border-style:dashed; width:100%; padding:12px;" onclick="document.getElementById('hiddenVideoInput').click()">+ 点击选择本地视频</button>
+        <input type="file" id="hiddenVideoInput" multiple accept="video/*" style="display:none;" onchange="onVideoFilesSelected(event)">
+      </div>
+      <div style="font-size:12px; color:var(--ink-4); margin-bottom:8px;" id="videoGroupFileCount">尚未选择视频文件</div>
+      <div id="videoUploadList" style="display:flex; flex-direction:column; gap:8px; max-height:200px; overflow-y:auto;"></div>
+    </div>
+    <div class="panel-ft">
+      <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeUploadVideoModal()">取消</button>
+      <button class="btn-primary" style="padding: 8px 24px; font-size:13px;" onclick="confirmUploadVideoGroup()">确认打包上传</button>
     </div>
   </div>
 </div>
@@ -545,7 +564,7 @@
       <button class="btn-upload" style="background:var(--ink-1); color:white; border:none;" onclick="openAddBcModal(); closeBcModal();">+ 添加口播</button>
     </div>
     <div class="bc-grid" id="bcGrid"></div>
-    <div class="panel-ft" style="justify-content:flex-end;">
+    <div class="panel-ft">
       <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeBcModal()">取消</button>
       <button class="btn-primary" style="padding: 8px 24px; font-size:13px;" onclick="confirmBc()">确认选用</button>
     </div>
@@ -569,7 +588,7 @@
 
       <button class="btn-outline" style="width:100%; border-style:dashed; padding:10px;" onclick="appendBcParagraph()">+ 添加下一段口播</button>
     </div>
-    <div class="panel-ft" style="justify-content:flex-end; border-top:1px solid var(--line);">
+    <div class="panel-ft">
       <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeAddBcModal()">取消</button>
       <button class="btn-primary" style="padding: 8px 24px; font-size:13px;" onclick="confirmAddBc()">保存并应用</button>
     </div>
@@ -601,7 +620,7 @@
     return raw.replace(PREFIX, `${PREFIX}120x180/`);
   }
 
-  // ================= 2. 数据 Mock (全量平铺打平) =================
+  // ================= 2. 数据 Mock =================
   const spuJsonData = {"data":[[
     {"id":"30b","imageUrl":"https://img.flamingo.shop/p/show/product/b63344bafc504524a0b6e28b43580c70.jpg","optionValue":"Mid Blue"},
     {"id":"2d3","imageUrl":"https://img.flamingo.shop/p/show/373095764b6a4d0f82ad90e43744459e.jpg","optionValue":"Mid Blue"},
@@ -611,7 +630,6 @@
     {"id":"1cb","imageUrl":"https://img.flamingo.shop/p/776504b9d7c64563bd26dccc2157547d.jpg","optionValue":"Navy Blue"}
   ]]};
 
-  // 这里的库数据已全部剥离 groupCard 层级，变为单纯的扁平数组
   const ASSETS_LIB = {
     video: [
       { id: 'v1_1', name: '春季风衣大促系列-Part1.mp4', url: 'https://media.flamingo.shop/v/7481748d89f4436c85b563b9b0c8623f.mp4', isVideo: true, cover: 'https://img.flamingo.shop/p/show/89eff2e31686479cbbfa3ad62f28cfdf.png' },
@@ -632,7 +650,6 @@
     ]
   };
 
-  // 口播库依然带组装，但是 UI 展现是直接大列表
   const BROADCAST_LIB = [
     {
       groupId: "b1", groupName: "春季风衣大促话术组合",
@@ -714,7 +731,7 @@
 
   function toggleAllSpuImgs() {
     const currentImgs = colorGroups[currentColor];
-    const allSelected = currentImgs.every(p => selectedSpuCart.some(item => item.id === p.id));
+    const allSelected = currentImgs.length > 0 && currentImgs.every(p => selectedSpuCart.some(item => item.id === p.id));
     
     if (allSelected) {
       currentImgs.forEach(p => {
@@ -882,9 +899,11 @@
     if(activeTags.has('audio')) document.getElementById('lbl-audio').innerText = nextNum++;
   }
 
-  // ================= 弹窗素材库 (支持级联即时搜索) =================
+  // ================= 弹窗素材库 =================
   let pickerCurrentType = null;
   let pickerSelectedId = null;
+  let pendingVideoUploadFiles = [];
+  let pendingVideoUploadFromPicker = false;
 
   function openPicker(type) {
     pickerCurrentType = type;
@@ -949,16 +968,25 @@
     updatePrompt();
   }
 
-  // 批量/单切片原生上传逻辑 (全部回归扁平直接Push)
+  // 批量/单切片原生上传逻辑
   function handleUploadAction(type, fromPicker = false) {
+    if (type === 'video') {
+       document.getElementById('newVideoGroupTitle').value = '';
+       document.getElementById('videoUploadList').innerHTML = '';
+       document.getElementById('videoGroupFileCount').innerText = '尚未选择视频文件';
+       document.getElementById('hiddenVideoInput').value = ''; 
+       pendingVideoUploadFiles = [];
+       pendingVideoUploadFromPicker = fromPicker;
+       document.getElementById('uploadVideoModal').classList.add('open');
+       if(fromPicker) closePicker(); 
+       return;
+    }
+
     const input = document.createElement('input');
     input.type = 'file';
     
     if (type === 'spuExtra') {
       input.accept = 'image/*';
-      input.multiple = true; 
-    } else if (type === 'video') { 
-      input.accept = 'video/*'; 
       input.multiple = true; 
     } else if (type === 'audio') { 
       input.accept = 'audio/*'; 
@@ -989,20 +1017,20 @@
                 id: 'u_' + Date.now() + index,
                 name: file.name,
                 url: URL.createObjectURL(file),
-                isVideo: type === 'video',
+                isVideo: false,
                 isAudio: type === 'audio',
-                cover: type === 'video' || type === 'audio' ? null : URL.createObjectURL(file)
+                cover: type === 'audio' ? null : URL.createObjectURL(file)
               };
-              ASSETS_LIB[type].unshift(newObj); // 直接平铺追加至最前
+              ASSETS_LIB[type].unshift(newObj);
               if (index === 0) firstObj = newObj;
            });
 
            showToast(`成功上传 ${files.length} 个素材并入库`);
 
            if (fromPicker) {
-              openPicker(type); // 重新渲染 Picker
+              openPicker(type); 
            } else {
-              assetsState[type] = firstObj; // 默认挂载第一个
+              assetsState[type] = firstObj; 
               renderAssetSlot(type);
               updatePrompt();
            }
@@ -1010,6 +1038,60 @@
       }
     };
     input.click();
+  }
+
+  // 视频组专属选择
+  function onVideoFilesSelected(e) {
+    if (e.target.files.length > 0) {
+       pendingVideoUploadFiles = Array.from(e.target.files);
+       document.getElementById('videoGroupFileCount').innerText = `已选择 ${pendingVideoUploadFiles.length} 个视频文件`;
+       
+       const titleInput = document.getElementById('newVideoGroupTitle');
+       if (!titleInput.value) {
+          titleInput.value = pendingVideoUploadFiles[0].name.split('.')[0] + (pendingVideoUploadFiles.length > 1 ? ' 等系列' : '');
+       }
+       
+       document.getElementById('videoUploadList').innerHTML = pendingVideoUploadFiles.map(f => `<div style="font-size:11px; color:var(--ink-2); background:var(--bg); padding:6px 10px; border-radius:4px; border:1px solid var(--line);"><span style="color:var(--accent); margin-right:6px;">▶</span>${f.name}</div>`).join('');
+    }
+    e.target.value = '';
+  }
+
+  // 确认上传视频组弹窗
+  function closeUploadVideoModal() {
+    document.getElementById('uploadVideoModal').classList.remove('open');
+    pendingVideoUploadFiles = [];
+    if(pendingVideoUploadFromPicker) openPicker('video');
+  }
+
+  function confirmUploadVideoGroup() {
+    const title = document.getElementById('newVideoGroupTitle').value.trim();
+    if (!title) return showToast('请输入视频组标题', 'error');
+    if (pendingVideoUploadFiles.length === 0) return showToast('请至少选择一个视频文件', 'error');
+
+    let firstObj = null;
+    pendingVideoUploadFiles.forEach((file, index) => {
+      const newObj = {
+          id: 'u_' + Date.now() + index,
+          name: pendingVideoUploadFiles.length > 1 ? `${title}-Part${index+1}` : title,
+          url: URL.createObjectURL(file),
+          isVideo: true,
+          cover: null
+      };
+      ASSETS_LIB.video.unshift(newObj);
+      if (index === 0) firstObj = newObj;
+    });
+
+    showToast(`成功上传 ${pendingVideoUploadFiles.length} 个视频`);
+
+    document.getElementById('uploadVideoModal').classList.remove('open');
+
+    if (pendingVideoUploadFromPicker) {
+       openPicker('video');
+    } else {
+       assetsState.video = firstObj; 
+       renderAssetSlot('video');
+       updatePrompt();
+    }
   }
 
   function removeAsset(type) {
@@ -1055,7 +1137,7 @@
     }
   }
 
-  // --- 口播库 (纯下拉垂直瀑布流) ---
+  // --- 口播库 ---
   let selectedBcIdx = null; 
   function openBcModal() {
     document.getElementById('bcSearchInput').value = '';
@@ -1112,7 +1194,7 @@
     updatePrompt();
   }
 
-  // --- 动态添加口播子弹窗 (修复必填与删除) ---
+  // --- 动态添加口播子弹窗 ---
   let bcParaCount = 1;
   function openAddBcModal() {
     bcParaCount = 1;
@@ -1504,7 +1586,7 @@
       updatePrompt();
     }
     
-    document.getElementById('creatorPanelBd').scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('creatorLeft').scrollTo({ top: 0, behavior: 'smooth' });
     showToast('已复制该任务配置到左侧创作区');
   }
 
@@ -1578,7 +1660,7 @@
         bodyHtml = `
           <div class="task-card-vid" style="background-image:url('${coverUrl}');" onclick="openVideo('${t.finalVideo}', '${t.finalCover}')"></div>
           <div class="task-card-info">
-            <div style="font-size:11px; font-weight:600; color:var(--ink-1); margin-bottom:4px;">${t.model} · ${t.duration}秒</div>
+            <div style="font-size:11px; font-weight:600; color:var(--ink-1); margin-bottom:4px;">${t.model}</div>
             <div class="task-card-prompt">${t.prompt}</div>
             
             <div style="margin-top:auto; display:flex; justify-content:space-between; align-items:center;">
@@ -1587,7 +1669,7 @@
               <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
                 ${actionsHtml}
                 ${t.auditStatus === 'pending' ? `<button class="btn-outline" style="color:var(--dot-fail);" onclick="doAudit('${t.id}', 'rejected')">不通过</button><button class="btn-outline" style="color:var(--dot-ok); border-color:var(--dot-ok);" onclick="doAudit('${t.id}', 'approved')">通过</button>` : ''}
-                ${t.auditStatus === 'approved' && t.uploadStatus === 'fail' ? `<button class="btn-outline" style="color:var(--dot-fail);" onclick="retryUpload('${t.id}')">重试上传</button>` : ''}
+                ${t.auditStatus === 'approved' && t.uploadStatus === 'fail' ? `<button class="btn-outline" style="color:var(--dot-fail);" onclick="retryUpload('${t.id}')">重传库</button>` : ''}
                 ${t.auditStatus === 'approved' ? `<button class="btn-outline" style="color:var(--accent); border-color:var(--accent);" onclick="downloadVideo('${t.finalVideo}')">下载视频</button>` : ''}
               </div>
             </div>
@@ -1749,32 +1831,33 @@
     }, 1500);
   }
 
+  // 修复：优化后严格执行 renderTaskList()
   function doAudit(id, status) {
+    if (!currentSPU || !DB[currentSPU]) return;
     const t = DB[currentSPU].tasks.find(x => x.id === id);
+    if (!t) return;
+
     t.auditStatus = status;
+    if (status === 'approved') {
+       t.uploadStatus = 'uploading';
+    }
+    
+    renderTaskList();
     
     if (status === 'approved') {
-      mockAuditApproveCount++;
-      t.uploadStatus = 'uploading';
-      renderTaskList();
-      
-      setTimeout(() => {
-        if (mockAuditApproveCount === 2 && !t._hasRetriedUp) {
-          t.uploadStatus = 'fail';
-        } else {
+       setTimeout(() => {
           t.uploadStatus = 'success';
-        }
-        renderTaskList();
-      }, 1500);
-    } else {
-      renderTaskList();
+          renderTaskList();
+       }, 1500);
     }
   }
 
   function retryUpload(id) {
+    if (!currentSPU || !DB[currentSPU]) return;
     const t = DB[currentSPU].tasks.find(x => x.id === id);
+    if (!t) return;
+    
     t.uploadStatus = 'uploading';
-    t._hasRetriedUp = true;
     renderTaskList();
     setTimeout(() => {
       t.uploadStatus = 'success';

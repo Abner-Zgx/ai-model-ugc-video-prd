@@ -33,10 +33,10 @@
   .input-field button { padding: 7px 14px; background: var(--ink-1); color: white; font-size: 12px; }
   .spu-meta { display: none; align-items: center; gap: 12px; font-size: 12px; margin-left: 8px; padding-left: 16px; border-left: 1px solid var(--line); }
 
-  /* 布局核心：放大创作区 (75/25) */
+  /* 布局核心：7 : 3 分栏 */
   .main-layout { flex: 1; display: flex; overflow: hidden; padding: 20px; gap: 20px; }
-  .creator-panel { flex: 7.5; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); display: flex; flex-direction: column; overflow: hidden; min-width: 0; position: relative; }
-  .list-panel { flex: 2.5; display: flex; flex-direction: column; min-width: 320px; }
+  .creator-panel { flex: 7; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); display: flex; flex-direction: column; overflow: hidden; min-width: 0; position: relative; }
+  .list-panel { flex: 3; display: flex; flex-direction: column; min-width: 320px; }
 
   /* 生成面板内部 */
   .panel-hd { padding: 16px 20px; border-bottom: 1px solid var(--line); font-weight: 600; font-size: 15px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background: var(--paper); z-index: 101; }
@@ -59,15 +59,25 @@
   /* 单个模块行样式 */
   .row-module { padding: 16px; border: 1px solid var(--line-2); border-radius: var(--r); background: var(--bg); }
   
-  /* 商品选图 */
+  /* SPU选图 */
   .color-tabs { display: flex; gap: 8px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; }
   .color-tab { padding: 4px 12px; border-radius: 100px; border: 1px solid var(--line); font-size: 12px; color: var(--ink-3); cursor: pointer; transition: 0.1s; white-space: nowrap; }
   .color-tab.active { background: var(--ink-1); color: white; border-color: var(--ink-1); }
-  .img-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 8px; }
+  .img-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 8px; }
   .img-item { aspect-ratio: 3/4; background: #E2E8F0; border-radius: 4px; cursor: pointer; border: 2px solid transparent; position: relative; transition: border 0.1s; background-size: cover; background-position: center; }
   .img-item:hover { border-color: var(--ink-4); }
   .img-item.selected { border-color: var(--accent); }
-  .img-item.selected::after { content: "✓"; position: absolute; top: -4px; right: -4px; width: 16px; height: 16px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; }
+  .img-item.selected::after { content: "✓"; position: absolute; top: -4px; right: -4px; width: 14px; height: 14px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: bold; }
+  
+  /* SPU 购物车已选池 */
+  .spu-cart-pool { margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--line); display: flex; flex-direction: column; gap: 8px; }
+  .spu-cart-title { font-size: 12px; color: var(--ink-2); font-weight: 600; display: flex; justify-content: space-between;}
+  .spu-cart-list { display: flex; gap: 10px; overflow-x: auto; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; margin-top: -8px; margin-right: -8px; }
+  .cart-item { width: 64px; height: 85px; border-radius: 4px; position: relative; background-size: cover; background-position: center; border: 1px solid var(--line); flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+  .cart-item-remove { position: absolute; top: -8px; right: -8px; width: 18px; height: 18px; background: var(--dot-fail); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; cursor: pointer; z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+  .cart-item-remove:hover { transform: scale(1.1); }
+  .cart-add-btn { border: 1px dashed var(--ink-4); background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--ink-4); font-size: 11px; cursor: pointer; transition: 0.2s; box-shadow: none; gap: 4px; }
+  .cart-add-btn:hover { border-color: var(--accent); color: var(--accent); }
 
   /* 双选按钮与素材槽 */
   .asset-slot { display: flex; gap: 8px; align-items: center; background: var(--paper); border: 1px dashed var(--line); padding: 16px 24px; border-radius: var(--r); justify-content: flex-start; }
@@ -75,9 +85,9 @@
   .btn-upload:hover { border-color: var(--ink-1); color: var(--ink-1); }
   
   .asset-filled { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); }
-  .asset-thumb { width: 48px; height: 48px; border-radius: var(--r-sm); background-size: cover; background-position: center; flex-shrink: 0; background-color: var(--line-2); position: relative; overflow: hidden; border: 1px solid var(--line-2); }
+  .asset-thumb { width: 48px; height: 48px; border-radius: var(--r-sm); background-size: cover; background-position: center; flex-shrink: 0; background-color: var(--line-2); position: relative; overflow: hidden; border: 1px solid var(--line-2); display: flex; align-items: center; justify-content: center;}
   .asset-info { flex: 1; min-width: 0; font-size: 12px; color: var(--ink-1); font-weight: 500; }
-  .asset-actions { display: flex; gap: 8px; align-items: center; }
+  .asset-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .btn-change { padding: 4px 12px; font-size: 12px; color: var(--ink-2); border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--paper); cursor: pointer; transition: 0.2s; }
   .btn-change:hover { border-color: var(--accent); color: var(--accent); }
   .asset-remove { width: 26px; height: 26px; border-radius: 50%; color: var(--ink-3); display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; background: var(--line-2); transition: 0.1s; }
@@ -121,10 +131,14 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 10000; pointer-events: none;
     transition: opacity 0.2s; opacity: 0; display: none; border: 2px solid #fff; overflow: hidden;
   }
+  .global-preview-pop.audio-pop {
+    aspect-ratio: auto; min-height: 80px; padding: 12px; background: #fff; border: 1px solid var(--line); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: var(--ink-1);
+  }
   .global-preview-pop.show { display: block; opacity: 1; }
   .pop-tag { display: inline-block; position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: #fff; padding: 2px 6px; border-radius: 3px; font-size: 10px; z-index: 10; }
 
-  /* 提及下拉菜单 (@ 唤起向上展开) */
+  /* 提及下拉菜单 */
   .mention-menu {
     position: fixed; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r);
     box-shadow: 0 -4px 16px rgba(0,0,0,0.15); z-index: 10001; min-width: 180px; max-height: 220px; overflow-y: auto;
@@ -144,37 +158,48 @@
   .modal-mask { position: absolute; inset: 0; background: rgba(17, 20, 24, 0.4); }
   .modal-box { position: relative; width: 800px; max-width: 90vw; max-height: 85vh; background: var(--paper); border-radius: var(--r-lg); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.18); animation: modalScale 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
   .modal-box.sm { width: 600px; }
+  .modal-box.mini { width: 440px; }
   @keyframes modalScale { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   
-  .picker-toolbar { padding: 12px 20px; border-bottom: 1px solid var(--line-2); display: flex; gap: 12px; align-items: center; }
+  .picker-toolbar { padding: 12px 20px; border-bottom: 1px solid var(--line-2); display: flex; gap: 12px; align-items: center; justify-content: space-between;}
   .picker-toolbar input { flex: 1; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--r); font-size: 12px; outline: none; }
   
-  .picker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 16px; padding: 20px; overflow-y: auto; flex: 1; }
-  .picker-item { aspect-ratio: 3/4; border-radius: 6px; border: 2px solid transparent; cursor: pointer; position: relative; overflow: hidden; background: #eee; }
-  .picker-item:hover { border-color: var(--ink-4); }
+  /* 素材库 Item 平铺排版 (无折叠，纯净网格流) */
+  .picker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); align-content: flex-start; gap: 16px; padding: 20px; overflow-y: auto; flex: 1; }
+
+  .picker-item-wrap { display: flex; flex-direction: column; gap: 6px; cursor: pointer; }
+  .picker-item-wrap:hover .picker-item { border-color: var(--ink-4); }
+  .picker-item-wrap:hover .picker-item-name { color: var(--accent); }
+  .picker-item { aspect-ratio: 3/4; border-radius: 6px; border: 2px solid transparent; position: relative; overflow: hidden; background: #eee; transition: 0.1s; box-shadow: 0 2px 8px rgba(0,0,0,0.05);}
+  .picker-item.audio { aspect-ratio: auto; height: 60px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--ink-3); }
   .picker-item.selected { border-color: var(--accent); }
   .picker-item.selected::after { content: "✓"; position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
   .picker-item img, .picker-item video { width: 100%; height: 100%; object-fit: cover; }
+  .picker-item-name { font-size: 11px; color: var(--ink-2); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; transition: 0.1s; }
 
-  /* 口播文本列表 */
-  .bc-grid { display: flex; flex-direction: column; gap: 12px; padding: 20px; overflow-y: auto; flex: 1; }
-  .bc-item { padding: 14px; border: 1px solid var(--line); border-radius: var(--r); cursor: pointer; transition: 0.1s; background: var(--paper); }
-  .bc-item:hover { border-color: var(--ink-4); }
+  /* 口播文本列表 (完全复用场景库卡片风格，垂直排布防遮挡) */
+  .bc-grid { display: flex; flex-direction: column; gap: 20px; padding: 20px; overflow-y: auto; flex: 1; }
+  .bc-group-card { border: 1px solid var(--line); border-radius: var(--r); background: var(--paper); overflow: hidden; flex-shrink:0; }
+  .bc-group-header { padding: 12px 16px; background: var(--bg); font-weight: 600; font-size: 13px; color: var(--ink-1); border-bottom: 1px solid var(--line); }
+  .bc-items-row { display: flex; flex-direction: column; gap: 8px; padding: 16px; }
+  
+  .bc-item { padding: 12px; border: 1px solid var(--line); border-radius: var(--r-sm); cursor: pointer; transition: 0.1s; background: var(--bg); }
+  .bc-item:hover { border-color: var(--ink-4); background: var(--paper); }
   .bc-item.selected { border-color: var(--accent); background: var(--accent-soft); }
-  .bc-title { font-weight: 600; color: var(--ink-1); margin-bottom: 6px; font-size: 13px; }
   .bc-text { color: var(--ink-3); font-size: 12px; line-height: 1.6; }
 
-  /* 右侧任务列表 */
+  /* 右侧任务列表 (放大视频缩略图) */
   .task-list-title { font-weight: 600; margin-bottom: 16px; font-size: 14px; display: flex; flex-direction: column; gap: 10px; }
   .filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
   .filter-group select { font-size: 11px; border: 1px solid var(--line); border-radius: 4px; padding: 4px 6px; outline: none; background: var(--paper); color: var(--ink-2); flex: 1; min-width: 85px;}
   
   .task-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; margin-bottom: 12px; }
-  .task-card-hd { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 11px; align-items:center; }
-  .task-card-body { display: flex; gap: 12px; }
-  .task-card-vid { width: 70px; height: 120px; background: #111; border-radius: 4px; flex-shrink: 0; position: relative; background-size: cover; background-position: center; border: 1px solid var(--line-2); cursor: pointer; }
-  .task-card-vid::after { content: "▶"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 16px; }
-  .task-card-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .task-card-hd { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 11px; align-items:center; }
+  .task-card-body { display: flex; gap: 14px; }
+  /* 缩略图增大至 108x192 */
+  .task-card-vid { width: 108px; height: 192px; background: #111; border-radius: 6px; flex-shrink: 0; position: relative; background-size: cover; background-position: center; border: 1px solid var(--line-2); cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .task-card-vid::after { content: "▶"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 24px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+  .task-card-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
   
   .task-card-prompt { font-size: 11px; color: var(--ink-3); line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
 
@@ -183,7 +208,7 @@
   .btn-primary { background: var(--ink-1); color: white; padding: 10px 32px; border-radius: var(--r); font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; min-width: 120px; }
   .btn-primary:hover { background: var(--accent); }
   .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
-  .btn-outline { border: 1px solid var(--line); background: var(--paper); color: var(--ink-2); padding: 4px 10px; border-radius: 4px; font-size: 11px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; }
+  .btn-outline { border: 1px solid var(--line); background: var(--paper); color: var(--ink-2); padding: 6px 12px; border-radius: 4px; font-size: 11px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
   .btn-outline:hover { border-color: var(--ink-4); }
 
   /* Toast 系统 */
@@ -209,12 +234,18 @@
 
   .empty-state { text-align: center; margin-top: 100px; color: var(--ink-4); width: 100%; }
 
-  /* 自定义 Select 样式 */
+  /* 自定义 Select 加宽 */
   .styled-select {
-    padding: 6px 10px; border: 1px solid var(--line); border-radius: var(--r);
+    padding: 6px 24px 6px 10px; border: 1px solid var(--line); border-radius: var(--r);
     outline: none; font-size: 12px; color: var(--ink-1); background: var(--paper);
     cursor: pointer;
   }
+  
+  /* 添加表单样式 */
+  .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  .form-group label { font-size: 12px; font-weight: 600; color: var(--ink-1); }
+  .form-group input, .form-group textarea { padding: 10px; border: 1px solid var(--line); border-radius: var(--r); outline: none; font-size: 13px; font-family: inherit; }
+  .form-group textarea { resize: none; height: 80px; }
 </style>
 </head>
 <body>
@@ -223,7 +254,7 @@
 
 <div class="global-loading" id="globalLoading">
   <div class="spinner"></div>
-  <div class="loading-text">正在提交任务...</div>
+  <div class="loading-text">正在处理任务...</div>
 </div>
 
 <div class="global-preview-pop" id="globalPreviewPop"></div>
@@ -271,6 +302,7 @@
             <div class="tag" data-tag="scene" onclick="toggleTag(this)">换场景</div>
             <div class="tag" data-tag="model" onclick="toggleTag(this)">换模特形象与穿搭</div>
             <div class="tag" data-tag="bc" onclick="toggleTag(this)">模特对嘴型口播</div>
+            <div class="tag" data-tag="audio" onclick="toggleTag(this)">🎵 换模特音色</div>
           </div>
         </div>
 
@@ -279,7 +311,7 @@
           <div class="row-module" id="box-video">
             <div class="asset-slot">
               <button class="btn-upload" onclick="openPicker('video')">📁 从素材库选择</button>
-              <button class="btn-upload" onclick="triggerNativeUpload('video')">↑ 上传新素材</button>
+              <button class="btn-upload" onclick="handleUploadAction('video')">↑ 上传参考视频</button>
             </div>
           </div>
         </div>
@@ -287,40 +319,56 @@
         <div class="field" id="row-spu">
           <div class="field-label" style="display:flex; justify-content:flex-start; align-items:center;">
             <span class="num-badge">2</span> 
-            <span>商品图片选择 <span style="color:var(--dot-fail); font-weight:normal;">*必选</span></span>
+            <span>商品图片选择 <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必选</span></span>
             <button id="btnSelectAllSpu" class="btn-select-all" onclick="toggleAllSpuImgs()">一键勾选</button>
           </div>
           <div class="row-module">
             <div class="color-tabs" id="colorTabsContainer"></div>
             <div class="img-grid" id="spuGrid"></div>
+            <div class="spu-cart-pool" id="spuCartPool" style="display:none;">
+              <div class="spu-cart-title">
+                <span>🖼️ 已选商品图 (<span id="cartCount">0</span>)</span>
+              </div>
+              <div class="spu-cart-list" id="spuCartList"></div>
+            </div>
           </div>
         </div>
 
         <div class="field" id="row-scene" style="display:none;">
-          <div class="field-label"><span class="num-badge" id="lbl-scene">3</span> 换场景 (场景背景图)</div>
+          <div class="field-label"><span class="num-badge" id="lbl-scene">3</span> 换场景 (场景背景图) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
           <div class="row-module" id="box-scene">
             <div class="asset-slot">
               <button class="btn-upload" onclick="openPicker('scene')">📁 从素材库选择</button>
-              <button class="btn-upload" onclick="triggerNativeUpload('scene')">↑ 上传新素材</button>
+              <button class="btn-upload" onclick="handleUploadAction('scene')">↑ 上传新素材</button>
             </div>
           </div>
         </div>
 
         <div class="field" id="row-model" style="display:none;">
-          <div class="field-label"><span class="num-badge" id="lbl-model">4</span> 换模特形象与穿搭 (模特展示图)</div>
+          <div class="field-label"><span class="num-badge" id="lbl-model">4</span> 换模特形象与穿搭 (模特展示图) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
           <div class="row-module" id="box-model">
             <div class="asset-slot">
               <button class="btn-upload" onclick="openPicker('model')">📁 从素材库选择</button>
-              <button class="btn-upload" onclick="triggerNativeUpload('model')">↑ 上传新素材</button>
+              <button class="btn-upload" onclick="handleUploadAction('model')">↑ 上传新素材</button>
             </div>
           </div>
         </div>
 
         <div class="field" id="row-bc" style="display:none;">
-          <div class="field-label"><span class="num-badge" id="lbl-bc">5</span> 模特对嘴型口播 (文案内容)</div>
+          <div class="field-label"><span class="num-badge" id="lbl-bc">5</span> 模特对嘴型口播 (文案内容) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
           <div class="row-module" style="display:flex; gap:12px; align-items: flex-start;">
             <textarea id="bcInput" placeholder="输入口播内容..." style="flex:1; height:60px; padding:10px; border:1px solid var(--line); border-radius:var(--r); outline:none; font-family:inherit; resize:none;" oninput="updatePrompt()"></textarea>
             <button class="btn-upload" style="height:38px;" onclick="openBcModal()">📁 从口播库选择</button>
+          </div>
+        </div>
+
+        <div class="field" id="row-audio" style="display:none;">
+          <div class="field-label"><span class="num-badge" id="lbl-audio">6</span> 换模特音色 (参考音频源) <span style="color:var(--dot-fail); font-weight:normal; margin-left:4px;">*必填</span></div>
+          <div class="row-module" id="box-audio">
+            <div class="asset-slot">
+              <button class="btn-upload" onclick="openPicker('audio')">📁 从音频库选择</button>
+              <button class="btn-upload" onclick="handleUploadAction('audio')">↑ 上传新素材</button>
+            </div>
           </div>
         </div>
 
@@ -342,34 +390,34 @@
       </div>
 
       <div class="panel-ft">
-        <div style="display:flex; gap:20px; align-items:center;">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-weight:600; color:var(--ink-1);">调用模型</span>
-            <select id="modelSelect" class="styled-select" style="width: 140px;">
+        <div style="display:flex; flex-wrap: wrap; gap:12px; align-items:center; justify-content:flex-end; width:100%;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-weight:600; color:var(--ink-1); font-size:12px;">调用模型</span>
+            <select id="modelSelect" class="styled-select" style="width: 160px;">
               <option value="Seedance 2.0 Fast" selected>Seedance 2.0 Fast</option>
               <option value="Seedance 2.0">Seedance 2.0</option>
             </select>
           </div>
           
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-weight:600; color:var(--ink-1);">生成时长</span>
-            <select id="durationSelect" class="styled-select" style="width: 80px;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-weight:600; color:var(--ink-1); font-size:12px;">时长</span>
+            <select id="durationSelect" class="styled-select" style="width: 70px;">
               <option value="4">4 秒</option>
               <option value="5">5 秒</option>
               <option value="6">6 秒</option>
               <option value="7">7 秒</option>
               <option value="8">8 秒</option>
               <option value="9">9 秒</option>
-              <option value="10" selected>10 秒</option>
+              <option value="10">10 秒</option>
               <option value="11">11 秒</option>
               <option value="12">12 秒</option>
               <option value="13">13 秒</option>
               <option value="14">14 秒</option>
-              <option value="15">15 秒</option>
+              <option value="15" selected>15 秒</option>
             </select>
           </div>
 
-          <button class="btn-primary" onclick="openConfirmModal()">提交生成任务</button>
+          <button class="btn-primary" style="margin-left: 8px;" onclick="openConfirmModal()">提交生成任务</button>
         </div>
       </div>
     </div>
@@ -418,7 +466,7 @@
     </div>
     <div style="padding: 24px; font-size:13px; line-height:1.6;">
       检测到左侧创作区已有未提交的配置内容。<br><br>
-      如果您继续导入当前失败的任务数据，**左侧的现有配置将被清空并覆盖**。确认要继续吗？
+      如果您继续导入当前所选的任务数据，**左侧的现有配置将被清空并覆盖**。确认要继续吗？
     </div>
     <div class="panel-ft" style="background:var(--paper); border-top:1px solid var(--line);">
       <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeWarnModal()">取消</button>
@@ -470,8 +518,10 @@
       <button class="modal-close" onclick="closePicker()" style="font-size:20px;">×</button>
     </div>
     <div class="picker-toolbar">
-      <input type="text" placeholder="搜索素材名称或 ID...">
-      <button class="btn-upload">↑ 上传新素材</button>
+      <div style="display:flex; gap:12px; align-items:center; flex:1;">
+        <input type="text" id="pickerSearchInput" placeholder="搜索素材名称..." style="width: 250px;" oninput="renderPickerGrid()">
+      </div>
+      <button class="btn-upload" onclick="handleUploadAction(pickerCurrentType, true)">↑ 上传新素材</button>
     </div>
     <div class="picker-grid" id="pickerGrid"></div>
     <div class="panel-ft" style="justify-content:flex-end;">
@@ -488,14 +538,40 @@
       <span>内置口播库</span>
       <button class="modal-close" onclick="closeBcModal()" style="font-size:20px;">×</button>
     </div>
-    <div class="picker-toolbar" style="background:var(--bg);">
-      <input type="text" id="newBcText" placeholder="输入你想自定义的口播文本...">
-      <button class="btn-upload" style="background:var(--ink-1); color:white; border:none;" onclick="addCustomBc()">+ 添加口播</button>
+    <div class="picker-toolbar" style="background:var(--bg); justify-content:space-between;">
+      <div style="display:flex; gap:12px; align-items:center;">
+        <input type="text" id="bcSearchInput" placeholder="搜索口播段落内容..." style="width:250px;" oninput="renderBcGrid()">
+      </div>
+      <button class="btn-upload" style="background:var(--ink-1); color:white; border:none;" onclick="openAddBcModal(); closeBcModal();">+ 添加口播</button>
     </div>
     <div class="bc-grid" id="bcGrid"></div>
     <div class="panel-ft" style="justify-content:flex-end;">
       <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeBcModal()">取消</button>
       <button class="btn-primary" style="padding: 8px 24px; font-size:13px;" onclick="confirmBc()">确认选用</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-wrap" id="addBcModal">
+  <div class="modal-mask" onclick="closeAddBcModal()"></div>
+  <div class="modal-box mini">
+    <div class="panel-hd" style="border-bottom: 1px solid var(--line);">
+      <span>新建多段口播组合</span>
+      <button class="modal-close" onclick="closeAddBcModal()" style="font-size:20px;">×</button>
+    </div>
+    <div style="padding: 24px; max-height: 60vh; overflow-y: auto;" id="bcFormContainer">
+      <div class="form-group" style="margin-bottom: 24px;">
+        <label>所属口播分组名 <span style="color:var(--dot-fail); font-weight:normal;">*</span> <span style="color:var(--ink-4); font-weight:normal;">(若填新名则创建新组)</span></label>
+        <input type="text" id="newBcGroup" placeholder="如：春季上新系列话术">
+      </div>
+      
+      <div id="bcParagraphs"></div>
+
+      <button class="btn-outline" style="width:100%; border-style:dashed; padding:10px;" onclick="appendBcParagraph()">+ 添加下一段口播</button>
+    </div>
+    <div class="panel-ft" style="justify-content:flex-end; border-top:1px solid var(--line);">
+      <button class="btn-upload" style="margin-right:8px; border:none; background:transparent;" onclick="closeAddBcModal()">取消</button>
+      <button class="btn-primary" style="padding: 8px 24px; font-size:13px;" onclick="confirmAddBc()">保存并应用</button>
     </div>
   </div>
 </div>
@@ -525,51 +601,57 @@
     return raw.replace(PREFIX, `${PREFIX}120x180/`);
   }
 
-  // ================= 2. 数据 Mock =================
+  // ================= 2. 数据 Mock (全量平铺打平) =================
   const spuJsonData = {"data":[[
     {"id":"30b","imageUrl":"https://img.flamingo.shop/p/show/product/b63344bafc504524a0b6e28b43580c70.jpg","optionValue":"Mid Blue"},
     {"id":"2d3","imageUrl":"https://img.flamingo.shop/p/show/373095764b6a4d0f82ad90e43744459e.jpg","optionValue":"Mid Blue"},
     {"id":"e5e","imageUrl":"https://img.flamingo.shop/p/show/product/6e027fb7b1674c149cc66f2dbb864d76.jpg","optionValue":"Mid Blue"},
     {"id":"179","imageUrl":"https://img.flamingo.shop/p/show/product/976fb81740c8476cbaebc26a37851a04.jpg","optionValue":"Mid Blue"},
     {"id":"39f","imageUrl":"https://img.flamingo.shop/p/show/product/d3dc9115ce1c46debaaca21b1ecdda24.jpg","optionValue":"Navy Blue"},
-    {"id":"1cb","imageUrl":"https://img.flamingo.shop/p/776504b9d7c64563bd26dccc2157547d.jpg","optionValue":"Navy Blue"},
-    {"id":"4f4","imageUrl":"https://img.flamingo.shop/p/show/product/bae6d964c63b4cfba86b0de749e07a54.jpg","optionValue":"Navy Blue"},
-    {"id":"6b0","imageUrl":"https://img.flamingo.shop/p/show/product/ede51f726ac74fecba628bd60d1de7a8.jpg","optionValue":"Navy Blue"},
-    {"id":"b29","imageUrl":"https://img.flamingo.shop/p/show/product/0e2e69ea9d1e41c98bd8bd2edfbe4fd0.jpg","optionValue":"Navy Blue"},
-    {"id":"3ef","imageUrl":"https://img.flamingo.shop/p/show/product/158a308fe12e40b3bccbc8caeab7fa43.jpg","optionValue":"Navy Blue"}
+    {"id":"1cb","imageUrl":"https://img.flamingo.shop/p/776504b9d7c64563bd26dccc2157547d.jpg","optionValue":"Navy Blue"}
   ]]};
 
+  // 这里的库数据已全部剥离 groupCard 层级，变为单纯的扁平数组
   const ASSETS_LIB = {
     video: [
-      { id: 'v1', name: '官方预设动作视频', url: 'https://media.flamingo.shop/v/7481748d89f4436c85b563b9b0c8623f.mp4', isVideo: true, cover: 'https://img.flamingo.shop/p/show/89eff2e31686479cbbfa3ad62f28cfdf.png' }
+      { id: 'v1_1', name: '春季风衣大促系列-Part1.mp4', url: 'https://media.flamingo.shop/v/7481748d89f4436c85b563b9b0c8623f.mp4', isVideo: true, cover: 'https://img.flamingo.shop/p/show/89eff2e31686479cbbfa3ad62f28cfdf.png' },
+      { id: 'v1_2', name: '春季风衣大促系列-Part2.mp4', url: 'https://media.flamingo.shop/v/6fece3c69aa04f79809e65b2bf9eb821.mp4', isVideo: true, cover: 'https://img.flamingo.shop/video_snapshot/3ddb42b2c0e94cf08c3ed0a6793dee23.jpg' }
     ],
     scene: [
       { id: 's1', name: '房间-落地窗旁', url: 'https://img.flamingo.shop/p/show/f7d1df7b9cac45f0a9e7aee005d1813f.jpg' },
       { id: 's2', name: '房间-大门前', url: 'https://img.flamingo.shop/p/show/cdbe9a7e9617405b96ae81969c5704b2.jpg' },
-      { id: 's3', name: '房间-衣柜前', url: 'https://img.flamingo.shop/p/show/ac6f1ecc4f0a437dafe31baaa6648a93.png' },
-      { id: 's4', name: '公园-座椅', url: 'https://img.flamingo.shop/p/show/78e36f14ccd84bcd99d1027c145d611a.png' },
-      { id: 's5', name: '家-梳妆镜前', url: 'https://img.flamingo.shop/p/show/1ef282fcbd77466780c823a816c870ca.jpg' }
+      { id: 's3', name: '房间-衣柜前', url: 'https://img.flamingo.shop/p/show/ac6f1ecc4f0a437dafe31baaa6648a93.png' }
     ],
     model: [
-      { id: 'm1', name: '穿搭款式1', url: 'https://img.flamingo.shop/p/show/89eff2e31686479cbbfa3ad62f28cfdf.png' },
-      { id: 'm2', name: '穿搭款式2', url: 'https://img.flamingo.shop/p/show/ffe9be6c3a7c4bb69090dc261c35936c.jpg' },
-      { id: 'm3', name: '穿搭款式3', url: 'https://img.flamingo.shop/p/show/26e11d2729dd4ed1881f9343ab266666.png' },
-      { id: 'm4', name: '穿搭款式4', url: 'https://img.flamingo.shop/p/show/9d860803dd9c4608b51d9523db79a97b.png' }
+      { id: 'm1', name: '穿搭款式 1', url: 'https://img.flamingo.shop/p/show/89eff2e31686479cbbfa3ad62f28cfdf.png' },
+      { id: 'm2', name: '穿搭款式 2', url: 'https://img.flamingo.shop/p/show/ffe9be6c3a7c4bb69090dc261c35936c.jpg' }
+    ],
+    audio: [
+      { id: 'a1', name: '温柔女声 (10s)', url: 'mock_audio.mp3', isAudio: true },
+      { id: 'a2', name: '活力带货 (15s)', url: 'mock_audio.mp3', isAudio: true }
     ]
   };
 
+  // 口播库依然带组装，但是 UI 展现是直接大列表
   const BROADCAST_LIB = [
-    { title: "a. 痛点切入型（Fit Focus）", text: "Tired of jeans that gap at the waist or squeeze your thighs? These are different. High-rise, stretch denim, contoured to actually fit a real woman's body. No muffin top, no tugging. Just denim that hugs everything in the right places. Tap to shop your size." },
-    { title: "b. 卖点直给型（Feature Pitch）", text: "Meet your new favorite jeans. Premium stretch denim, four-way recovery, and a tummy-control waistband that holds you in without holding you back. Wear them to brunch, to work, on a flight — they bounce back every time. Limited sizes left. Don't sleep on these." },
-    { title: "c. 时尚种草型（Trend Hook）", text: "Wide-leg jeans are everywhere this season, and these are the ones you've been seeing on your feed. Soft, structured, vintage-washed — they go with a tee, a bodysuit, a blazer, anything. Pair them once and you'll wear them every week. Link's right there." },
-    { title: "d. 价格驱动型（Value Play）", text: "Designer-quality denim without the designer price tag. We're talking buttery soft fabric, flattering cuts, and washes that don't fade after two cycles. Under fifty bucks. Free shipping on your first order. Why are you still paying triple for the same thing?" },
-    { title: "e. 场景共鸣型（Lifestyle Story）", text: "You know that one pair of jeans you reach for every single time? This is about to be it. Throws on with sneakers for errands, heels for date night, boots in the fall. One pair, every outfit, zero effort. Get yours before your size sells out." }
+    {
+      groupId: "b1", groupName: "春季风衣大促话术组合",
+      items: [
+        { id: "bc1_1", text: "Tired of jeans that gap at the waist? These are different. High-rise, stretch denim, contoured to actually fit a real woman's body." },
+        { id: "bc1_2", text: "No muffin top, no tugging. Just denim that hugs everything in the right places. Tap to shop your size before they are gone." }
+      ]
+    },
+    {
+      groupId: "b2", groupName: "其他口播素材",
+      items: [
+        { id: "bc2_1", text: "Meet your new favorite jeans. Premium stretch denim, four-way recovery, and a tummy-control waistband." }
+      ]
+    }
   ];
 
   let currentSPU = null;
   const DB = {}; 
   let mockGenCount = 0;          
-  let mockAuditApproveCount = 0; 
   let currentTotalCost = 0;
 
   const productList = spuJsonData.data[0];
@@ -579,13 +661,14 @@
     colorGroups[p.optionValue].push(p);
   });
 
-  const ALL_TAGS = ['spu', 'scene', 'model', 'bc'];
+  const ALL_TAGS = ['spu', 'scene', 'model', 'bc', 'audio'];
   let activeTags = new Set();
   let isManual = false;
-  let selectedSpuImgs = new Set(); 
-  let assetsState = { video: null, scene: null, model: null };
+  let selectedSpuCart = []; 
+  let assetsState = { video: null, scene: null, model: null, audio: null };
   let currentColor = Object.keys(colorGroups)[0];
 
+  // ================= SPU 购物车交互 =================
   function initSpuUI() {
     const tabsContainer = document.getElementById('colorTabsContainer');
     tabsContainer.innerHTML = Object.keys(colorGroups).map(color => `
@@ -594,22 +677,20 @@
       </div>
     `).join('');
     renderSpuGrid();
-    syncSpuSelectAllBtn();
+    renderSpuCart();
   }
 
   function switchColor(color) {
     if (currentColor !== color) {
       currentColor = color;
-      selectedSpuImgs.clear(); 
       initSpuUI();
-      updatePrompt();
     }
   }
 
   function renderSpuGrid() {
     const grid = document.getElementById('spuGrid');
     grid.innerHTML = colorGroups[currentColor].map(p => {
-      const isSelected = [...selectedSpuImgs].some(item => item.id === p.id);
+      const isSelected = selectedSpuCart.some(item => item.id === p.id);
       const thumbUrl = displayImageUrl(p.imageUrl);
       return `
         <div class="img-item ${isSelected ? 'selected' : ''}" 
@@ -618,42 +699,43 @@
         </div>
       `;
     }).join('');
+    syncSpuSelectAllBtn();
   }
 
   function toggleSpuImg(id, url) {
-    const exists = [...selectedSpuImgs].find(item => item.id === id);
-    if (exists) selectedSpuImgs.delete(exists);
-    else selectedSpuImgs.add({ id, imageUrl: url });
+    const idx = selectedSpuCart.findIndex(item => item.id === id);
+    if (idx !== -1) selectedSpuCart.splice(idx, 1);
+    else selectedSpuCart.push({ id, url });
     
     renderSpuGrid();
-    syncSpuSelectAllBtn();
+    renderSpuCart();
     updatePrompt();
   }
 
   function toggleAllSpuImgs() {
     const currentImgs = colorGroups[currentColor];
-    const allSelected = currentImgs.every(p => [...selectedSpuImgs].some(item => item.id === p.id));
+    const allSelected = currentImgs.every(p => selectedSpuCart.some(item => item.id === p.id));
     
     if (allSelected) {
       currentImgs.forEach(p => {
-        const exists = [...selectedSpuImgs].find(item => item.id === p.id);
-        if (exists) selectedSpuImgs.delete(exists);
+        const idx = selectedSpuCart.findIndex(item => item.id === p.id);
+        if (idx !== -1) selectedSpuCart.splice(idx, 1);
       });
     } else {
       currentImgs.forEach(p => {
-        const exists = [...selectedSpuImgs].find(item => item.id === p.id);
-        if (!exists) selectedSpuImgs.add({ id: p.id, imageUrl: p.imageUrl });
+        if (!selectedSpuCart.some(item => item.id === p.id)) {
+          selectedSpuCart.push({ id: p.id, url: p.imageUrl });
+        }
       });
     }
-    
     renderSpuGrid();
-    syncSpuSelectAllBtn();
+    renderSpuCart();
     updatePrompt();
   }
 
   function syncSpuSelectAllBtn() {
     const currentImgs = colorGroups[currentColor] || [];
-    const allSelected = currentImgs.length > 0 && currentImgs.every(p => [...selectedSpuImgs].some(item => item.id === p.id));
+    const allSelected = currentImgs.length > 0 && currentImgs.every(p => selectedSpuCart.some(item => item.id === p.id));
     const btn = document.getElementById('btnSelectAllSpu');
     if(allSelected) {
       btn.innerText = '取消勾选'; btn.classList.add('is-all');
@@ -662,19 +744,49 @@
     }
   }
 
+  function renderSpuCart() {
+    const pool = document.getElementById('spuCartPool');
+    const list = document.getElementById('spuCartList');
+    const count = document.getElementById('cartCount');
+    
+    count.innerText = selectedSpuCart.length;
+    if (selectedSpuCart.length === 0) {
+      pool.style.display = 'none';
+    } else {
+      pool.style.display = 'flex';
+      list.innerHTML = selectedSpuCart.map(item => `
+        <div class="cart-item" style="background-image:url('${displayImageUrl(item.url)}')">
+          <div class="cart-item-remove" onclick="removeCartItem('${item.id}')">×</div>
+        </div>
+      `).join('') + `
+        <div class="cart-item cart-add-btn" onclick="handleUploadAction('spuExtra')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          添加自定义
+        </div>
+      `;
+    }
+  }
+
+  function removeCartItem(id) {
+    const idx = selectedSpuCart.findIndex(item => item.id === id);
+    if (idx !== -1) selectedSpuCart.splice(idx, 1);
+    renderSpuGrid();
+    renderSpuCart();
+    updatePrompt();
+  }
+
+  // ================= 顶栏与全局 =================
   function updateSpuMetaInfo() {
     if (!currentSPU || !DB[currentSPU]) return;
     const tasks = DB[currentSPU].tasks;
     let genCount = 0;
     currentTotalCost = 0;
-    
     tasks.forEach(t => {
       if(t.genStatus === 'success') {
         genCount++;
         currentTotalCost += t.cost;
       }
     });
-
     document.getElementById('metaSpuText').innerHTML = `<strong>${currentSPU}</strong> <span style="color:var(--line); margin:0 8px;">|</span> 已生成视频 ${genCount} 个 <span style="color:var(--line); margin:0 8px;">|</span> 成本：${currentTotalCost.toFixed(2)}元`;
   }
 
@@ -690,21 +802,17 @@
     
     updateSpuMetaInfo();
     initSpuUI();
-    document.getElementById('durationSelect').value = "10";
+    document.getElementById('durationSelect').value = "15";
     updatePrompt();
     renderTaskList();
   }
 
   function handleReset() { location.reload(); }
-
-  function refreshTaskList() {
-    renderTaskList();
-    showToast('视频生成列表已刷新');
-  }
+  function refreshTaskList() { renderTaskList(); showToast('视频生成列表已刷新'); }
 
   function isFormDirty() {
-    if (assetsState.video || assetsState.scene || assetsState.model) return true;
-    if (selectedSpuImgs.size > 0) return true;
+    if (assetsState.video || assetsState.scene || assetsState.model || assetsState.audio) return true;
+    if (selectedSpuCart.length > 0) return true;
     if (document.getElementById('bcInput').value.trim() !== '') return true;
     if (activeTags.size > 0) return true;
     return false;
@@ -712,25 +820,19 @@
 
   function clearForm() {
     document.getElementById('modelSelect').value = "Seedance 2.0 Fast";
-    
     activeTags.clear();
     syncTagsUI();
+    assetsState = { video: null, scene: null, model: null, audio: null };
+    renderAssetSlot('video'); renderAssetSlot('scene'); renderAssetSlot('model'); renderAssetSlot('audio');
     
-    assetsState = { video: null, scene: null, model: null };
-    renderAssetSlot('video');
-    renderAssetSlot('scene');
-    renderAssetSlot('model');
-    
-    selectedSpuImgs.clear();
-    renderSpuGrid();
-    syncSpuSelectAllBtn();
+    selectedSpuCart = [];
+    initSpuUI();
     
     document.getElementById('bcInput').value = '';
     selectedBcIdx = null;
     renderBcGrid();
     
-    document.getElementById('durationSelect').value = "10";
-    
+    document.getElementById('durationSelect').value = "15";
     resetManual();
   }
 
@@ -759,6 +861,7 @@
     document.getElementById('row-scene').style.display = activeTags.has('scene') ? 'flex' : 'none';
     document.getElementById('row-model').style.display = activeTags.has('model') ? 'flex' : 'none';
     document.getElementById('row-bc').style.display = activeTags.has('bc') ? 'flex' : 'none';
+    document.getElementById('row-audio').style.display = activeTags.has('audio') ? 'flex' : 'none';
 
     const btnAll = document.getElementById('btnSelectAll');
     if (activeTags.size === ALL_TAGS.length) {
@@ -776,16 +879,22 @@
     if(activeTags.has('scene')) document.getElementById('lbl-scene').innerText = nextNum++;
     if(activeTags.has('model')) document.getElementById('lbl-model').innerText = nextNum++;
     if(activeTags.has('bc')) document.getElementById('lbl-bc').innerText = nextNum++;
+    if(activeTags.has('audio')) document.getElementById('lbl-audio').innerText = nextNum++;
   }
 
+  // ================= 弹窗素材库 (支持级联即时搜索) =================
   let pickerCurrentType = null;
   let pickerSelectedId = null;
 
   function openPicker(type) {
     pickerCurrentType = type;
     pickerSelectedId = assetsState[type] ? assetsState[type].id : null;
-    const typeName = type === 'video' ? '视频' : (type === 'scene' ? '场景图' : '模特图');
+    let typeName = '素材';
+    if(type==='video') typeName='视频'; else if(type==='scene') typeName='场景图'; 
+    else if(type==='model') typeName='模特图'; else if(type==='audio') typeName='音频';
+    
     document.getElementById('pickerTitle').innerText = `选择 ${typeName} 素材`;
+    document.getElementById('pickerSearchInput').value = ''; 
     document.getElementById('pickerModal').classList.add('open');
     renderPickerGrid();
   }
@@ -793,18 +902,34 @@
   function closePicker() { document.getElementById('pickerModal').classList.remove('open'); }
 
   function renderPickerGrid() {
+    const query = document.getElementById('pickerSearchInput').value.trim().toLowerCase();
     const grid = document.getElementById('pickerGrid');
     const items = ASSETS_LIB[pickerCurrentType] || [];
-    grid.innerHTML = items.map(item => {
+    
+    const filteredItems = items.filter(item => {
+      if (!query) return true;
+      return item.name.toLowerCase().includes(query);
+    });
+
+    if (filteredItems.length === 0) {
+      grid.innerHTML = `<div style="text-align:center; padding:40px 0; color:var(--ink-4); width:100%;">未搜索到匹配的素材</div>`;
+      return;
+    }
+    
+    grid.innerHTML = filteredItems.map(item => {
       const isSel = item.id === pickerSelectedId;
-      const mediaUrl = displayImageUrl(item.cover || item.url); 
-      const mediaHtml = item.isVideo 
-        ? `<video src="${item.url}" muted onmouseenter="this.play()" onmouseleave="this.pause()" poster="${mediaUrl}"></video>` 
-        : `<img src="${mediaUrl}">`;
+      let mediaHtml = '';
+      if (item.isAudio) {
+         mediaHtml = `<div class="picker-item audio ${isSel ? 'selected' : ''}">🔊</div>`;
+      } else {
+         const mediaUrl = displayImageUrl(item.cover || item.url); 
+         const inner = item.isVideo ? `<video src="${item.url}" muted onmouseenter="this.play()" onmouseleave="this.pause()" poster="${mediaUrl}"></video>` : `<img src="${mediaUrl}">`;
+         mediaHtml = `<div class="picker-item ${isSel ? 'selected' : ''}">${inner}</div>`;
+      }
       return `
-        <div class="picker-item ${isSel ? 'selected' : ''}" onclick="selectPickerItem('${item.id}')">
+        <div class="picker-item-wrap" onclick="selectPickerItem('${item.id}')">
           ${mediaHtml}
-          <div class="name-bar">${item.name}</div>
+          <div class="picker-item-name" title="${item.name}">${item.name}</div>
         </div>
       `;
     }).join('');
@@ -817,30 +942,71 @@
 
   function confirmPicker() {
     if (!pickerSelectedId) return showToast('请先点选一个素材', 'error');
-    const item = ASSETS_LIB[pickerCurrentType].find(i => i.id === pickerSelectedId);
-    assetsState[pickerCurrentType] = item;
+    const targetItem = ASSETS_LIB[pickerCurrentType].find(i => i.id === pickerSelectedId);
+    assetsState[pickerCurrentType] = targetItem;
     closePicker();
     renderAssetSlot(pickerCurrentType);
     updatePrompt();
   }
 
-  function triggerNativeUpload(type) {
+  // 批量/单切片原生上传逻辑 (全部回归扁平直接Push)
+  function handleUploadAction(type, fromPicker = false) {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = type === 'video' ? 'video/*' : 'image/*';
+    
+    if (type === 'spuExtra') {
+      input.accept = 'image/*';
+      input.multiple = true; 
+    } else if (type === 'video') { 
+      input.accept = 'video/*'; 
+      input.multiple = true; 
+    } else if (type === 'audio') { 
+      input.accept = 'audio/*'; 
+      input.multiple = true;
+    } else { 
+      input.accept = 'image/*'; 
+      input.multiple = true;
+    }
+
     input.onchange = e => {
       if(e.target.files.length > 0) {
-        const file = e.target.files[0];
-        assetsState[type] = { 
-          id: 'u_' + Date.now(), 
-          name: file.name, 
-          url: URL.createObjectURL(file), 
-          isVideo: type === 'video',
-          cover: type === 'video' ? null : URL.createObjectURL(file)
-        };
-        showToast('素材加载成功');
-        renderAssetSlot(type);
-        updatePrompt();
+        const files = Array.from(e.target.files);
+
+        if (type === 'spuExtra') {
+           files.forEach(file => {
+             selectedSpuCart.push({
+               id: 'u_' + Date.now() + Math.random().toString().slice(2, 6),
+               url: URL.createObjectURL(file)
+             });
+           });
+           showToast(`成功添加 ${files.length} 张自定义商品图`);
+           renderSpuCart();
+           updatePrompt();
+        } else {
+           let firstObj = null;
+           files.forEach((file, index) => {
+              const newObj = {
+                id: 'u_' + Date.now() + index,
+                name: file.name,
+                url: URL.createObjectURL(file),
+                isVideo: type === 'video',
+                isAudio: type === 'audio',
+                cover: type === 'video' || type === 'audio' ? null : URL.createObjectURL(file)
+              };
+              ASSETS_LIB[type].unshift(newObj); // 直接平铺追加至最前
+              if (index === 0) firstObj = newObj;
+           });
+
+           showToast(`成功上传 ${files.length} 个素材并入库`);
+
+           if (fromPicker) {
+              openPicker(type); // 重新渲染 Picker
+           } else {
+              assetsState[type] = firstObj; // 默认挂载第一个
+              renderAssetSlot(type);
+              updatePrompt();
+           }
+        }
       }
     };
     input.click();
@@ -857,13 +1023,19 @@
     const item = assetsState[type];
     
     if (item) {
-      const thumbUrl = displayImageUrl(item.cover || item.url);
-      const thumbStyle = `background-image:url('${thumbUrl}');`;
-      const playIcon = item.isVideo ? `<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">▶</div>` : '';
+      let thumbContent = '';
+      let thumbStyle = '';
+      if (item.isAudio) {
+         thumbContent = `<div style="font-size:20px; color:var(--ink-3);">🔊</div>`;
+      } else {
+         const thumbUrl = displayImageUrl(item.cover || item.url);
+         thumbStyle = `background-image:url('${thumbUrl}');`;
+         if(item.isVideo) thumbContent = `<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">▶</div>`;
+      }
       
       box.innerHTML = `
         <div class="asset-filled">
-          <div class="asset-thumb" style="${thumbStyle}">${playIcon}</div>
+          <div class="asset-thumb" style="${thumbStyle}">${thumbContent}</div>
           <div class="asset-info">${item.name}</div>
           <div class="asset-actions">
             <button class="btn-change" onclick="openPicker('${type}')">更换素材</button>
@@ -872,50 +1044,150 @@
         </div>
       `;
     } else {
+      let libName = type==='audio'?'音频库':'素材库';
+      let upText = type==='video'?'参考视频':'新素材';
       box.innerHTML = `
         <div class="asset-slot" style="justify-content: flex-start;">
-          <button class="btn-upload" onclick="openPicker('${type}')">📁 从素材库选择</button>
-          <button class="btn-upload" onclick="triggerNativeUpload('${type}')">↑ 上传新素材</button>
+          <button class="btn-upload" onclick="openPicker('${type}')">📁 从${libName}选择</button>
+          <button class="btn-upload" onclick="handleUploadAction('${type}')">↑ 上传${upText}</button>
         </div>
       `;
     }
   }
 
-  let selectedBcIdx = null;
+  // --- 口播库 (纯下拉垂直瀑布流) ---
+  let selectedBcIdx = null; 
   function openBcModal() {
-    selectedBcIdx = null;
+    document.getElementById('bcSearchInput').value = '';
     document.getElementById('bcModal').classList.add('open');
     renderBcGrid();
   }
   function closeBcModal() { document.getElementById('bcModal').classList.remove('open'); }
+  
   function renderBcGrid() {
+    const query = document.getElementById('bcSearchInput').value.trim().toLowerCase();
     const grid = document.getElementById('bcGrid');
-    grid.innerHTML = BROADCAST_LIB.map((bc, idx) => `
-      <div class="bc-item ${selectedBcIdx === idx ? 'selected' : ''}" onclick="selectBc(${idx})">
-        <div class="bc-title">${bc.title}</div>
-        <div class="bc-text">${bc.text}</div>
+
+    const filteredGroups = BROADCAST_LIB.filter(g => {
+      if (!query) return true;
+      return g.items.some(bc => bc.text.toLowerCase().includes(query));
+    });
+
+    if (filteredGroups.length === 0) {
+      grid.innerHTML = `<div style="text-align:center; padding:40px 0; color:var(--ink-4); width:100%;">未搜索到匹配的口播段落</div>`;
+      return;
+    }
+
+    grid.innerHTML = filteredGroups.map(g => {
+      return `
+      <div class="bc-group-card">
+        <div class="bc-group-header">
+          <span>${g.groupName}</span>
+        </div>
+        <div class="bc-items-row">
+          ${g.items.map((bc, index) => `
+            <div class="bc-item ${selectedBcIdx === bc.id ? 'selected' : ''}" onclick="selectBc('${bc.id}')">
+              <div class="bc-text"><span style="color:var(--ink-4); font-weight:600; margin-right:4px;">[段落 ${index+1}]</span> ${bc.text}</div>
+            </div>
+          `).join('')}
+        </div>
       </div>
-    `).join('');
+    `}).join('');
   }
-  function selectBc(idx) {
-    selectedBcIdx = idx;
+
+  function selectBc(id) {
+    selectedBcIdx = id;
     renderBcGrid();
   }
+  
   function confirmBc() {
-    if(selectedBcIdx === null) return showToast('请先选择一段口播文案', 'error');
-    document.getElementById('bcInput').value = BROADCAST_LIB[selectedBcIdx].text;
+    if(!selectedBcIdx) return showToast('请先选择一段口播文案', 'error');
+    let target = null;
+    BROADCAST_LIB.forEach(g => {
+      const found = g.items.find(i => i.id === selectedBcIdx);
+      if(found) target = found;
+    });
+    document.getElementById('bcInput').value = target.text;
     closeBcModal();
     updatePrompt();
   }
-  function addCustomBc() {
-    const input = document.getElementById('newBcText');
-    const val = input.value.trim();
-    if(!val) return showToast('请输入口播文本内容', 'error');
-    BROADCAST_LIB.unshift({ title: "自定义新增口播", text: val });
-    input.value = '';
-    selectedBcIdx = 0;
-    showToast('自定义口播已添加并选中');
-    renderBcGrid();
+
+  // --- 动态添加口播子弹窗 (修复必填与删除) ---
+  let bcParaCount = 1;
+  function openAddBcModal() {
+    bcParaCount = 1;
+    document.getElementById('bcParagraphs').innerHTML = `
+      <div class="bc-para-item" style="padding:16px; border:1px dashed var(--line); border-radius:6px; margin-bottom:12px; background:var(--paper); position:relative;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label>文案正文 <span style="color:var(--dot-fail); font-weight:normal;">*</span></label>
+          <textarea class="bc-para-text" placeholder="在此输入需要生成的口播文本..."></textarea>
+        </div>
+      </div>
+    `;
+    document.getElementById('newBcGroup').value = '';
+    document.getElementById('addBcModal').classList.add('open');
+  }
+
+  function closeAddBcModal() {
+    document.getElementById('addBcModal').classList.remove('open');
+  }
+
+  function appendBcParagraph() {
+    bcParaCount++;
+    const div = document.createElement('div');
+    div.className = 'bc-para-item';
+    div.style.cssText = 'padding:16px; border:1px dashed var(--line); border-radius:6px; margin-bottom:12px; background:var(--paper); position:relative;';
+    div.innerHTML = `
+      <button class="btn-outline" style="position:absolute; top:12px; right:12px; padding:2px 6px; font-size:11px; color:var(--dot-fail); border-color:var(--dot-fail);" onclick="this.parentElement.remove()">删除本段</button>
+      <div class="form-group" style="margin-bottom:0; margin-top:20px;">
+        <label>追加文案 <span style="color:var(--dot-fail); font-weight:normal;">*</span></label>
+        <textarea class="bc-para-text" placeholder="在此输入需要生成的口播文本..."></textarea>
+      </div>
+    `;
+    document.getElementById('bcParagraphs').appendChild(div);
+    const container = document.getElementById('bcFormContainer');
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function confirmAddBc() {
+    const groupName = document.getElementById('newBcGroup').value.trim();
+    if (!groupName) return showToast('请输入所属口播分组名', 'error');
+
+    const items = document.querySelectorAll('.bc-para-item');
+    let validItems = [];
+
+    items.forEach(el => {
+       const text = el.querySelector('.bc-para-text').value.trim();
+       if (text) {
+          validItems.push({ id: 'bc_u_' + Date.now() + Math.random().toString().slice(2,6), text: text });
+       }
+    });
+
+    if (validItems.length === 0) return showToast('请至少填写一段完整的口播内容', 'error');
+
+    let group = BROADCAST_LIB.find(g => g.groupName === groupName);
+    
+    if (group) {
+      validItems.forEach(item => group.items.push(item));
+    } else {
+      BROADCAST_LIB.unshift({
+        groupId: 'g_u_' + Date.now(),
+        groupName: groupName,
+        items: validItems
+      });
+    }
+
+    selectedBcIdx = validItems[0].id; 
+    showToast(`成功添加了 ${validItems.length} 段口播`);
+    
+    // 瞬间填充到左侧表单
+    document.getElementById('bcInput').value = validItems[0].text;
+    updatePrompt();
+
+    closeAddBcModal();
+    if (document.getElementById('bcModal').classList.contains('open')) {
+       renderBcGrid();
+    }
   }
 
   // ================= 完美排版的混合流式 Prompt 引擎 =================
@@ -955,28 +1227,37 @@
   function updatePrompt() {
     if(isManual) return;
     
-    let globalIdx = 1;
-    let vidChip = createChip('video', globalIdx++, assetsState.video);
+    // 独立芯片编号修复
+    let vidIdx = 1;
+    let imgIdx = 1;
+    let audioIdx = 1;
+
+    let vidChip = createChip('video', vidIdx++, assetsState.video);
 
     let spuChips = [];
     let spuChipsStr = "";
-    if (selectedSpuImgs.size > 0) {
-      Array.from(selectedSpuImgs).forEach(item => {
-        spuChips.push(createChip('image', globalIdx++, { url: item.imageUrl, isVideo: false }));
+    if (selectedSpuCart.length > 0) {
+      selectedSpuCart.forEach(item => {
+        spuChips.push(createChip('image', imgIdx++, { url: item.url, isVideo: false }));
       });
       spuChipsStr = spuChips.join('');
     } else {
-      spuChipsStr = createChip('image', globalIdx++, null);
+      spuChipsStr = createChip('image', imgIdx++, null);
     }
 
     let sceneChip = "";
     if(activeTags.has('scene')) {
-      sceneChip = createChip('image', globalIdx++, assetsState.scene);
+      sceneChip = createChip('image', imgIdx++, assetsState.scene);
     }
 
     let modelChip = "";
     if(activeTags.has('model')) {
-      modelChip = createChip('image', globalIdx++, assetsState.model);
+      modelChip = createChip('image', imgIdx++, assetsState.model);
+    }
+    
+    let audioChip = "";
+    if(activeTags.has('audio')) {
+      audioChip = createChip('audio', audioIdx++, assetsState.audio);
     }
 
     let html = `把 ${vidChip} 中的`;
@@ -1008,21 +1289,32 @@
       let val = document.getElementById('bcInput').value || "口播内容";
       html += `<br>模特对嘴型口播：【${val}】`;
     }
+    
+    if(activeTags.has('audio')) {
+      html += `<br>模特音色可以用 ${audioChip}`;
+    }
 
     document.getElementById('richEditor').innerHTML = html;
   }
 
   function createChip(type, idx, assetObj) {
-    const label = type === 'video' ? '视频' : '图片';
+    let label = '图片';
+    if(type==='video') label='视频';
+    if(type==='audio') label='音频';
+    
     let mediaHtml = '';
     let url = '';
     let cover = '';
     
-    if (assetObj && assetObj.url) {
-      url = assetObj.url;
-      cover = assetObj.cover || assetObj.url;
-      const thumbUrl = displayImageUrl(cover);
-      mediaHtml = `<img src="${thumbUrl}" style="width:16px; height:16px; object-fit:cover; border-radius:2px; margin-right:4px; vertical-align:middle; background:#111;">`;
+    if (assetObj && (assetObj.url || type === 'audio')) {
+      url = assetObj.url || '';
+      cover = assetObj.cover || assetObj.url || '';
+      if (type === 'audio') {
+         mediaHtml = `<span style="font-size:12px; margin-right:2px; vertical-align:middle;">🎵</span>`;
+      } else {
+         const thumbUrl = displayImageUrl(cover);
+         mediaHtml = `<img src="${thumbUrl}" style="width:16px; height:16px; object-fit:cover; border-radius:2px; margin-right:4px; vertical-align:middle; background:#111;">`;
+      }
     } else {
       const phClass = type === 'video' ? 'ph-vid' : 'ph-spu';
       mediaHtml = `<span class="chip-ph ${phClass}" style="display:inline-block;width:16px;height:16px;border-radius:2px;margin-right:4px;background-size:cover;background-position:center;background-color:var(--ink-5);"></span>`;
@@ -1037,32 +1329,33 @@
   function showMentionMenu(rect) {
     const menu = document.getElementById('mentionMenu');
     let listHtml = '';
-    let gIdx = 1;
+    let vIdx = 1, iIdx = 1, aIdx = 1;
 
     if (assetsState.video) {
-      listHtml += `<div class="mention-item" onclick="insertMention('video', ${gIdx}, '${assetsState.video.url}', '${assetsState.video.cover||''}')"><img src="${displayImageUrl(assetsState.video.cover||assetsState.video.url)}"> 视频${gIdx} (参考视频)</div>`;
-      gIdx++;
-    } else { gIdx++; }
+      listHtml += `<div class="mention-item" onclick="insertMention('video', ${vIdx}, '${assetsState.video.url}', '${assetsState.video.cover||''}')"><img src="${displayImageUrl(assetsState.video.cover||assetsState.video.url)}"> 视频${vIdx} (参考视频)</div>`;
+      vIdx++;
+    }
 
-    if (selectedSpuImgs.size > 0) {
-      Array.from(selectedSpuImgs).forEach(item => {
-        listHtml += `<div class="mention-item" onclick="insertMention('image', ${gIdx}, '${item.imageUrl}', '')"><img src="${displayImageUrl(item.imageUrl)}"> 图片${gIdx} (商品图)</div>`;
-        gIdx++;
+    if (selectedSpuCart.length > 0) {
+      selectedSpuCart.forEach(item => {
+        listHtml += `<div class="mention-item" onclick="insertMention('image', ${iIdx}, '${item.url}', '')"><img src="${displayImageUrl(item.url)}"> 图片${iIdx} (商品图)</div>`;
+        iIdx++;
       });
-    } else { gIdx++; }
+    }
 
-    if (activeTags.has('scene')) {
-      if(assetsState.scene) {
-        listHtml += `<div class="mention-item" onclick="insertMention('image', ${gIdx}, '${assetsState.scene.url}', '')"><img src="${displayImageUrl(assetsState.scene.url)}"> 图片${gIdx} (场景图)</div>`;
-      }
-      gIdx++;
+    if (activeTags.has('scene') && assetsState.scene) {
+      listHtml += `<div class="mention-item" onclick="insertMention('image', ${iIdx}, '${assetsState.scene.url}', '')"><img src="${displayImageUrl(assetsState.scene.url)}"> 图片${iIdx} (场景图)</div>`;
+      iIdx++;
     }
     
-    if (activeTags.has('model')) {
-      if(assetsState.model) {
-        listHtml += `<div class="mention-item" onclick="insertMention('image', ${gIdx}, '${assetsState.model.url}', '')"><img src="${displayImageUrl(assetsState.model.url)}"> 图片${gIdx} (模特图)</div>`;
-      }
-      gIdx++;
+    if (activeTags.has('model') && assetsState.model) {
+      listHtml += `<div class="mention-item" onclick="insertMention('image', ${iIdx}, '${assetsState.model.url}', '')"><img src="${displayImageUrl(assetsState.model.url)}"> 图片${iIdx} (模特图)</div>`;
+      iIdx++;
+    }
+    
+    if (activeTags.has('audio') && assetsState.audio) {
+      listHtml += `<div class="mention-item" onclick="insertMention('audio', ${aIdx}, '${assetsState.audio.url}', '')">🎵 音频${aIdx} (参考音色)</div>`;
+      aIdx++;
     }
 
     if(listHtml === '') {
@@ -1081,7 +1374,7 @@
   }
 
   function insertMention(type, idx, url, cover) {
-    const assetObj = { url: url, cover: cover, isVideo: type === 'video' };
+    const assetObj = { url: url, cover: cover, isVideo: type === 'video', isAudio: type === 'audio' };
     const chipHtml = createChip(type, idx, assetObj);
 
     if(savedMentionRange) {
@@ -1110,22 +1403,38 @@
       const url = chip.dataset.url;
       const label = chip.dataset.label;
       
+      pop.className = 'global-preview-pop'; 
+      
       let popHtml = `<div class="pop-tag">${label} 预览</div>`;
       if(url) {
         if(type === 'video') {
           popHtml += `<video src="${url}" autoplay loop muted style="width:100%;height:100%;object-fit:cover;"></video>`;
           popHtml += `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:32px;text-shadow:0 2px 8px rgba(0,0,0,0.5);">▶</div>`;
+        } else if (type === 'audio') {
+          pop.classList.add('audio-pop');
+          popHtml = `
+            <div style="font-weight:600; margin-bottom:8px; font-size:12px;">${label} 预览</div>
+            <div style="display:flex; align-items:center; gap:8px;">
+               <div class="spinner" style="width:16px; height:16px; border-width:2px;"></div>
+               <span style="font-size:11px; color:var(--ink-3);">波形解析中...</span>
+            </div>
+          `;
         } else {
           popHtml += `<img src="${url}" style="width:100%;height:100%;object-fit:cover;">`;
         }
       } else {
-        const phClass = type === 'video' ? 'ph-vid' : 'ph-spu';
-        popHtml += `<div style="width:100%;height:100%;" class="${phClass}"></div>`;
+        if (type === 'audio') {
+           pop.classList.add('audio-pop');
+           popHtml = `<div style="font-size:11px; color:var(--ink-4);">暂未上传${label}</div>`;
+        } else {
+           const phClass = type === 'video' ? 'ph-vid' : 'ph-spu';
+           popHtml += `<div style="width:100%;height:100%;" class="${phClass}"></div>`;
+        }
       }
       
       pop.innerHTML = popHtml;
       pop.style.left = (rect.left + rect.width / 2 - 90) + 'px';
-      pop.style.top = (rect.top - 330) + 'px'; 
+      pop.style.top = (rect.top - (type==='audio'?100:330)) + 'px'; 
       pop.classList.add('show');
     }
   });
@@ -1138,10 +1447,10 @@
   });
 
 
-  // ================= 编辑后再次生成逻辑 (载入回填防覆盖) =================
+  // ================= 载入回填防覆盖 =================
   let pendingLoadTaskId = null; 
 
-  function editAndRetryTask(id) {
+  function loadTaskToLeftPanel(id) {
     if (isFormDirty()) {
       pendingLoadTaskId = id;
       document.getElementById('warnModal').classList.add('open');
@@ -1163,23 +1472,40 @@
     const task = DB[currentSPU].tasks.find(x => x.id === id);
     if(!task) return;
 
+    // 回填配置项快照
     document.getElementById('modelSelect').value = task.model;
     document.getElementById('durationSelect').value = task.duration;
     
-    isManual = true;
-    document.getElementById('richEditor').innerHTML = task.prompt;
-    document.getElementById('prompt-status').innerHTML = '<span style="color:#C2410C; font-weight:600;">PROMPT已经被修改，改动配置操作项不会再影响PROMPT</span>';
-    document.getElementById('btn-reset-p').style.display = 'inline';
+    activeTags = new Set(task.config.tags);
+    assetsState = JSON.parse(JSON.stringify(task.config.assets));
+    selectedSpuCart = JSON.parse(JSON.stringify(task.config.spuCart));
+    document.getElementById('bcInput').value = task.config.bcText;
+    currentColor = task.config.color;
 
+    // 获取任务保存的 isManual 状态
+    isManual = task.config.isManual || false;
+
+    // 同步重绘所有UI组件
+    initSpuUI();
     syncTagsUI();
-    renderSpuGrid();
-    syncSpuSelectAllBtn();
     renderAssetSlot('video');
     renderAssetSlot('scene');
     renderAssetSlot('model');
+    renderAssetSlot('audio');
+
+    // 状态接管逻辑
+    if (isManual) {
+      document.getElementById('richEditor').innerHTML = task.prompt;
+      document.getElementById('prompt-status').innerHTML = '<span style="color:#C2410C; font-weight:600;">PROMPT已经被修改，改动配置操作项不会再影响PROMPT</span>';
+      document.getElementById('btn-reset-p').style.display = 'inline';
+    } else {
+      document.getElementById('prompt-status').innerText = '系统自动构建中，支持悬浮预览，输入 "@" 可手动插入上方素材';
+      document.getElementById('btn-reset-p').style.display = 'none';
+      updatePrompt();
+    }
     
     document.getElementById('creatorPanelBd').scrollTo({ top: 0, behavior: 'smooth' });
-    showToast('历史任务数据已载入到左侧工作区');
+    showToast('已复制该任务配置到左侧创作区');
   }
 
 
@@ -1228,15 +1554,22 @@
       }
 
       let bodyHtml = '';
+      let actionsHtml = `<button class="btn-outline" onclick="loadTaskToLeftPanel('${t.id}')">复制Prompt</button>`;
+
       if (t.genStatus === 'progress') {
-        bodyHtml = `<div style="padding:30px; text-align:center; color:var(--ink-4); width:100%;">等待模型处理中 · 预计 3-5 分钟</div>`;
+        bodyHtml = `
+          <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+            <div style="text-align:center; color:var(--ink-4); flex:1; padding-top:20px;">等待模型处理中 · 预计 3-5 分钟</div>
+            <div style="display:flex; justify-content:flex-end; margin-top:12px;">${actionsHtml}</div>
+          </div>
+        `;
       } else if (t.genStatus === 'fail') {
         bodyHtml = `
-          <div style="flex:1;">
+          <div style="flex:1; display:flex; flex-direction:column;">
             <div class="fail-block"><strong>生成中断</strong><br>${t.failReason}</div>
-            <div style="display:flex; gap:8px;">
+            <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:auto;">
+              ${actionsHtml}
               <button class="btn-outline" onclick="retryGen('${t.id}')">重试生成</button>
-              <button class="btn-outline" style="color:var(--accent); border-color:var(--accent);" onclick="editAndRetryTask('${t.id}')">编辑并重新生成</button>
             </div>
           </div>
         `;
@@ -1251,7 +1584,8 @@
             <div style="margin-top:auto; display:flex; justify-content:space-between; align-items:center;">
               <span style="font-size:10px; color:var(--ink-4);">成本: ¥ ${t.cost.toFixed(2)}</span>
               
-              <div style="display:flex; gap:8px;">
+              <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+                ${actionsHtml}
                 ${t.auditStatus === 'pending' ? `<button class="btn-outline" style="color:var(--dot-fail);" onclick="doAudit('${t.id}', 'rejected')">不通过</button><button class="btn-outline" style="color:var(--dot-ok); border-color:var(--dot-ok);" onclick="doAudit('${t.id}', 'approved')">通过</button>` : ''}
                 ${t.auditStatus === 'approved' && t.uploadStatus === 'fail' ? `<button class="btn-outline" style="color:var(--dot-fail);" onclick="retryUpload('${t.id}')">重试上传</button>` : ''}
                 ${t.auditStatus === 'approved' ? `<button class="btn-outline" style="color:var(--accent); border-color:var(--accent);" onclick="downloadVideo('${t.finalVideo}')">下载视频</button>` : ''}
@@ -1275,9 +1609,10 @@
 
   function openConfirmModal() {
     if (!assetsState.video) return showToast('必须上传/选择参考视频', 'error');
-    if (selectedSpuImgs.size === 0) return showToast('必须至少选择一张商品图', 'error');
+    if (selectedSpuCart.length === 0) return showToast('必须至少选择一张商品图', 'error');
     if (activeTags.has('scene') && !assetsState.scene) return showToast('已勾选换场景，请选择场景素材', 'error');
     if (activeTags.has('model') && !assetsState.model) return showToast('已勾选换模特形象，请选择模特素材', 'error');
+    if (activeTags.has('audio') && !assetsState.audio) return showToast('已勾选换音色，请选择音频素材', 'error');
     if (activeTags.has('bc') && !document.getElementById('bcInput').value.trim()) return showToast('已勾选口播，请输入口播文案', 'error');
 
     document.getElementById('confirmModel').innerText = document.getElementById('modelSelect').value;
@@ -1286,6 +1621,7 @@
     
     document.getElementById('confirmModal').classList.add('open');
 
+    // Hover 事件绑定
     const confirmPromptDiv = document.getElementById('confirmPrompt');
     confirmPromptDiv.onmouseover = function(e) {
       const chip = e.target.closest('.media-chip');
@@ -1296,22 +1632,32 @@
         const url = chip.dataset.url;
         const label = chip.dataset.label;
         
+        pop.className = 'global-preview-pop'; 
+        
         let popHtml = `<div class="pop-tag">${label} 预览</div>`;
         if(url) {
           if(type === 'video') {
             popHtml += `<video src="${url}" autoplay loop muted style="width:100%;height:100%;object-fit:cover;"></video>`;
             popHtml += `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:32px;text-shadow:0 2px 8px rgba(0,0,0,0.5);">▶</div>`;
+          } else if (type === 'audio') {
+             pop.classList.add('audio-pop');
+             popHtml = `<div style="font-weight:600; margin-bottom:8px; font-size:12px;">${label} 预览</div><div style="display:flex; align-items:center; gap:8px;"><div class="spinner" style="width:16px; height:16px; border-width:2px;"></div><span style="font-size:11px; color:var(--ink-3);">波形解析中...</span></div>`;
           } else {
             popHtml += `<img src="${url}" style="width:100%;height:100%;object-fit:cover;">`;
           }
         } else {
-          const phClass = type === 'video' ? 'ph-vid' : 'ph-spu';
-          popHtml += `<div style="width:100%;height:100%;" class="${phClass}"></div>`;
+          if (type === 'audio') {
+             pop.classList.add('audio-pop');
+             popHtml = `<div style="font-size:11px; color:var(--ink-4);">暂未上传${label}</div>`;
+          } else {
+             const phClass = type === 'video' ? 'ph-vid' : 'ph-spu';
+             popHtml += `<div style="width:100%;height:100%;" class="${phClass}"></div>`;
+          }
         }
         
         pop.innerHTML = popHtml;
         pop.style.left = (rect.left + rect.width / 2 - 90) + 'px';
-        pop.style.top = (rect.top - 330) + 'px'; 
+        pop.style.top = (rect.top - (type==='audio'?100:330)) + 'px'; 
         pop.classList.add('show');
         pop.style.zIndex = '10005'; 
       }
@@ -1353,7 +1699,15 @@
         prompt: promptHtml,
         time: '刚刚',
         cost: 14.27,
-        videoCover: assetsState.video.cover || assetsState.video.url
+        videoCover: assetsState.video.cover || assetsState.video.url,
+        config: {
+          tags: Array.from(activeTags),
+          assets: JSON.parse(JSON.stringify(assetsState)),
+          spuCart: JSON.parse(JSON.stringify(selectedSpuCart)),
+          bcText: document.getElementById('bcInput').value,
+          color: currentColor,
+          isManual: isManual
+        }
       };
       
       DB[currentSPU].tasks.unshift(newTask);
@@ -1466,6 +1820,7 @@
       window.open(url, '_blank');
     }
   }
+
 </script>
 
 </body>

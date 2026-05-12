@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI模特UGC视频花费看板</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink-1: #111418; --ink-2: #2A2F36; --ink-3: #5C636B; --ink-4: #8A9099; --ink-5: #B6BBC2;
+    --line: #E8EAEE; --line-2: #F0F2F5; --bg: #FAFBFC; --paper: #FFFFFF;
+    --accent: #1F4FE0; --accent-soft: #EEF2FE; --accent-ink: #1339B3;
+    --money: #F56C6C; /* 财务数据专用色 */
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#f0f2f5;color:#333;font-size:13px;}
+
+  /* ── 顶部导航 ── */
+  .top-nav{background:#fff;height:48px;display:flex;align-items:center;padding:0 20px;border-bottom:1px solid #e8e8e8;justify-content:space-between;}
+  .breadcrumb{display:flex;align-items:center;gap:8px;color:#888;font-size:14px;}
+  .breadcrumb a{color:#888;text-decoration:none;} .breadcrumb a:hover{color:rgb(65,181,132);}
+  .breadcrumb .cur{color:#333;font-weight:500;}
+  .user-info{color:#888;font-size:13px;}
+
+  /* ── 容器 ── */
+  .container{padding:16px 20px; max-width: 1400px; margin: 0 auto;}
+
+  /* ── 顶部数据汇总卡片 (给老板看) ── */
+  .stat-panel { display: flex; gap: 16px; margin-bottom: 16px; }
+  .stat-card { flex: 1; background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+  .stat-title { font-size: 13px; color: var(--ink-3); font-weight: 500;}
+  .stat-value { font-size: 28px; font-weight: 700; color: var(--ink-1); font-family: 'Inter', sans-serif;}
+  .stat-value.money { color: var(--money); }
+  .stat-desc { font-size: 11px; color: var(--ink-4); }
+
+  /* ── 顶部操作栏 ── */
+  .toolbar{background:#fff;border:1px solid #e8e8e8;border-radius:4px;padding:16px;margin-bottom:16px;display:flex;flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+
+  .tb-group{display:inline-flex;align-items:center;margin:0;}
+  .tb-label{font-size:13px;color:#606266;text-align:right;padding-right:8px;flex-shrink:0;}
+  .tb-input, .tb-select{
+    width: 140px; height:32px; line-height:32px; border:1px solid #dcdfe6; border-radius:4px;
+    padding:0 12px; font-size:13px; color:#606266; outline:none; background:#fff;
+    transition:border-color .2s cubic-bezier(.645,.045,.355,1);
+  }
+  .tb-input::placeholder{color:#c0c4cc;}
+  .tb-input:hover, .tb-select:hover{border-color:#c0c4cc;}
+  .tb-input:focus, .tb-select:focus{border-color:rgb(65,181,132);}
+
+  .tb-select{
+    appearance:none; -webkit-appearance:none; padding-right:30px; cursor:pointer;
+    background: #fff url("data:image/svg+xml;utf8,<svg viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'><path d='M7 9L3.5 5h7L7 9z' fill='%23C0C4CC'/></svg>") no-repeat right 10px center / 12px 12px;
+  }
+
+  .tb-right{display:flex;align-items:center;gap:10px; flex-shrink: 0;}
+  .btn{border:none;border-radius:4px;padding:0 16px;font-size:13px;cursor:pointer;height:32px;display:inline-flex;align-items:center;gap:4px;transition:all .15s;white-space:nowrap;}
+  .btn-primary{background:rgb(65,181,132);color:#fff;} .btn-primary:hover{background:rgb(85,201,152);}
+  .btn-outline{background:#fff;color:#606266;border:1px solid #dcdfe6;} .btn-outline:hover{border-color:rgb(65,181,132);color:rgb(65,181,132);}
+
+  /* ── 聚合折叠表格 ── */
+  .table-wrap{background:#fff;border:1px solid #e4e4e4;border-radius:6px;overflow:hidden;}
+  
+  /* 父级列宽配置：展开(40), SPU(150), 产出视频数(150), 覆盖运营(1fr), 最新产出时间(150), 累计花费(150) */
+  .t-head { display:grid; grid-template-columns: 40px 150px 150px 1fr 180px 150px; column-gap:16px; padding:0 16px; height:44px; align-items:center; background:#f8f8f9; border-bottom:1px solid #e8e8e8; font-size:13px; font-weight:600; color:#606266; }
+  
+  /* 父级行 */
+  .t-row-parent { display:grid; grid-template-columns: 40px 150px 150px 1fr 180px 150px; column-gap:16px; padding:0 16px; min-height:56px; align-items:center; border-bottom:1px solid #f0f0f0; font-size:14px; transition:background .2s; cursor:pointer; }
+  .t-row-parent:hover { background:#f5f7fa; }
+  .t-row-parent.open { background:#f0f9eb; border-bottom:none; }
+  
+  .expand-icon { width:24px; height:24px; display:flex; align-items:center; justify-content:center; color:var(--ink-4); transition: transform 0.2s; font-size:16px; }
+  .t-row-parent.open .expand-icon { transform: rotate(90deg); color:rgb(65,181,132); }
+
+  .spu-main { font-weight:700; color:var(--ink-1); font-size:15px; }
+  .money-total { font-weight:700; color:var(--money); font-family: 'Inter', sans-serif; font-size: 16px; }
+  .tag-op { display:inline-block; padding:0 8px; border-radius:4px; font-size:11px; border:1px solid #e9e9eb; background:#f4f4f5; color:#606266; line-height:20px; margin-right:4px; margin-bottom:2px;}
+
+  /* 子级明细区 */
+  .sub-container { display:none; background:#fafafa; border-bottom:1px solid #e8e8e8; padding: 0 16px 16px 56px; }
+  .sub-container.open { display:block; animation: slideDown 0.3s ease-out; }
+  @keyframes slideDown { from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);} }
+
+  .sub-table { border:1px solid #e4e4e4; border-radius:4px; background:#fff; overflow:hidden; }
+  /* 子级列宽配置：缩略图(70), 视频名(1fr), 运营(120), 生成时间(160), 单次花费(120) */
+  .sub-head { display:grid; grid-template-columns: 70px 1fr 120px 160px 120px; column-gap:16px; padding:0 16px; height:36px; align-items:center; background:#f5f7fa; border-bottom:1px solid #e8e8e8; font-size:12px; color:#909399; }
+  .sub-row { display:grid; grid-template-columns: 70px 1fr 120px 160px 120px; column-gap:16px; padding:12px 16px; align-items:center; border-bottom:1px solid #f0f0f0; font-size:12px; transition:0.1s;}
+  .sub-row:last-child { border-bottom:none; }
+  .sub-row:hover { background:#fdfdfe; }
+
+  /* 缩略图 */
+  .thumb-box{width:44px;height:60px;border-radius:4px;overflow:hidden;border:1px solid #e8e8e8;background:#111;position:relative;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .thumb-box img{width:100%;height:100%;object-fit:cover;display:block;}
+  .thumb-box.clickable{cursor:pointer;}
+  .thumb-box .play-mask{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);opacity:0;transition:opacity .15s;color:#fff;font-size:20px;}
+  .thumb-box.clickable:hover .play-mask{opacity:1;}
+
+  .vname{color:#606266; font-family:monospace;}
+  .vcost{font-weight:600; color:var(--money); font-family: 'Inter', sans-serif;}
+
+  /* ── 分页 ── */
+  .pager-wrap{display:flex;align-items:center;justify-content:flex-end;padding:16px 0;gap:8px;font-size:13px;color:#606266;}
+  .pager-total{margin-right:8px;}
+  .pager-size{border:1px solid #dcdfe6;border-radius:4px;height:28px;padding:0 6px;font-size:13px;background:#fff;cursor:pointer;outline:none;}
+  .pager-nav{display:flex;align-items:center;gap:4px;}
+  .pager-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;cursor:pointer;font-size:13px;color:#606266;border-radius:4px;} .pager-btn:hover{color:rgb(65,181,132);}
+  .pager-btn[disabled]{color:#c0c4cc;cursor:not-allowed;}
+  .pager-num{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer;font-size:13px;color:#606266;background:transparent;border:none;} .pager-num:hover{color:rgb(65,181,132);}
+  .pager-num.active{background:rgb(65,181,132);color:#fff;border-radius:4px;}
+  .pager-dots{width:28px;text-align:center;color:#909399;font-size:12px;cursor:default;}
+  .pager-goto{display:flex;align-items:center;gap:6px;font-size:13px;}
+  /* 精简并缩小前往分页的输入框 */
+  .pager-goto input{width:36px;height:26px;border:1px solid #dcdfe6;border-radius:4px;text-align:center;font-size:12px;outline:none; transition:0.2s;} .pager-goto input:focus{border-color:rgb(65,181,132);}
+
+  /* 视频播放器弹窗 */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;justify-content:center;align-items:center; backdrop-filter: blur(2px);}
+  .overlay.show{display:flex;}
+  .modal{background:#fff;border-radius:6px;box-shadow:0 6px 30px rgba(0,0,0,.12);max-height:85vh;overflow:hidden;}
+  .m-hd{padding:16px 20px;border-bottom:1px solid #e8e8e8;display:flex;justify-content:space-between;align-items:center;}
+  .m-hd h3{font-size:16px;font-weight:500;color:#303133;} 
+  .m-close{background:none;border:none;font-size:24px;cursor:pointer;color:#909399;padding:2px 6px; line-height: 1;} .m-close:hover{color:#303133;}
+  .m-bd{padding:20px;overflow-y:auto;max-height:calc(85vh - 110px);}
+  .modal-player{max-width:400px;width:90%;} .modal-player video{width:100%;border-radius:4px;background:#000; aspect-ratio: 9/16; display: block;}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="ovPlayer"><div class="modal modal-player"><div class="m-hd"><h3 id="pTitle" style="font-size: 14px; width:280px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">视频预览</h3><button class="m-close" onclick="closePlayer()">×</button></div><div class="m-bd" style="padding: 16px;"><video id="vPlayer" controls autoplay></video></div></div></div>
+
+<div class="top-nav">
+  <div class="breadcrumb"><span>☰</span> <a href="#">财务统计</a> <span style="margin:0 4px;color:#c0c4cc">&gt;</span> <span class="cur">💰 AI模特UGC视频花费看板</span></div>
+  <div class="user-info">👤 财务总监</div>
+</div>
+
+<div class="container">
+
+<div class="stat-panel">
+  <div class="stat-card">
+    <div class="stat-title">筛选期内总花费金额</div>
+    <div class="stat-value money">¥ <span id="statMoney">0.00</span></div>
+    <div class="stat-desc">单次 AI 视频生成固定成本为 14.27 元</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">筛选期内生成的视频总数</div>
+    <div class="stat-value" id="statVids">0</div>
+    <div class="stat-desc">包含在下方所有聚合的 SPU 数据中</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">涉及 SPU 总量</div>
+    <div class="stat-value" id="statSpus">0</div>
+    <div class="stat-desc">发生过生成操作的独立 SPU 数量</div>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div style="display:flex; align-items:center; flex-wrap:wrap; gap:16px;">
+    <div class="tb-group"><div class="tb-label">SPU</div><input class="tb-input" id="fSpu" placeholder="请输入SPU编号" onkeydown="if(event.key==='Enter')doFilter()"></div>
+    <div class="tb-group">
+      <div class="tb-label">生成时间</div>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <input type="date" class="tb-input" id="fDateStart" style="width: 130px;">
+        <span style="color:#c0c4cc;">-</span>
+        <input type="date" class="tb-input" id="fDateEnd" style="width: 130px;">
+      </div>
+    </div>
+    <div class="tb-group">
+      <div class="tb-label">运营姓名</div>
+      <select class="tb-select" id="fCreator">
+        <option value="">全部运营</option>
+        <option value="王运营">王运营</option>
+        <option value="李投放">李投放</option>
+        <option value="张编导">张编导</option>
+        <option value="陈增长">陈增长</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="tb-right">
+    <button class="btn btn-primary" onclick="doFilter()">汇总查询</button>
+    <button class="btn btn-outline" onclick="doReset()">重置筛选</button>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <div class="t-head">
+    <div></div>
+    <div>SPU</div>
+    <div>产出视频数</div>
+    <div>覆盖运营人员</div>
+    <div>最新产出时间</div>
+    <div style="text-align:right; padding-right:16px;">累计花费 (元)</div>
+  </div>
+  <div id="tbody"></div>
+</div>
+
+<div class="pager-wrap">
+  <span class="pager-total">共 <b id="pTotal">0</b> 个 SPU</span>
+  <select class="pager-size" id="pSize" onchange="pageSize=+this.value;curPage=1;renderPage()"><option value="10">10条/页</option><option value="20">20条/页</option><option value="50">50条/页</option></select>
+  <div class="pager-nav" id="pagerNav"></div>
+  <div class="pager-goto">前往 <input id="pGoto" onkeydown="if(event.key==='Enter')gotoPage(+this.value)"> 页</div>
+</div>
+
+</div>
+
+<script>
+/* ══ 时间默认值处理 (近7天) ══ */
+const todayObj = new Date();
+const past7Obj = new Date();
+past7Obj.setDate(todayObj.getDate() - 6);
+
+function formatDate(d) {
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+// 初始化时间输入框默认值
+document.getElementById('fDateStart').value = formatDate(past7Obj);
+document.getElementById('fDateEnd').value = formatDate(todayObj);
+
+
+/* ══ 核心辅助函数 ══ */
+function displayImageUrl(url) {
+  const raw = String(url || '').trim();
+  if (!raw) return raw;
+  const PREFIX = 'https://img.flamingo.shop/';
+  if (!raw.startsWith(PREFIX)) return raw;
+  if (raw.startsWith(`${PREFIX}120x180/`)) return raw;
+  return raw.replace(PREFIX, `${PREFIX}120x180/`);
+}
+
+function getRandomDateInLast7Days() {
+  const start = past7Obj.getTime();
+  const end = todayObj.getTime();
+  const date = new Date(start + Math.random() * (end - start));
+  
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  const time = date.toTimeString().split(' ')[0].substring(0, 5);
+  
+  return `${yyyy}-${mm}-${dd} ${time}`;
+}
+
+/* ══ Mock 原始明细数据生成 (视频粒度) ══ */
+const VID_URL = 'https://media.flamingo.shop/v/7481748d89f4436c85b563b9b0c8623f.mp4';
+const VID_COV = 'https://img.flamingo.shop/p/show/89eff2e31686479cbbfa3ad62f28cfdf.png';
+const CREATORS = ['王运营', '李投放', '张编导', '陈增长'];
+const REF_NAMES = ['拉伸裤脚参考视频', '口袋细节展示', '模特走秀背面', '360度旋转'];
+const UNIT_COST = 14.27; // 单次固定花费
+
+// 生成精确的 18 个独立 SPU
+const SPU_LIST = Array.from({length: 18}, (_, i) => String(391001 + i));
+
+const RAW_DATA = [];
+let rid=1000;
+
+// 为每个 SPU 随机分配 1 到 3 个视频，让数据分布更具真实随机性
+SPU_LIST.forEach(spu => {
+  const vCount = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3
+  
+  for(let i=0; i<vCount; i++){
+    const dateStr = getRandomDateInLast7Days();
+    const creator = CREATORS[Math.floor(Math.random() * CREATORS.length)];
+    
+    const yy = dateStr.substring(2, 4);
+    const mm = dateStr.substring(5, 7);
+    const dd = dateStr.substring(8, 10);
+    const timeStr = yy + mm + dd;
+    const refName = REF_NAMES[Math.floor(Math.random() * REF_NAMES.length)];
+    const r2 = Math.floor(Math.random() * 90 + 10); 
+    const vname = `${spu}-${timeStr}-${refName}-${r2}.mp4`;
+
+    RAW_DATA.push({
+      id: ++rid, 
+      spu: spu, 
+      date: dateStr, 
+      creator: creator, 
+      vname: vname,
+      cost: UNIT_COST,
+      finalVid: VID_URL, 
+      finalCov: VID_COV
+    });
+  }
+});
+
+// 降序排序保证最新时间在前面
+RAW_DATA.sort((a,b) => b.date.localeCompare(a.date));
+
+/* ══ 聚合与过滤 ══ */
+let AGG_DATA = [];
+let curPage=1, pageSize=10;
+
+function aggregateData(filteredRaw) {
+  const map = {};
+  let totalMoney = 0;
+  let totalVids = 0;
+
+  filteredRaw.forEach(v => {
+    if (!map[v.spu]) {
+      map[v.spu] = {
+        spu: v.spu,
+        totalCost: 0,
+        vidCount: 0,
+        latestDate: v.date, // 因为数据已经是降序，第一条遇到的就是最新的
+        creators: new Set(),
+        details: []
+      };
+    }
+    const g = map[v.spu];
+    g.totalCost += v.cost;
+    g.vidCount += 1;
+    g.creators.add(v.creator);
+    g.details.push(v); // 压入明细
+
+    // 更新全局统计
+    totalMoney += v.cost;
+    totalVids += 1;
+  });
+
+  const res = Object.values(map);
+  // 按总花费降序排列展示
+  res.sort((a,b) => b.totalCost - a.totalCost);
+  
+  return { list: res, totalMoney, totalVids };
+}
+
+function doFilter(){
+  const spu = document.getElementById('fSpu').value.trim();
+  const dateStart = document.getElementById('fDateStart').value; 
+  const dateEnd = document.getElementById('fDateEnd').value; 
+  const creator = document.getElementById('fCreator').value;
+  
+  // 1. 先过滤微观明细层面的数据
+  const filteredRaw = RAW_DATA.filter(d => {
+    if(spu && !d.spu.includes(spu)) return false;
+    if(dateStart && d.date < dateStart) return false;
+    if(dateEnd && d.date > dateEnd + ' 23:59:59') return false;
+    if(creator && d.creator !== creator) return false;
+    return true;
+  });
+
+  // 2. 将过滤后的明细数据重新按 SPU 聚合并计算总花费
+  const aggResult = aggregateData(filteredRaw);
+  AGG_DATA = aggResult.list;
+  
+  // 3. 刷新大盘数据
+  document.getElementById('statMoney').innerText = aggResult.totalMoney.toFixed(2);
+  document.getElementById('statVids').innerText = aggResult.totalVids;
+  document.getElementById('statSpus').innerText = AGG_DATA.length;
+
+  curPage=1; 
+  renderPage();
+}
+
+function doReset(){
+  document.getElementById('fSpu').value='';
+  document.getElementById('fDateStart').value = formatDate(past7Obj);
+  document.getElementById('fDateEnd').value = formatDate(todayObj);
+  document.getElementById('fCreator').value='';
+  doFilter();
+}
+
+/* ══ 渲染表格 ══ */
+function toggleExpand(spu) {
+  const row = document.getElementById('row_' + spu);
+  const sub = document.getElementById('sub_' + spu);
+  if (row.classList.contains('open')) {
+     row.classList.remove('open');
+     sub.classList.remove('open');
+  } else {
+     row.classList.add('open');
+     sub.classList.add('open');
+  }
+}
+
+function renderPage(){
+  const total = AGG_DATA.length;
+  document.getElementById('pTotal').textContent = total;
+  const totalPages = Math.max(1, Math.ceil(total/pageSize));
+  if(curPage > totalPages) curPage = totalPages;
+  const start = (curPage-1)*pageSize, end = Math.min(start+pageSize, total);
+  const page = AGG_DATA.slice(start, end);
+
+  const tb = document.getElementById('tbody');
+  if(!page.length){
+    tb.innerHTML='<div style="text-align:center;padding:60px;color:#909399">暂无匹配的 SPU 花费数据</div>'; 
+    renderPager(totalPages); 
+    return;
+  }
+
+  tb.innerHTML = page.map((g, idx) => {
+    // 渲染参与的运营标签
+    const creatorTags = Array.from(g.creators).map(c => `<span class="tag-op">${c}</span>`).join('');
+
+    // 渲染二级子表格明细
+    const subHtml = g.details.map(v => {
+      const thumbHtml=`<div class="thumb-box clickable" onclick="openPlayer('${v.finalVid}', '${v.vname}')"><img src="${v.finalCov}"><div class="play-mask">▶</div></div>`;
+      return `
+        <div class="sub-row">
+          <div>${thumbHtml}</div>
+          <div class="vname">${v.vname}</div>
+          <div style="color:#606266;">${v.creator}</div>
+          <div style="color:#909399; font-family:sans-serif;">${v.date}</div>
+          <div class="vcost">¥ ${v.cost.toFixed(2)}</div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="t-row-parent" id="row_${g.spu}" onclick="toggleExpand('${g.spu}')">
+        <div><div class="expand-icon">▸</div></div>
+        <div class="spu-main">${g.spu}</div>
+        <div>${g.vidCount} 个</div>
+        <div>${creatorTags}</div>
+        <div style="color:#909399;">${g.latestDate}</div>
+        <div class="money-total" style="text-align:right; padding-right:16px;">¥ ${g.totalCost.toFixed(2)}</div>
+      </div>
+      <div class="sub-container" id="sub_${g.spu}">
+        <div class="sub-table">
+          <div class="sub-head">
+            <div>视频预览</div>
+            <div>生成视频名称</div>
+            <div>经手运营</div>
+            <div>生成时间</div>
+            <div>单次生成花费</div>
+          </div>
+          ${subHtml}
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  renderPager(totalPages);
+}
+
+/* ══ 分页器 ══ */
+function renderPager(totalPages){
+  const nav=document.getElementById('pagerNav');
+  let h=`<button class="pager-btn" ${curPage<=1?'disabled':''} onclick="goPage(${curPage-1})">&lt;</button>`;
+  const pages=calcPages(curPage,totalPages);
+  pages.forEach(p=>{
+    if(p==='...'){h+=`<span class="pager-dots">…</span>`;}
+    else{h+=`<button class="pager-num${p===curPage?' active':''}" onclick="goPage(${p})">${p}</button>`;}
+  });
+  h+=`<button class="pager-btn" ${curPage>=totalPages?'disabled':''} onclick="goPage(${curPage+1})">&gt;</button>`;
+  nav.innerHTML=h;
+}
+function calcPages(cur,total){
+  if(total<=7)return Array.from({length:total},(_,i)=>i+1);
+  const p=[];
+  p.push(1);
+  if(cur>3)p.push('...');
+  for(let i=Math.max(2,cur-1);i<=Math.min(total-1,cur+1);i++)p.push(i);
+  if(cur<total-2)p.push('...');
+  p.push(total);
+  return p;
+}
+function goPage(n){const tp=Math.max(1,Math.ceil(AGG_DATA.length/pageSize));if(n<1||n>tp)return;curPage=n;renderPage();window.scrollTo(0,0);}
+function gotoPage(n){goPage(n);}
+
+/* ══ 视频预览 ══ */
+function openPlayer(url, name){
+  document.getElementById('pTitle').textContent = name || '视频预览';
+  document.getElementById('vPlayer').src = url;
+  document.getElementById('ovPlayer').classList.add('show');
+}
+function closePlayer(){document.getElementById('ovPlayer').classList.remove('show');document.getElementById('vPlayer').pause();}
+document.getElementById('ovPlayer').addEventListener('click', e => { if(e.target.id==='ovPlayer') closePlayer(); });
+
+/* ══ 初始化 ══ */
+doFilter(); 
+</script>
+</body>
+</html>
